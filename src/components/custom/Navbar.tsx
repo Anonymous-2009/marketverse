@@ -1,0 +1,207 @@
+'use client';
+
+import Link from 'next/link';
+import { Store, CircleUserRound, LogOut, ShoppingCart, LogInIcon as Logs, MapPin, CreditCard, UserRoundCog, UserRoundIcon as UserRoundPen, MoreVertical, Search } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { SignInButton } from '@clerk/nextjs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useClerk } from '@clerk/nextjs';
+
+export default function Navbar() {
+  const { user } = useUser();
+  const { signOut } = useClerk();
+
+  return (
+    <nav className="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
+      <div className="max-w-8xl mx-auto">
+        <div className="py-4 border-b border-slate-900/10 lg:px-8 lg:border-0 dark:border-slate-300/10 mx-4 lg:mx-0">
+          <div className="relative flex items-center justify-between">
+            {/* Left Section */}
+            <Link
+              href="/"
+              className="flex-none w-auto mr-3"
+            >
+              <span className="sr-only">Market home page</span>
+              <span className="text-black dark:text-white text-xl md:text-2xl font-bold">
+                MarketVerse
+              </span>
+            </Link>
+
+            {/* Search Bar (Desktop Only) */}
+            <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-10 pr-4 py-2 w-full text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-700 rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* Right Section */}
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        {/* <AvatarImage src={user.profileImageUrl || ''} alt={user.firstName || 'User'} /> */}
+                        <AvatarFallback>{user.firstName?.charAt(0) || 'U'}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end">
+                    <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>
+                        View Profile
+                        <DropdownMenuShortcut>
+                          <UserRoundPen size={16} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        Update Profile
+                        <DropdownMenuShortcut>
+                          <UserRoundCog size={16} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        Payment Method
+                        <DropdownMenuShortcut>
+                          <CreditCard size={16} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        Address
+                        <DropdownMenuShortcut>
+                          <MapPin size={16} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Quick Links</DropdownMenuItem>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          More Options
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuItem>
+                              Cart
+                              <DropdownMenuShortcut>
+                                <ShoppingCart size={15} />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              WishLists
+                              <DropdownMenuShortcut>
+                                <Logs size={16} />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Order</DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Explore Products
+                            </DropdownMenuItem>
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                    <DropdownMenuItem disabled>Exclusive</DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut()}>
+                      Log out
+                      <DropdownMenuShortcut>
+                        <LogOut size={15} />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  {/* Desktop View */}
+                  <div className="hidden md:flex items-center space-x-4">
+                    <SignInButton>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-slate-700 dark:text-slate-200 hover:text-white dark:hover:text-slate-800 hover:bg-black"
+                      >
+                        <CircleUserRound className="mr-2 h-4 w-4" /> Login
+                      </Button>
+                    </SignInButton>
+                    <Link href="/auth/login">
+                    <Button
+                      size="sm"
+                      className="bg-black hover:bg-zinc-400 text-white hover:text-black"
+                    >
+                      <Store className="mr-2 h-4 w-4" /> Become a Seller
+                    </Button>
+                    </Link>
+                  </div>
+                  {/* Mobile View */}
+                  <div className="md:hidden">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreVertical className="h-5 w-5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <SignInButton>
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start"
+                            >
+                              <CircleUserRound className="mr-2 h-4 w-4" />
+                              <span>Login</span>
+                            </Button>
+                          </SignInButton>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/auth/login">
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start"
+                          >
+                            <Store className="mr-2 h-4 w-4" />
+                            <span>Become a Seller</span>
+                          </Button>
+                          </Link> 
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+

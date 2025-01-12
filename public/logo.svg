@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 100">
+  <!-- Background -->
+  <rect width="200" height="100" fill="none" />
+
+  <!-- Market Text -->
+  <text x="20" y="40" font-family="Arial, sans-serif" font-size="30" fill="black" text-anchor="start">Market</text>
+
+  <!-- Verse Text -->
+  <text x="60" y="65" font-family="Arial, sans-serif" font-size="30" fill="black" text-anchor="start">Verse</text>
+</svg>
