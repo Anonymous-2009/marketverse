@@ -42,26 +42,9 @@ export default function LoginPage() {
     console.log(values)
     // Here you would typically send the form data to your backend
     console.log(isLoaded);
-    if (isLoaded) {
-      try {
-       const data = await signUp.create({
-          first_name: values.firstName,
-          last_name: values.lastName,
-          email_address: values.email,
-          username: values.username,
-          password: values.password,
-        });
-  
-        console.log("Data:", data);
-        // send the email.
-        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-  
-        // change the UI to our pending section.
-        // setPendingVerification(true);
-      } catch (error) {
-        console.error("Error signing up:", error);
-      }
-    }
+ 
+   
+      
   
     // try {
     //   const response = await axios.post('/api/login', values);

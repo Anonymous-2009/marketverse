@@ -22,11 +22,69 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useClerk } from '@clerk/nextjs';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const { user } = useUser();
+  const router = useRouter();
   const { signOut } = useClerk();
+  const [isSeller, setIsSeller] = useState(false);
 
+  const handleClick = async () => {
+    console.log("Clicked");
+    try {
+      if (!user) {
+        console.error('User not authenticated');
+        return;
+      }
+
+      const data = {
+        userId: user.id,
+        email: user.emailAddresses,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+      };
+
+      const response = await axios.post('/api/login', data);
+      console.log('API Response:', response.data);
+      router.refresh();
+    } catch (error) {
+      console.error('Error hitting API:', error);
+    }
+  }
+  useEffect(() => {
+    const checkSellerStatus = async () => {
+      try {
+        const response = await axios.post('/api/check', user);
+        console.log('API Response:', response.data);
+
+        if (response.data.isSeller) {
+          setIsSeller(true);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    if (user) {
+      checkSellerStatus();
+    }
+  }, [user]);
+
+  const userClick = async () => {
+    console.log("Clicked");
+    router.refresh();
+    try {
+      const response = await axios.post('/api/delete', user);
+      console.log('API Response:', response.data);
+      router.refresh();
+    } catch (error) {
+      console.error('Error hitting API:', error);
+    }
+  };
   return (
     <nav className="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
       <div className="max-w-8xl mx-auto">
@@ -59,14 +117,16 @@ export default function Navbar() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  <DropdownMenuTrigger asChild >
                     <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        {/* <AvatarImage src={user.profileImageUrl || ''} alt={user.firstName || 'User'} /> */}
+                      <Avatar className="h-8 w-8" >
+                        <AvatarImage src={user.imageUrl || ''} alt={user.firstName || 'User'} />
                         <AvatarFallback>{user.firstName?.charAt(0) || 'U'}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
+
+                  {!isSeller ? (
                   <DropdownMenuContent className="w-56" align="end">
                     <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -137,8 +197,44 @@ export default function Navbar() {
                         <LogOut size={15} />
                       </DropdownMenuShortcut>
                     </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleClick()}>
+                      Become a Seller
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
+                  ) : (
+                    <DropdownMenuContent className="w-56" align="end">
+                      <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
+
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => userClick()}>
+                        Become a Buyyer
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        View Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        View Listed Products
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Preview Orders
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Update Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        List a Product
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Payment Method
+                    </DropdownMenuItem>
+                    </DropdownMenuContent>
+                    
+                  )
+                } 
                 </DropdownMenu>
+                
               ) : (
                 <>
                   {/* Desktop View */}
@@ -152,14 +248,14 @@ export default function Navbar() {
                         <CircleUserRound className="mr-2 h-4 w-4" /> Login
                       </Button>
                     </SignInButton>
-                    <Link href="/auth/login">
+                    <SignInButton>
                     <Button
                       size="sm"
                       className="bg-black hover:bg-zinc-400 text-white hover:text-black"
                     >
                       <Store className="mr-2 h-4 w-4" /> Become a Seller
                     </Button>
-                    </Link>
+                    </SignInButton>
                   </div>
                   {/* Mobile View */}
                   <div className="md:hidden">
