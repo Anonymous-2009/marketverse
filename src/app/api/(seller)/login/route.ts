@@ -10,8 +10,18 @@ export async function POST(req: NextRequest) {
     const { userId, email, firstName, lastName, username } = body;
 
     // Validate input
-    if (!userId || !email || !email[0]?.emailAddress || !firstName || !lastName || !username) {
-      return NextResponse.json({ message: 'All fields are required.' }, { status: 400 });
+    if (
+      !userId ||
+      !email ||
+      !email[0]?.emailAddress ||
+      !firstName ||
+      !lastName ||
+      !username
+    ) {
+      return NextResponse.json(
+        { message: 'All fields are required.' },
+        { status: 400 }
+      );
     }
 
     const emailAddress = email[0].emailAddress;
@@ -45,6 +55,9 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error('Error adding seller:', error);
-    return NextResponse.json({ message: 'Internal Server Error.' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Internal Server Error.' },
+      { status: 500 }
+    );
   }
 }

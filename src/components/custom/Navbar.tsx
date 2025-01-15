@@ -1,7 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { Store, CircleUserRound, LogOut, ShoppingCart, LogInIcon as Logs, MapPin, CreditCard, UserRoundCog, UserRoundIcon as UserRoundPen, MoreVertical, Search,PersonStanding,Gem, Ban, FileCheck2,Kanban,ChartNoAxesGantt    } from 'lucide-react';
+import {
+  Store,
+  CircleUserRound,
+  LogOut,
+  ShoppingCart,
+  LogInIcon as Logs,
+  MapPin,
+  CreditCard,
+  UserRoundCog,
+  UserRoundIcon as UserRoundPen,
+  MoreVertical,
+  Search,
+  PersonStanding,
+  Gem,
+  Ban,
+  FileCheck2,
+  Kanban,
+  ChartNoAxesGantt,
+} from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,7 +51,7 @@ export default function Navbar() {
   const [isSeller, setIsSeller] = useState(false);
 
   const handleClick = async () => {
-    console.log("Clicked");
+    console.log('Clicked');
     try {
       if (!user) {
         console.error('User not authenticated');
@@ -54,7 +72,7 @@ export default function Navbar() {
     } catch (error) {
       console.error('Error hitting API:', error);
     }
-  }
+  };
   useEffect(() => {
     const checkSellerStatus = async () => {
       try {
@@ -75,7 +93,7 @@ export default function Navbar() {
   }, [user]);
 
   const userClick = async () => {
-    console.log("Clicked");
+    console.log('Clicked');
     router.refresh();
     try {
       const response = await axios.post('/api/delete', user);
@@ -91,10 +109,7 @@ export default function Navbar() {
         <div className="py-4 border-b border-slate-900/10 lg:px-8 lg:border-0 dark:border-slate-300/10 mx-4 lg:mx-0">
           <div className="relative flex items-center justify-between">
             {/* Left Section */}
-            <Link
-              href="/"
-              className="flex-none w-auto mr-3"
-            >
+            <Link href="/" className="flex-none w-auto mr-3">
               <span className="sr-only">Market home page</span>
               <span className="text-black dark:text-white text-xl md:text-2xl font-bold">
                 MarketVerse
@@ -117,180 +132,177 @@ export default function Navbar() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild >
-                    <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8" >
-                        <AvatarImage src={user.imageUrl || ''} alt={user.firstName || 'User'} />
-                        <AvatarFallback>{user.firstName?.charAt(0) || 'U'}</AvatarFallback>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative h-8 w-8 rounded-full"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage
+                          src={user.imageUrl || ''}
+                          alt={user.firstName || 'User'}
+                        />
+                        <AvatarFallback>
+                          {user.firstName?.charAt(0) || 'U'}
+                        </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
 
                   {!isSeller ? (
-                  <DropdownMenuContent className="w-56" align="end">
-                    <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuContent className="w-56" align="end">
+                      <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
 
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        View Profile
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          View Profile
+                          <DropdownMenuShortcut>
+                            <UserRoundPen size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          Update Profile
+                          <DropdownMenuShortcut>
+                            <UserRoundCog size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          Payment Method
+                          <DropdownMenuShortcut>
+                            <CreditCard size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          Address
+                          <DropdownMenuShortcut>
+                            <MapPin size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+
+                      <DropdownMenuSeparator />
+
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>Quick Links</DropdownMenuItem>
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                            More Options
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>
+                                Cart
+                                <DropdownMenuShortcut>
+                                  <ShoppingCart size={15} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                WishLists
+                                <DropdownMenuShortcut>
+                                  <Logs size={16} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>Order</DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Explore Products
+                              </DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                      </DropdownMenuGroup>
+                      <DropdownMenuItem disabled>Exclusive</DropdownMenuItem>
+
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => signOut()}>
+                        Log out
                         <DropdownMenuShortcut>
-                          <UserRoundPen size={16} />
+                          <LogOut size={15} />
                         </DropdownMenuShortcut>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        Update Profile
-                        <DropdownMenuShortcut>
-                          <UserRoundCog size={16} />
-                        </DropdownMenuShortcut>
+
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => handleClick()}>
+                        Become a Seller
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        Payment Method
-                        <DropdownMenuShortcut>
-                          <CreditCard size={16} />
-                        </DropdownMenuShortcut>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        Address
-                        <DropdownMenuShortcut>
-                          <MapPin size={16} />
-                        </DropdownMenuShortcut>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Quick Links</DropdownMenuItem>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                          More Options
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>
-                              Cart
-                              <DropdownMenuShortcut>
-                                <ShoppingCart size={15} />
-                              </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              WishLists
-                              <DropdownMenuShortcut>
-                                <Logs size={16} />
-                              </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>Order</DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Explore Products
-                            </DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    </DropdownMenuGroup>
-                    <DropdownMenuItem disabled>Exclusive</DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut()}>
-                      Log out
-                      <DropdownMenuShortcut>
-                        <LogOut size={15} />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => handleClick()}>
-                      Become a Seller
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
+                    </DropdownMenuContent>
                   ) : (
                     <DropdownMenuContent className="w-56" align="end">
                       <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
 
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-
-
-                      <DropdownMenuItem>
-                        View Profile
-                        <DropdownMenuShortcut>
-                          <UserRoundPen size={16} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    
-
-                    <DropdownMenuItem>
-                        View Listed Products
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                          Orders
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                        <DropdownMenuSubContent>
                         <DropdownMenuItem>
-                              Previews Orders
-                              <DropdownMenuShortcut className='pl-12'>
-                              <ChartNoAxesGantt size={16} />
-                        </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Pending Orders
-                              <DropdownMenuShortcut>
-                              <Kanban  size={16} />
-                        </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Completed Orders
-                            </DropdownMenuItem>
-                            
-                            <DropdownMenuItem>
-                              Accept Orders
-                              <DropdownMenuShortcut>
-                              <FileCheck2  size={16} />
-                        </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Decline Orders
-                              <DropdownMenuShortcut>
-                              <Ban size={16} />
-                        </DropdownMenuShortcut>
-                            </DropdownMenuItem>
+                          View Profile
+                          <DropdownMenuShortcut>
+                            <UserRoundPen size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
 
+                        <DropdownMenuItem>
+                          View Listed Products
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                            Orders
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>
+                                Previews Orders
+                                <DropdownMenuShortcut className="pl-12">
+                                  <ChartNoAxesGantt size={16} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Pending Orders
+                                <DropdownMenuShortcut>
+                                  <Kanban size={16} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Completed Orders
+                              </DropdownMenuItem>
 
-                        </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
+                              <DropdownMenuItem>
+                                Accept Orders
+                                <DropdownMenuShortcut>
+                                  <FileCheck2 size={16} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Decline Orders
+                                <DropdownMenuShortcut>
+                                  <Ban size={16} />
+                                </DropdownMenuShortcut>
+                              </DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
                         </DropdownMenuSub>
 
+                        <DropdownMenuItem>List a Product</DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                        List a Product
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        Payment Details
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          Payment Details
+                          <DropdownMenuShortcut>
+                            <Gem size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuItem disabled>Inclusive</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => userClick()}>
+                        Become a Buyer
                         <DropdownMenuShortcut>
-                        <Gem size={16}/>
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-
-                    </DropdownMenuGroup>
-                    <DropdownMenuItem disabled>Inclusive</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => userClick()}>
-                        Become a Buyer 
-                        <DropdownMenuShortcut>
-                        <PersonStanding size={16}/>
+                          <PersonStanding size={16} />
                         </DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
-                    
-                  )
-                } 
+                  )}
                 </DropdownMenu>
-                
               ) : (
                 <>
                   {/* Desktop View */}
@@ -305,12 +317,12 @@ export default function Navbar() {
                       </Button>
                     </SignInButton>
                     <SignInButton>
-                    <Button
-                      size="sm"
-                      className="bg-black hover:bg-zinc-400 text-white hover:text-black"
-                    >
-                      <Store className="mr-2 h-4 w-4" /> Become a Seller
-                    </Button>
+                      <Button
+                        size="sm"
+                        className="bg-black hover:bg-zinc-400 text-white hover:text-black"
+                      >
+                        <Store className="mr-2 h-4 w-4" /> Become a Seller
+                      </Button>
                     </SignInButton>
                   </div>
                   {/* Mobile View */}
@@ -335,14 +347,14 @@ export default function Navbar() {
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/auth/login">
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start"
-                          >
-                            <Store className="mr-2 h-4 w-4" />
-                            <span>Become a Seller</span>
-                          </Button>
-                          </Link> 
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start"
+                            >
+                              <Store className="mr-2 h-4 w-4" />
+                              <span>Become a Seller</span>
+                            </Button>
+                          </Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -356,4 +368,3 @@ export default function Navbar() {
     </nav>
   );
 }
-

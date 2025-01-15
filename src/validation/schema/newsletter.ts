@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 export const NewsLetterSchema = z.object({
@@ -6,7 +5,7 @@ export const NewsLetterSchema = z.object({
     .string()
     .email('Invalid email')
     .nonempty('Email is required')
-    .min(10, 'Email is too short')
+    .min(10, 'Email is too short'),
 });
 
 export type NewsLetterType = z.infer<typeof NewsLetterSchema>;

@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuShortcut
+  DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 
@@ -23,15 +23,16 @@ export default function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light  <DropdownMenuShortcut>
-                        <Sun size={15}/>
-                        </DropdownMenuShortcut>
+          Light{' '}
+          <DropdownMenuShortcut>
+            <Sun size={15} />
+          </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('dark')}>
-          Dark 
+          Dark
           <DropdownMenuShortcut>
-                        <Moon size={15}/>
-                        </DropdownMenuShortcut>
+            <Moon size={15} />
+          </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
           System

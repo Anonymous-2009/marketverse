@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  # marketverse:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     # image: anonymous2009/client:latest
+  #   container_name: marketverse
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - postgres
+  #   env_file:
+  #     - .env.local # Reference the .env file
+  #   networks:
+  #     - marketverse
+
+  postgres:
+    image: postgres:latest
+    container_name: marketverse-database
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: marketverse
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U root']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5400:5432'
+    volumes:
+      - marketverse-data:/var/lib/postgresql/data
+    networks:
+      - marketverse
+
+networks:
+  marketverse:
+    driver: bridge
+
+volumes:
+  marketverse-data:

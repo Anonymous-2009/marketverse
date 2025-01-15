@@ -5,7 +5,7 @@ import Navbar from '@/components/custom/Navbar';
 import Footer from '@/components/custom/Footer';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

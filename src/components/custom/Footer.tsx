@@ -7,14 +7,14 @@ import Link from 'next/link';
 import ThemeToggle from './Theme-Toggle';
 import axios from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsLetterType, NewsLetterSchema } from '../../validation';
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
+import { useToast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import TypedText from './TypedText';
 
 export default function Footer() {
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const {
     register,
@@ -24,27 +24,25 @@ export default function Footer() {
   } = useForm<NewsLetterType>({
     resolver: zodResolver(NewsLetterSchema),
   });
-  
+
   const handleClick: SubmitHandler<NewsLetterType> = async (data) => {
     try {
       const response = await axios.post('/api/newsletter', data);
       const result = response.data;
       // console.log("Response:", result);
       toast({
-        title: "Message",
+        title: 'Message',
         description: result.message,
-        action: (
-          <ToastAction altText="OK">OK</ToastAction>
-        ),
-      })
+        action: <ToastAction altText="OK">OK</ToastAction>,
+      });
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error);
       toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
+      });
     } finally {
       reset();
     }
@@ -55,13 +53,14 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-1">
-            <span className="text-2xl"> 
-            <TypedText
-        strings={['MarketVerse']}
-        typeSpeed={120}
-        backSpeed={100}
-        loop={true}/>
-         </span>
+            <span className="text-2xl">
+              <TypedText
+                strings={['MarketVerse']}
+                typeSpeed={120}
+                backSpeed={100}
+                loop={true}
+              />
+            </span>
           </div>
 
           <div>
