@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Store, CircleUserRound, LogOut, ShoppingCart, LogInIcon as Logs, MapPin, CreditCard, UserRoundCog, UserRoundIcon as UserRoundPen, MoreVertical, Search } from 'lucide-react';
+import { Store, CircleUserRound, LogOut, ShoppingCart, LogInIcon as Logs, MapPin, CreditCard, UserRoundCog, UserRoundIcon as UserRoundPen, MoreVertical, Search,PersonStanding,Gem, Ban, FileCheck2,Kanban,ChartNoAxesGantt    } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -208,27 +208,83 @@ export default function Navbar() {
                       <DropdownMenuLabel>My Account Details</DropdownMenuLabel>
 
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => userClick()}>
-                        Become a Buyyer
-                      </DropdownMenuItem>
+                      <DropdownMenuGroup>
+
+
                       <DropdownMenuItem>
                         View Profile
+                        <DropdownMenuShortcut>
+                          <UserRoundPen size={16} />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
+                    
+
                     <DropdownMenuItem>
                         View Listed Products
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Preview Orders
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Update Profile
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          Orders
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                        <DropdownMenuItem>
+                              Previews Orders
+                              <DropdownMenuShortcut className='pl-12'>
+                              <ChartNoAxesGantt size={16} />
+                        </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Pending Orders
+                              <DropdownMenuShortcut>
+                              <Kanban  size={16} />
+                        </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Completed Orders
+                            </DropdownMenuItem>
+                            
+                            <DropdownMenuItem>
+                              Accept Orders
+                              <DropdownMenuShortcut>
+                              <FileCheck2  size={16} />
+                        </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Decline Orders
+                              <DropdownMenuShortcut>
+                              <Ban size={16} />
+                        </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+
+
+                        </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                        </DropdownMenuSub>
+
+
                     <DropdownMenuItem>
                         List a Product
                     </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                        Payment Method
+                        Payment Details
+                        <DropdownMenuShortcut>
+                        <Gem size={16}/>
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
+
+                    </DropdownMenuGroup>
+                    <DropdownMenuItem disabled>Inclusive</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => userClick()}>
+                        Become a Buyer 
+                        <DropdownMenuShortcut>
+                        <PersonStanding size={16}/>
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                     
                   )
