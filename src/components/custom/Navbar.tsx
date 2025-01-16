@@ -233,12 +233,14 @@ export default function Navbar() {
 
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
+                          <Link href="/dashboard/profile">
                         <DropdownMenuItem>
                           View Profile
                           <DropdownMenuShortcut>
                             <UserRoundPen size={16} />
                           </DropdownMenuShortcut>
                         </DropdownMenuItem>
+                          </Link>
 
                         <DropdownMenuItem>
                           View Listed Products
