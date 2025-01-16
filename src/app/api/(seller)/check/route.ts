@@ -17,7 +17,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch the seller from the database
+    // // Fetch the seller from the database
+    // const seller = await db
+    //   .select()
+    //   .from(sellersTable)
+    //   .where(and(eq(sellersTable.uniqueId, id), eq(sellersTable.isSeller, true)))
+    //   .limit(1);
     const seller = await db
       .select()
       .from(sellersTable)

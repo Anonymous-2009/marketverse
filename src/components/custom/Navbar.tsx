@@ -64,6 +64,7 @@ export default function Navbar() {
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,
+        imageURL: user.imageUrl,
       };
 
       const response = await axios.post('/api/login', data);
@@ -77,10 +78,12 @@ export default function Navbar() {
     const checkSellerStatus = async () => {
       try {
         const response = await axios.post('/api/check', user);
-        console.log('API Response:', response.data);
+        console.log('API Response:', response.data.isSeller);
 
         if (response.data.isSeller) {
           setIsSeller(true);
+        } else {
+          setIsSeller(false);
         }
       } catch (error) {
         console.error('Error:', error);
@@ -233,14 +236,14 @@ export default function Navbar() {
 
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                          <Link href="/dashboard/profile">
-                        <DropdownMenuItem>
-                          View Profile
-                          <DropdownMenuShortcut>
-                            <UserRoundPen size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                          </Link>
+                        <Link href="/dashboard/profile">
+                          <DropdownMenuItem>
+                            View Profile
+                            <DropdownMenuShortcut>
+                              <UserRoundPen size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </Link>
 
                         <DropdownMenuItem>
                           View Listed Products

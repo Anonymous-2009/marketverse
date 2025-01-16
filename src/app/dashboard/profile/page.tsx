@@ -1,41 +1,41 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Upload, User, Mail, Phone } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { Upload, User, Mail, Phone } from 'lucide-react';
 
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+} from '@/components/ui/select';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Card, CardContent } from '@/components/ui/card'
-import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton'
+} from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton';
 
 export default function ProfilePage() {
-  const [profileData, setProfileData] = useState(null)
-  const [formData, setFormData] = useState(null)
-  const [isOpen, setIsOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [profileData, setProfileData] = useState(null);
+  const [formData, setFormData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Simulating API call
     const fetchProfileData = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const data = {
         firstName: 'John',
         lastName: 'Doe',
@@ -43,60 +43,60 @@ export default function ProfilePage() {
         email: 'john.doe@example.com',
         phone: '+1234567890',
         gender: 'male',
-        avatar: '/placeholder.svg?height=96&width=96'
-      }
-      setProfileData(data)
-      setFormData(data)
-      setIsLoading(false)
-    }
+        avatar: '/placeholder.svg?height=96&width=96',
+      };
+      setProfileData(data);
+      setFormData(data);
+      setIsLoading(false);
+    };
 
-    fetchProfileData()
-  }, [])
+    fetchProfileData();
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleGenderChange = (value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      gender: value
-    }))
-  }
+      gender: value,
+    }));
+  };
 
   const handleAvatarUpload = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          avatar: reader.result
-        }))
-      }
-      reader.readAsDataURL(file)
+          avatar: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // Here you would normally make an API call
-    setProfileData(formData)
-    setIsOpen(false)
-  }
+    setProfileData(formData);
+    setIsOpen(false);
+  };
 
   if (isLoading) {
-    return <ProfileSkeleton />
+    return <ProfileSkeleton />;
   }
 
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Profile Information</h1>
+        <h1 className="text-3xl font-bold">Seller Profile Information</h1>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button>Update Profile</Button>
@@ -184,7 +184,10 @@ export default function ProfilePage() {
 
                 <div className="space-y-2">
                   <Label>Gender</Label>
-                  <Select onValueChange={handleGenderChange} value={formData.gender}>
+                  <Select
+                    onValueChange={handleGenderChange}
+                    value={formData.gender}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a gender" />
                     </SelectTrigger>
@@ -192,13 +195,17 @@ export default function ProfilePage() {
                       <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
-                      <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                      <SelectItem value="prefer-not-to-say">
+                        Prefer not to say
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <Button type="submit" className="w-full">Save Changes</Button>
+              <Button type="submit" className="w-full">
+                Save Changes
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -218,12 +225,16 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12">
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Full Name</p>
-                    <p className="text-lg font-medium">{profileData.firstName} {profileData.lastName}</p>
+                    <p className="text-lg font-medium">
+                      {profileData.firstName} {profileData.lastName}
+                    </p>
                   </div>
 
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Age</p>
-                    <p className="text-lg font-medium">{profileData.age} years</p>
+                    <p className="text-lg font-medium">
+                      {profileData.age} years
+                    </p>
                   </div>
 
                   <div className="space-y-1">
@@ -246,7 +257,9 @@ export default function ProfilePage() {
                     <p className="text-sm text-muted-foreground">Gender</p>
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-muted-foreground" />
-                      <p className="text-lg font-medium capitalize">{profileData.gender}</p>
+                      <p className="text-lg font-medium capitalize">
+                        {profileData.gender}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -256,6 +269,5 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-

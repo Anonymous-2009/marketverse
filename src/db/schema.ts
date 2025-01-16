@@ -6,7 +6,7 @@ import {
   time,
   varchar,
   boolean,
-  integer
+  integer,
 } from 'drizzle-orm/pg-core';
 
 // Define your table
@@ -45,20 +45,23 @@ export interface Seller {
 }
 
 export const sellersInfoTable = pgTable('sellers_info', {
-  id: serial("id").primaryKey(),
-  firstName: varchar("firstName", { length: 50 }).notNull(),
-  lastName: varchar("lastName", { length: 50 }).notNull(),
-  age: integer("age").notNull(),
-  email: varchar("email", { length: 100 }).notNull().unique(),
-  phoneNo: varchar("phoneNo", { length: 15 }).notNull().unique(),
-  gender: varchar("gender", { length: 10 }).notNull(),
-  profileImageUrl: varchar("profileImageUrl", { length: 255 }),
-  createdAt: date("createdAt").defaultNow().notNull(),
-  updatedAt: date("updatedAt").defaultNow().notNull()
+  id: serial('id').primaryKey(),
+  uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
+  firstName: varchar('firstName', { length: 50 }).notNull(),
+  lastName: varchar('lastName', { length: 50 }).notNull(),
+  username: varchar('username', { length: 50 }).notNull(),
+  age: integer('age').notNull(),
+  email: varchar('email', { length: 100 }).notNull().unique(),
+  phoneNo: integer('phoneNo').notNull().unique(),
+  gender: varchar('gender', { length: 10 }),
+  profileImageUrl: varchar('profileImageUrl', { length: 255 }),
+  createdAt: date('createdAt').defaultNow().notNull(),
+  updatedAt: date('updatedAt').defaultNow().notNull(),
 });
 
 export interface SellerInfo {
   id: number;
+  uniqueId: string;
   firstName: string;
   lastName: string;
   age: number;

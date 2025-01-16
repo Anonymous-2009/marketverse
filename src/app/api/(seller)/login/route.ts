@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { sellersTable } from '@/db/schema';
+import { sellersTable, sellersInfoTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { userId, email, firstName, lastName, username } = body;
+    const { userId, email, firstName, lastName, username, imageURL } = body;
 
     // Validate input
     if (
@@ -39,8 +39,21 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    const info: typeof sellersInfoTable.$inferInsert = {
+      uniqueId: userId,
+      firstName,
+      lastName,
+      age: 0,
+      email: emailAddress,
+      username,
+      phoneNo: 0,
+      gender: null,
+      profileImageUrl: imageURL,
+    };
+    await db.insert(sellersInfoTable).values(info);
 
     // Insert data into sellers table
+
     const newSeller = await db.insert(sellersTable).values({
       email: emailAddress,
       uniqueId: userId,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { sellersTable } from '@/db/schema';
+import { sellersTable, sellersInfoTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
@@ -35,7 +35,14 @@ export async function POST(req: NextRequest) {
     await db
       .delete(sellersTable)
       .where(eq(sellersTable.email, body.primaryEmailAddress.emailAddress));
-
+    // empty the sellersInfoTable for the seller
+    await db
+      .delete(sellersInfoTable)
+      .where(eq(sellersInfoTable.email, body.primaryEmailAddress.emailAddress));
+    //     await db
+    // .update(sellersTable)
+    // .set({ isSeller: false })
+    // .where(eq(sellersTable.email, body.primaryEmailAddress.emailAddress));
     return NextResponse.json(
       {
         message: `Seller with email '${body.primaryEmailAddress.emailAddress}' has been deleted successfully.`,
