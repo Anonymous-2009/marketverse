@@ -52,11 +52,11 @@ export const sellersInfoTable = pgTable('sellers_info', {
   username: varchar('username', { length: 50 }).notNull(),
   age: integer('age').notNull(),
   email: varchar('email', { length: 100 }).notNull().unique(),
-  phoneNo: integer('phoneNo').notNull().unique(),
+  phoneNo: integer('phone_no').notNull().unique(),
   gender: varchar('gender', { length: 10 }),
-  profileImageUrl: varchar('profileImageUrl', { length: 255 }),
-  createdAt: date('createdAt').defaultNow().notNull(),
-  updatedAt: date('updatedAt').defaultNow().notNull(),
+  profileImageUrl: varchar('profile_image_url', { length: 255 }),
+  createdAt: date('created_at').defaultNow().notNull(),
+  updatedAt: date('updateda_t').defaultNow().notNull(),
 });
 
 export interface SellerInfo {

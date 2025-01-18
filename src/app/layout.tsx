@@ -6,6 +6,7 @@ import Footer from '@/components/custom/Footer';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/toaster';
+import Providers from './providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,24 +29,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+    <Providers>
+      <ClerkProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
-            <Navbar />
-            {children}
-            <Toaster />
-            <Footer />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              {children}
+              <Toaster />
+              <Footer />
+            </ThemeProvider>
+          </body>
+        </html>
+      </ClerkProvider>
+    </Providers>
   );
 }

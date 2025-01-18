@@ -78,7 +78,7 @@ export default function Navbar() {
     const checkSellerStatus = async () => {
       try {
         const response = await axios.post('/api/check', user);
-        console.log('API Response:', response.data.isSeller);
+        // console.log('API Response:', response.data.isSeller);
 
         if (response.data.isSeller) {
           setIsSeller(true);
