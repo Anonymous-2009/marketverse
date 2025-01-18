@@ -10,7 +10,7 @@ interface CloudinaryUploadResponse {
   [key: string]: any; // Add more properties if needed
 }
 
-export async function POST(request: NextRequest) {
+export async function PUT(request: NextRequest) {
     try {
       const formData = await request.formData();
       const file = formData.get('file');

@@ -20,6 +20,7 @@ export const updateSchema = z.object({
     required_error: 'Please select a gender',
   }),
   profileImageUrl: z.string().optional(),
+  email: z.string().optional()
 });
 
 export type updateType = z.infer<typeof updateSchema>;
