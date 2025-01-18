@@ -30,7 +30,7 @@ export const sellersTable = pgTable('sellers', {
   uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
   username: varchar('username', { length: 50 }).notNull(),
   firstName: varchar('first_name', { length: 50 }).notNull(),
-  lastName: varchar('last_name', { length: 50 }).notNull(),
+  lastName: varchar('last_name', { length: 50 }),
   isSeller: boolean('is_seller').default(true),
 });
 
@@ -48,7 +48,7 @@ export const sellersInfoTable = pgTable('sellers_info', {
   id: serial('id').primaryKey(),
   uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
   firstName: varchar('firstName', { length: 50 }).notNull(),
-  lastName: varchar('lastName', { length: 50 }).notNull(),
+  lastName: varchar('lastName', { length: 50 }),
   username: varchar('username', { length: 50 }).notNull(),
   age: integer('age').notNull(),
   email: varchar('email', { length: 100 }).notNull().unique(),

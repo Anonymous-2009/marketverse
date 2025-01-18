@@ -8,14 +8,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { userId, email, firstName, lastName, username, imageURL } = body;
-
+    console.log(body)
     // Validate input
     if (
       !userId ||
       !email ||
       !email[0]?.emailAddress ||
       !firstName ||
-      !lastName ||
       !username
     ) {
       return NextResponse.json(
