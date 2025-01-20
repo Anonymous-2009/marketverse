@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=builder /home/marketverse/.next ./.next
 COPY --from=builder /home/marketverse/node_modules ./node_modules
 COPY --from=builder /home/marketverse/package.json .
-COPY --from=builder /home/marketverse/package-lock.json .
+COPY --from=builder /home/marketverse/yarn.lock .
 
 # Expose ports
 EXPOSE 3000

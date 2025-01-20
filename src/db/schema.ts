@@ -7,6 +7,8 @@ import {
   varchar,
   boolean,
   integer,
+  numeric,
+  json
 } from 'drizzle-orm/pg-core';
 
 // Define your table
@@ -56,7 +58,7 @@ export const sellersInfoTable = pgTable('sellers_info', {
   gender: varchar('gender', { length: 10 }),
   profileImageUrl: varchar('profile_image_url', { length: 255 }),
   createdAt: date('created_at').defaultNow().notNull(),
-  updatedAt: date('updateda_t').defaultNow().notNull(),
+  updatedAt: date('updated_at').defaultNow().notNull(),
 });
 
 export interface SellerInfo {
@@ -72,3 +74,13 @@ export interface SellerInfo {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export const products = pgTable('products', {
+  id: serial('id'),
+  productId: numeric('product_id').primaryKey().notNull(), // 5-digit ID
+  sellerId: serial('seller_id').notNull(), // Unique ID for each seller
+  productName: varchar('product_name', { length: 255 }).notNull(), // Name of the product
+  productPrice: numeric('product_price', { precision: 10, scale: 2 }).notNull(), // Price of the product
+  productDescription: text('product_description').notNull(), // Description of the product
+  productImages: json('product-images').array().notNull(), // Array of product image URLs
+});

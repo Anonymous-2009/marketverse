@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const updateSchema = z.object({
-    firstName: z
+  firstName: z
     .string()
     .min(2, { message: 'First name must be at least 2 characters' })
     .max(50, { message: 'First name must not exceed 50 characters' }),
@@ -20,7 +20,7 @@ export const updateSchema = z.object({
     required_error: 'Please select a gender',
   }),
   profileImageUrl: z.string().optional(),
-  email: z.string().optional()
+  email: z.string().optional(),
 });
 
 export type updateType = z.infer<typeof updateSchema>;

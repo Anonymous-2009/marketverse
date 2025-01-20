@@ -7,3 +7,10 @@ cloudinary.config({
 });
 
 export default cloudinary;
+
+export const uploadImage = async (file: string) => {
+  const result = await cloudinary.uploader.upload(file, {
+    folder: 'product-images',
+  });
+  return result.secure_url;
+};

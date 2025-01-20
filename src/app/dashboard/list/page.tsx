@@ -1,7 +1,19 @@
-import React from 'react';
+'use client';
+import ProductForm from "./Product";
+import { useUser } from '@clerk/nextjs';
+import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
 
-const List = () => {
-  return <div>List a products </div>;
-};
+export default function Page() {
+  const { user, isLoaded } = useUser();
 
-export default List;
+  if (!isLoaded) {
+    return <ProfileSkelCreateProductSkeleton />
+  }
+
+  return (
+    <div className="container mx-auto py-10">
+      <ProductForm email={user?.primaryEmailAddress?.emailAddress} sellerId={user?.id}/>
+    </div>
+  )
+}
+

@@ -287,7 +287,12 @@ export default function Navbar() {
                           </DropdownMenuPortal>
                         </DropdownMenuSub>
 
-                        <DropdownMenuItem>List a Product</DropdownMenuItem>
+                          <Link href='/dashboard/list'>
+                        <DropdownMenuItem>
+                          
+                          List a Product
+                          </DropdownMenuItem>
+                          </Link>
 
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>

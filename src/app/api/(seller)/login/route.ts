@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { userId, email, firstName, lastName, username, imageURL } = body;
-    console.log(body)
+    console.log(body);
     // Validate input
     if (
       !userId ||

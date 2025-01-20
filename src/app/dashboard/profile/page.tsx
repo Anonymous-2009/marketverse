@@ -5,15 +5,15 @@ import Profile from './Profile';
 import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton';
 
 export default function ProfilePage() {
-  const { user, isLoaded  } = useUser();
+  const { user, isLoaded } = useUser();
 
-  if(isLoaded) {
-    return <Profile email={user?.primaryEmailAddress?.emailAddress}/>
+  if (isLoaded) {
+    return <Profile email={user?.primaryEmailAddress?.emailAddress} />;
   }
 
   return (
     <div>
-    <ProfileSkeleton />
+      <ProfileSkeleton />
     </div>
   );
 }
