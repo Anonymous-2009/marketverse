@@ -1,7 +1,47 @@
 {
   "name": "marketverse",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
+  "main": "src/app/layout.tsx",
+  "description": "Marketverse is a platform that allows users to create and manage their own virtual marketplaces.",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "tailwindcss",
+    "next",
+    "lucide-react",
+    "typescript",
+    "axios",
+    "zod",
+    "yarn",
+    "vercel",
+    "cloudinary",
+    "nodemailer",
+    "node-cron",
+    "drizzle-orm",
+    "clsx",
+    "date-fns",
+    "typed.js",
+    "tailwind-merge",
+    "tailwindcss-animate",
+    "react-hook-form",
+    "docker",
+    "postgresql",
+    "docker-compose"
+  ],
+  "author": {
+    "name": "Anonymous",
+    "email": "anonymous292009@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "version": ">=2.46.2",
+    "url": "https://github.com/Anonymous-2009/marketverse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Anonymous-2009/marketverse/issues"
+  },
+  "homepage": "https://github.com/Anonymous-2009/marketverse#readme",
   "scripts": {
     "format": "prettier --write .",
     "dev": "next dev --turbopack",
