@@ -77,10 +77,11 @@ export interface SellerInfo {
 
 export const products = pgTable('products', {
   id: serial('id'),
-  productId: numeric('product_id').primaryKey().notNull(), // 5-digit ID
-  sellerId: serial('seller_id').notNull(), // Unique ID for each seller
+  productId: integer('product_id').primaryKey().notNull(), // 5-digit ID
+  sellerId: varchar('seller_id').notNull(), // Unique ID for each seller
+  sellerEmail: varchar('seller_email').notNull(), // Email of the seller
   productName: varchar('product_name', { length: 255 }).notNull(), // Name of the product
-  productPrice: numeric('product_price', { precision: 10, scale: 2 }).notNull(), // Price of the product
+  productPrice: integer('product_price').notNull(), // Price of the product
   productDescription: text('product_description').notNull(), // Description of the product
   productImages: json('product-images').array().notNull(), // Array of product image URLs
 });

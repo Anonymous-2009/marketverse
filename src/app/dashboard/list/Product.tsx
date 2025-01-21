@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { X, Upload, Image as ImageIcon } from 'lucide-react'
 import axios from 'axios'
+import { useToast } from "@/hooks/use-toast"
 
 export interface ProductFormData {
   productName: string;
@@ -19,6 +20,7 @@ export interface ProductFormData {
 }
 
 export default function CreateProduct({ email, sellerId }: any) {
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedImages, setSelectedImages] = useState<File[]>([])
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
@@ -108,13 +110,17 @@ export default function CreateProduct({ email, sellerId }: any) {
 
     try {
       const response = await axios.post('/api/add-product', formData)
-      console.log(response.data)
+      // console.log(response.data)
+      toast({
+        title: "Message",
+        description: response.data.message,
+      })
       previewUrls.forEach(url => URL.revokeObjectURL(url))
       setSelectedImages([])
       setPreviewUrls([])
     } catch (error) {
       console.error('Error creating product:', error)
-      alert('Failed to list a product')
+      // alert('Failed to list a product')
     } finally {
       setIsSubmitting(false)
     }
