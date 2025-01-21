@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { db } from '@/db/index';
-import { newsletterTable } from '@/db/schema'
+import { newsletterTable } from '@/db/schema';
 import cron from 'node-cron';
 
 // Configure nodemailer
@@ -39,7 +39,7 @@ async function sendWeeklyNewsletter() {
         ...mailOptions,
         to: subscriber.email,
       });
-      
+
       console.log(`Newsletter sent to ${subscriber.email}`);
     }
 
@@ -51,11 +51,15 @@ async function sendWeeklyNewsletter() {
 }
 
 // Schedule the task to run every Monday at 10 AM
-cron.schedule('0 10 * * 1', async () => {
-  await sendWeeklyNewsletter();
-}, {
-  timezone: "UTC"
-});
+cron.schedule(
+  '0 10 * * 1',
+  async () => {
+    await sendWeeklyNewsletter();
+  },
+  {
+    timezone: 'UTC',
+  }
+);
 
 // API route handler
 export async function GET() {

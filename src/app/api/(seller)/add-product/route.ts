@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     // Get and validate the price first
     const rawPrice = body.get('productPrice');
     const productPrice = Number(rawPrice);
-    
+
     // Validate price - uncomment and modify these checks as needed
     if (isNaN(productPrice) || productPrice <= 0) {
       return NextResponse.json(
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     function generateFiveDigitCode() {
       return Math.floor(10000 + Math.random() * 90000);
     }
-    const productId = generateFiveDigitCode();  // Note: removed toString()
+    const productId = generateFiveDigitCode(); // Note: removed toString()
 
     // Upload all images to Cloudinary
     const uploadPromises = productImages.map(async (image: any) => {
@@ -70,8 +70,8 @@ export async function POST(req: NextRequest) {
     // Prepare the product data
     const info: typeof products.$inferInsert = {
       productName: body.get('productName') as string,
-      productId,  // Now it's a number, matching the schema
-      sellerId: body.get('sellerID') as string,   // Already validated as a number
+      productId, // Now it's a number, matching the schema
+      sellerId: body.get('sellerID') as string, // Already validated as a number
       sellerEmail: body.get('sellerEmail') as string,
       productPrice: Math.floor(productPrice), // Ensure it's an integer
       productDescription: body.get('productDescription') as string,

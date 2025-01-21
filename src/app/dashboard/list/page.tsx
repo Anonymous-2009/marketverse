@@ -1,5 +1,5 @@
 'use client';
-import ProductForm from "./Product";
+import ProductForm from './Product';
 import { useUser } from '@clerk/nextjs';
 import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
 
@@ -7,13 +7,15 @@ export default function Page() {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
-    return <ProfileSkelCreateProductSkeleton />
+    return <ProfileSkelCreateProductSkeleton />;
   }
 
   return (
     <div className="container mx-auto py-10">
-      <ProductForm email={user?.primaryEmailAddress?.emailAddress} sellerId={user?.id}/>
+      <ProductForm
+        email={user?.primaryEmailAddress?.emailAddress}
+        sellerId={user?.id}
+      />
     </div>
-  )
+  );
 }
-

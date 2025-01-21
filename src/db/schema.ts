@@ -8,7 +8,7 @@ import {
   boolean,
   integer,
   numeric,
-  json
+  json,
 } from 'drizzle-orm/pg-core';
 
 // Define your table

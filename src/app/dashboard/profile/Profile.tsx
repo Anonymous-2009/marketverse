@@ -72,7 +72,7 @@ const Profile = ({ email }: any) => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('email', email);
-  
+
       const response = await axios.put('/api/upload', formData);
       const data = await response.data;
       toast({

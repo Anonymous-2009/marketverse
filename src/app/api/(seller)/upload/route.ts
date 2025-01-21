@@ -58,11 +58,14 @@ export async function PUT(request: NextRequest) {
       .where(eq(sellersInfoTable.email, email))
       .returning();
 
-    return NextResponse.json({
-      success: true,
-      url: result.secure_url,
-      message: 'file upload successfully',
-    }, { status: 200 });
+    return NextResponse.json(
+      {
+        success: true,
+        url: result.secure_url,
+        message: 'file upload successfully',
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });

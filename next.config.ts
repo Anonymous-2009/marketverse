@@ -5,6 +5,6 @@ const nextConfig = {
     // Warning: This disables ESLint during builds in production!
     ignoreDuringBuilds: true,
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
