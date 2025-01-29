@@ -50,7 +50,7 @@ export function ProductList({ email }: ProductListProps) {
   console.log(products);
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Our Products</h1>
+      <h1 className="text-3xl font-bold mb-6">your Products in market</h1>
       <div className="space-y-12">
         {products.map((product) => (
           <ProductDetail key={product.id} {...product} />

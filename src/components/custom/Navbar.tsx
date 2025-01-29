@@ -165,12 +165,7 @@ export default function Navbar() {
                             <UserRoundPen size={16} />
                           </DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          Update Profile
-                          <DropdownMenuShortcut>
-                            <UserRoundCog size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                      
                         <DropdownMenuItem>
                           Payment Method
                           <DropdownMenuShortcut>
@@ -244,10 +239,11 @@ export default function Navbar() {
                             </DropdownMenuShortcut>
                           </DropdownMenuItem>
                         </Link>
-
+                        <Link href="/dashboard/view">
                         <DropdownMenuItem>
                           View Listed Products
                         </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuSub>
                           <DropdownMenuSubTrigger>
