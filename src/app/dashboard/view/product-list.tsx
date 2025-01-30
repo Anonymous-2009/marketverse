@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { ProductDetail } from './product-detail';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface Product {
   id: number;
@@ -19,18 +21,7 @@ interface ProductListProps {
 }
 
 export function ProductList({ email }: ProductListProps) {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 0,
-      productId: 0,
-      sellerId: '',
-      sellerEmail: '',
-      productName: '',
-      productPrice: 0,
-      productDescription: '',
-      productImages: [],
-    },
-  ]); // Explicitly type the state
+  const [products, setProducts] = useState<Product[]>([]); // Explicitly type the state
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,14 +38,25 @@ export function ProductList({ email }: ProductListProps) {
     fetchProducts();
   }, [email]); // Dependency array listens for changes in email
 
-  console.log(products);
+  // console.log(products);
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">your Products in market</h1>
+      <h1 className="text-3xl font-bold mb-6">Your Products in Market</h1>
       <div className="space-y-12">
-        {products.map((product) => (
-          <ProductDetail key={product.id} {...product} />
-        ))}
+        {!products || products.length === 0 ? (
+          <div>
+            <p className="text-xl text-gray-600">No products listed yet.</p>
+            <Link href="/dashboard/list">
+              <Button variant="link" className="mt-4">
+                Click here to add product
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          products.map((product) => (
+            <ProductDetail key={product.id} {...product} />
+          ))
+        )}
       </div>
     </div>
   );

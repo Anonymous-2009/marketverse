@@ -52,13 +52,15 @@ export async function POST(req: NextRequest) {
 
       // Compress the image using Sharp
       const compressedImageBuffer = await sharp(buffer)
-        .resize(1080, 1080, { // Resize to maximum dimensions while maintaining aspect ratio
+        .resize(1080, 1080, {
+          // Resize to maximum dimensions while maintaining aspect ratio
           fit: 'inside',
-          withoutEnlargement: true
+          withoutEnlargement: true,
         })
-        .jpeg({ // Convert to JPEG and compress
+        .jpeg({
+          // Convert to JPEG and compress
           quality: 80, // Adjust quality (0-100)
-          mozjpeg: true // Use mozjpeg compression
+          mozjpeg: true, // Use mozjpeg compression
         })
         .toBuffer();
 
@@ -72,9 +74,9 @@ export async function POST(req: NextRequest) {
         transformation: [
           { quality: 'auto:good' }, // Let Cloudinary optimize quality
           { fetch_format: 'auto' }, // Automatically choose best format
-          { strip: true } // Strip unnecessary metadata
+          { strip: true }, // Strip unnecessary metadata
         ],
-        resource_type: 'image'
+        resource_type: 'image',
       });
 
       return result.secure_url;
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
     };
 
     const result = await db.insert(products).values(info);
-    
+
     return NextResponse.json(
       { message: 'Product successfully listed in MarketVerse' },
       { status: 201 }

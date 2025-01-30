@@ -165,7 +165,7 @@ export default function Navbar() {
                             <UserRoundPen size={16} />
                           </DropdownMenuShortcut>
                         </DropdownMenuItem>
-                      
+
                         <DropdownMenuItem>
                           Payment Method
                           <DropdownMenuShortcut>
@@ -240,9 +240,9 @@ export default function Navbar() {
                           </DropdownMenuItem>
                         </Link>
                         <Link href="/dashboard/view">
-                        <DropdownMenuItem>
-                          View Listed Products
-                        </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            View Listed Products
+                          </DropdownMenuItem>
                         </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuSub>

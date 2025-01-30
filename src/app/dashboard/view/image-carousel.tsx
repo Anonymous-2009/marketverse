@@ -31,14 +31,14 @@ export function ImageCarousel({
                 <div className="relative aspect-square md:aspect-[4/3] lg:aspect-[3/2]">
                   {/* Product Image */}
                   <Image
-  src={src || '/placeholder.svg'}
-  alt={`Product image ${index + 1}`}
-  fill
-  className="object-cover rounded-md"
-  quality={80}
-  loading="lazy" // ✅ Lazy loading enabled
-  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-/>
+                    src={src || '/placeholder.svg'}
+                    alt={`Product image ${index + 1}`}
+                    fill
+                    className="object-cover rounded-md"
+                    quality={80}
+                    loading="lazy" // ✅ Lazy loading enabled
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
 
                   {/* Arrows inside the image container */}
                   <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 text-white rounded-full hover:bg-black/70" />
