@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 export const fetchDataByEmail = async (email: string | undefined) => {
   try {
     const { data } = await axios.post('/api/details', { email });
