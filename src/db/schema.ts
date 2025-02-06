@@ -85,3 +85,12 @@ export const products = pgTable('products', {
   productDescription: text('product_description').notNull(), // Description of the product
   productImages: json('product-images').array().notNull(), // Array of product image URLs
 });
+
+export const paymentAccount = pgTable('paymentAccount', {
+  id: serial('id'),
+  accountUsername: varchar('account_username'),
+  accountNumber: numeric('account_number').primaryKey(),
+  sellerId: varchar('seller_id').notNull(), // Unique ID for each seller
+  sellerEmail: varchar('seller_email').notNull(), // Email of the seller
+  // isSeller: boolean('is_seller'), if future use or we check if the user is a seller or need to add this field
+});

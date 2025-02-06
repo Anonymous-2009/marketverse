@@ -288,12 +288,14 @@ export default function Navbar() {
                         </Link>
 
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                          Payment Details
-                          <DropdownMenuShortcut>
-                            <Gem size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                        <Link href="/dashboard/payment">
+                          <DropdownMenuItem>
+                            Payment Details
+                            <DropdownMenuShortcut>
+                              <Gem size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </Link>
                       </DropdownMenuGroup>
                       <DropdownMenuItem disabled>Inclusive</DropdownMenuItem>
                       <DropdownMenuSeparator />
