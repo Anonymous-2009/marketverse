@@ -57,7 +57,7 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
     }
 
     if (email) getData()
-  }, [email, toast, data])
+  }, [email, toast])
 
   const handleUnlink = async () => {
     try {

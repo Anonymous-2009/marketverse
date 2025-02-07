@@ -49,7 +49,7 @@ export default function Navbar() {
   const router = useRouter();
   const { signOut } = useClerk();
   const [isSeller, setIsSeller] = useState(false);
-
+// console.log('client user is here: ', user?.id);
   const handleClick = async () => {
     console.log('Clicked');
     try {

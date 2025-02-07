@@ -13,7 +13,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: 'all field are needed' });
 
   try {
-    const data = await axios.post('http://localhost:4000/auth/login', body);
+    const data = await axios.post('https://marketverse-banking.onrender.com/auth/login', body);
     const finalData = await data.data;
     console.log(data.data);
     console.log(data.data.user.accountNumber);
