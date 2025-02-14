@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { sellersTable, sellersInfoTable } from '@/db/schema';
+import { sellersTable, sellersInfoTable, buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
@@ -24,6 +24,16 @@ export async function POST(req: NextRequest) {
     }
 
     const emailAddress = email[0].emailAddress;
+
+    // Check if seller already exists
+    const existingBuyer = await db
+      .select()
+      .from(buyerProfile)
+      .where(eq(buyerProfile.email, emailAddress));
+
+    if (existingBuyer) {
+      await db.delete(buyerProfile).where(eq(buyerProfile.email, emailAddress));
+    }
 
     // Check if seller already exists
     const existingSeller = await db

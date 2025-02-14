@@ -3,7 +3,7 @@ import { fetchDataByEmail } from './fetchData';
 
 export const useFetchDataByEmail = (email: string | undefined) => {
   return useQuery({
-    queryKey: ['details', email],
+    queryKey: ['details-seller', email],
     queryFn: async () => {
       if (!email) return null;
       return await fetchDataByEmail(email); // Ensure this is an async function

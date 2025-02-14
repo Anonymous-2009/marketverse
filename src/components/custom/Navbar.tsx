@@ -49,7 +49,7 @@ export default function Navbar() {
   const router = useRouter();
   const { signOut } = useClerk();
   const [isSeller, setIsSeller] = useState(false);
-// console.log('client user is here: ', user?.id);
+  // console.log('client user is here: ', user?.id);
   const handleClick = async () => {
     console.log('Clicked');
     try {
@@ -159,12 +159,14 @@ export default function Navbar() {
                       <DropdownMenuSeparator />
 
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                          View Profile
-                          <DropdownMenuShortcut>
-                            <UserRoundPen size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                        <Link href="/common/profile">
+                          <DropdownMenuItem>
+                            View Profile
+                            <DropdownMenuShortcut>
+                              <UserRoundPen size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </Link>
 
                         <DropdownMenuItem>
                           Payment Method

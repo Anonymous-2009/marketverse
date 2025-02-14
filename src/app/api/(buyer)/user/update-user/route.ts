@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { sellersInfoTable } from '@/db/schema';
+import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { updateSchema } from '@/validation';
 
@@ -33,19 +33,19 @@ export async function PUT(req: NextRequest) {
     }
 
     // Check if buyer exists
-    const existingSeller = await db
+    const existingBuyer = await db
       .select()
-      .from(sellersInfoTable)
-      .where(eq(sellersInfoTable.email, data.email))
+      .from(buyerProfile)
+      .where(eq(buyerProfile.email, data.email))
       .limit(1);
 
-    if (!existingSeller.length) {
+    if (!existingBuyer.length) {
       return NextResponse.json({ message: 'Buyer not found' }, { status: 404 });
     }
 
     // Update buyer profile
     const result = await db
-      .update(sellersInfoTable)
+      .update(buyerProfile)
       .set({
         firstName: data.firstName,
         lastName: data.lastName,
@@ -54,7 +54,7 @@ export async function PUT(req: NextRequest) {
         gender: data.gender,
         updatedAt: new Date().toISOString(),
       })
-      .where(eq(sellersInfoTable.email, data.email))
+      .where(eq(buyerProfile.email, data.email))
       .returning();
 
     if (!result.length) {
@@ -63,7 +63,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'Seller updated successfully',
+        message: 'Buyer updated successfully',
         data: result[0],
       },
       { status: 200 }

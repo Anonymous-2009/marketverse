@@ -94,3 +94,31 @@ export const paymentAccount = pgTable('paymentAccount', {
   sellerEmail: varchar('seller_email').notNull(), // Email of the seller
   // isSeller: boolean('is_seller'), if future use or we check if the user is a seller or need to add this field
 });
+
+// here's come's the buyer detail's table's.
+
+export const buyerProfile = pgTable('buyerProfile', {
+  id: serial('id'),
+  uniqueId: varchar('unique_id', { length: 50 })
+    .notNull()
+    .unique()
+    .primaryKey(),
+  firstName: varchar('first_name', { length: 50 }).notNull(),
+  lastName: varchar('last_name', { length: 50 }),
+  username: varchar('username', { length: 50 }).notNull(),
+  age: integer('age').notNull(),
+  email: varchar('email', { length: 100 }).notNull().unique(),
+  phoneNo: integer('phone_no').notNull().unique(),
+  gender: varchar('gender', { length: 10 }),
+  profileImageUrl: varchar('profile_image_url', { length: 255 }),
+  createdAt: date('created_at').defaultNow().notNull(),
+  updatedAt: date('updated_at').defaultNow().notNull(),
+});
+
+export const buyerAddress = pgTable('buyerAddress', {
+  id: serial('id'),
+});
+
+export const buyerPayment = pgTable('buyerPayment', {
+  id: serial('id'),
+});

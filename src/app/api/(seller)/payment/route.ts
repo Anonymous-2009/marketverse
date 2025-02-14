@@ -13,7 +13,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: 'all field are needed' });
 
   try {
-    const data = await axios.post('https://marketverse-banking.onrender.com/auth/login', body);
+    const data = await axios.post(
+      'https://marketverse-banking.onrender.com/auth/login',
+      body
+    );
     const finalData = await data.data;
     console.log(data.data);
     console.log(data.data.user.accountNumber);
@@ -26,8 +29,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     };
 
     const value = await db.insert(paymentAccount).values(insertData);
-    console.log(value)
-    return NextResponse.json({ message: 'payment account link successfully', value });
+    console.log(value);
+    return NextResponse.json({
+      message: 'payment account link successfully',
+      value,
+    });
   } catch (error) {
     console.log(error);
   }

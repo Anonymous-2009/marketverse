@@ -5,10 +5,7 @@ export const updateSchema = z.object({
     .string()
     .min(2, { message: 'First name must be at least 2 characters' })
     .max(50, { message: 'First name must not exceed 50 characters' }),
-  lastName: z
-    .string()
-    .min(2, { message: 'Last name must be at least 2 characters' })
-    .max(50, { message: 'Last name must not exceed 50 characters' }),
+  lastName: z.string().optional(),
   age: z
     .number()
     .min(18, { message: 'Must be at least 18 years old' })
@@ -24,3 +21,4 @@ export const updateSchema = z.object({
 });
 
 export type updateType = z.infer<typeof updateSchema>;
+// this schema will work for both seller and buyer page

@@ -1,114 +1,143 @@
-"use client"
+'use client';
 
-import axios from "axios"
-import type React from "react"
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Loader2, User, CreditCard, Unlink, Link, Eye, EyeOff } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { useToast } from "@/hooks/use-toast"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { PaymentSchema, type PaymentType } from "@/validation" // Adjust this import path as needed
+import axios from 'axios';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  Loader2,
+  User,
+  CreditCard,
+  Unlink,
+  Link,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { PaymentSchema, type PaymentType } from '@/validation'; // Adjust this import path as needed
 
 interface MainProps {
-  email: string | undefined
-  sellerId: string | undefined
+  email: string | undefined;
+  sellerId: string | undefined;
 }
 
 interface AccountData {
-  accountUsername: string
-  accountNumber: string
-  sellerId: string
-  sellerEmail: string
+  accountUsername: string;
+  accountNumber: string;
+  sellerId: string;
+  sellerEmail: string;
 }
 
 const Main: React.FC<MainProps> = ({ email, sellerId }) => {
-  const [data, setData] = useState<AccountData[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isLinking, setIsLinking] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [showPassword, setShowPassword] = useState(false) // Added showPassword state
-  const { toast } = useToast()
+  const [data, setData] = useState<AccountData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLinking, setIsLinking] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Added showPassword state
+  const { toast } = useToast();
 
   const form = useForm<PaymentType>({
     resolver: zodResolver(PaymentSchema),
-    defaultValues: { username: "", password: "" },
-  })
+    defaultValues: { username: '', password: '' },
+  });
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`/api/payment/${email}`)
-        setData(response.data.result)
+        const response = await axios.get(`/api/payment/${email}`);
+        setData(response.data.result);
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error('Error fetching data:', error);
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch account data.",
-        })
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to fetch account data.',
+        });
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    if (email) getData()
-  }, [email, toast])
+    if (email) getData();
+  }, [email, toast]);
 
   const handleUnlink = async () => {
     try {
-      setIsLoading(true)
-      const response = await axios.delete(`/api/payment/unlink/${data[0].accountUsername}`)
+      setIsLoading(true);
+      const response = await axios.delete(
+        `/api/payment/unlink/${data[0].accountUsername}`
+      );
       toast({
-        title: "Success",
+        title: 'Success',
         description: response.data.message,
-      })
-      setData([])
+      });
+      setData([]);
     } catch (error) {
-      console.error("Error unlinking account:", error)
+      console.error('Error unlinking account:', error);
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to unlink the account. Please try again.",
-      })
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to unlink the account. Please try again.',
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleLink = async (formData: PaymentType) => {
     try {
-      setIsLinking(true)
+      setIsLinking(true);
       const value = {
         sellerEmail: email,
         sellerId,
         username: formData.username,
         password: formData.password,
-      }
-      console.log(value)
-      const response = await axios.post("/api/payment", value)
-      setData(response.data.result)
+      };
+      console.log(value);
+      const response = await axios.post('/api/payment', value);
+      setData(response.data.result);
       toast({
-        title: "Success",
+        title: 'Success',
         description: response.data.message,
-      })
-      setIsDialogOpen(false)
-      setData([])
+      });
+      setIsDialogOpen(false);
+      setData([]);
     } catch (error) {
-      console.error("Error linking account:", error)
+      console.error('Error linking account:', error);
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to link the account. Please try again.",
-      })
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to link the account. Please try again.',
+      });
     } finally {
-      setIsLinking(false)
+      setIsLinking(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -117,7 +146,7 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
           <Loader2 className="h-8 w-8 animate-spin" />
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -138,7 +167,10 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
                   <DialogTitle>Link Account</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleLink)} className="space-y-4 py-4">
+                  <form
+                    onSubmit={form.handleSubmit(handleLink)}
+                    className="space-y-4 py-4"
+                  >
                     <FormField
                       control={form.control}
                       name="username"
@@ -160,7 +192,10 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
                           <FormLabel>Password</FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Input type={showPassword ? "text" : "password"} {...field} />
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                {...field}
+                              />
                               <Button
                                 type="button"
                                 variant="ghost"
@@ -168,8 +203,16 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
                                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                                 onClick={() => setShowPassword(!showPassword)}
                               >
-                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                                {showPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                                <span className="sr-only">
+                                  {showPassword
+                                    ? 'Hide password'
+                                    : 'Show password'}
+                                </span>
                               </Button>
                             </div>
                           </FormControl>
@@ -177,7 +220,11 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" disabled={isLinking} className="w-full">
+                    <Button
+                      type="submit"
+                      disabled={isLinking}
+                      className="w-full"
+                    >
                       {isLinking ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
                       ) : (
@@ -205,29 +252,39 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-muted-foreground" />
                   <p>
-                    <span className="font-medium">Username:</span> {data.accountUsername}
+                    <span className="font-medium">Username:</span>{' '}
+                    {data.accountUsername}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
                   <p>
-                    <span className="font-medium">Account Number:</span> {data.accountNumber}
+                    <span className="font-medium">Account Number:</span>{' '}
+                    {data.accountNumber}
                   </p>
                 </div>
               </CardContent>
               <CardFooter>
-                <Button variant="destructive" onClick={handleUnlink} className="w-full" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Unlink className="h-4 w-4 mr-2" />}
+                <Button
+                  variant="destructive"
+                  onClick={handleUnlink}
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <Unlink className="h-4 w-4 mr-2" />
+                  )}
                   Unlink Account
                 </Button>
               </CardFooter>
             </Card>
-          )
+          );
         })
       )}
     </>
-  )
-}
+  );
+};
 
-export default Main
-
+export default Main;

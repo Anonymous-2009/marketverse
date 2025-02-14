@@ -1,7 +1,7 @@
 import cloudinary from '@/utils/cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { sellersInfoTable } from '@/db/schema';
+import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import sharp from 'sharp';
 
@@ -43,10 +43,12 @@ export async function PUT(request: NextRequest) {
     // Process image with Sharp
     const processedImageBuffer = await sharp(buffer)
       .resize(800, 800, {
+        // Resize to maximum dimensions while maintaining aspect ratio
         fit: 'inside',
         withoutEnlargement: true,
       })
       .jpeg({
+        // Convert to JPEG and compress
         quality: 80,
         mozjpeg: true,
       })
@@ -56,20 +58,23 @@ export async function PUT(request: NextRequest) {
     const base64String = processedImageBuffer.toString('base64');
     const uploadString = `data:image/jpeg;base64,${base64String}`;
 
-    // Upload to Cloudinary with optimizations
+    // Upload to Cloudinary
     const result: CloudinaryUploadResponse = await cloudinary.uploader.upload(
       uploadString,
       {
         folder: 'profile_images',
-        transformation: [{ quality: 'auto' }, { fetch_format: 'auto' }],
+        transformation: [
+          { quality: 'auto' }, // Let Cloudinary optimize quality
+          { fetch_format: 'auto' }, // Auto-select best format
+        ],
       }
     );
 
-    // Update seller profile with new image URL
+    // Update database with new image URL
     await db
-      .update(sellersInfoTable)
+      .update(buyerProfile)
       .set({ profileImageUrl: result.secure_url })
-      .where(eq(sellersInfoTable.email, email))
+      .where(eq(buyerProfile.email, email))
       .returning();
 
     return NextResponse.json(

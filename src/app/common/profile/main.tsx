@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react';
-
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Upload, User, Mail, Phone } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -23,8 +20,7 @@ import {
 } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton';
-import { useFetchDataByEmail } from '@/service/seller-detail/fetchDataByEmail';
-import { SellerInfo } from '@/db/schema';
+import { useFetchDataByEmailForBuyer } from '@/service/buyer-detail/fetchDataByEmail';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
@@ -33,8 +29,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 
-const Profile = ({ email }: any) => {
+const Main = ({ email }: { email: string }) => {
   const router = useRouter();
+  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isUploading, setUploading] = useState(false);
+
+  const { data, isLoading, isError } = useFetchDataByEmailForBuyer(email);
+
   const {
     register,
     handleSubmit,
@@ -54,13 +56,6 @@ const Profile = ({ email }: any) => {
       email: email,
     },
   });
-
-  const { toast } = useToast();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isUploading, setUploading] = useState(false);
-  const { data, isLoading, isError, error } = useFetchDataByEmail(email);
-  // Use the custom mutation hook
-  // const a = data[0] fuck
 
   // Update form values when data is loaded
   useEffect(() => {
@@ -83,8 +78,16 @@ const Profile = ({ email }: any) => {
     return <ProfileSkeleton />;
   }
 
-  // console.log(data.message)
-  const handleUpload = async (event: any) => {
+  if (isError || !data?.data?.[0]) {
+    return <p className="text-xl text-gray-600">No buyer info listed yet.</p>;
+  }
+
+  // Extract the first item from the data array and assign it to finalData and it's a good way, but in for seller i use a different way like array map method, but i should use this way for seller too.
+  const finalData = data.data[0];
+
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files?.[0]) return;
+
     try {
       setUploading(true);
       const file = event.target.files[0];
@@ -92,8 +95,7 @@ const Profile = ({ email }: any) => {
       formData.append('file', file);
       formData.append('email', email);
 
-      const response = await axios.put('/api/upload', formData);
-      const data = await response.data;
+      const response = await axios.put('/api/user/upload-image', formData);
       toast({
         title: 'Message',
         description: response.data.message,
@@ -103,7 +105,6 @@ const Profile = ({ email }: any) => {
           </ToastAction>
         ),
       });
-      //   console.log(data)
     } catch (error) {
       console.error('Error uploading image:', error);
       toast({
@@ -117,25 +118,19 @@ const Profile = ({ email }: any) => {
     }
   };
 
-  const handleFormSubmit = async (data: updateType) => {
-    // console.log('Form submitted:', data);
+  const handleFormSubmit = async (formData: updateType) => {
     try {
-      // Log the form data
-      const response = await axios.put('/api/update', data);
-      const result = await response.data;
-      // console.log(result)
+      const response = await axios.put('/api/user/update-user', formData);
       toast({
         title: 'Message',
-        description: result.message,
+        description: response.data.message,
         action: (
           <ToastAction altText="OK" onClick={() => router.refresh()}>
             OK
           </ToastAction>
         ),
       });
-      // Close dialog and reset form
       setIsOpen(false);
-      // reset();
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
@@ -147,14 +142,10 @@ const Profile = ({ email }: any) => {
     }
   };
 
-  // for images loading
-  const finalData = data.data[0];
   return (
     <div className="container mx-auto py-10">
-      {/* work on later  */}
-
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Seller Profile Information</h1>
+        <h1 className="text-3xl font-bold">Buyer Profile Information</h1>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button>Update Profile</Button>
@@ -171,13 +162,12 @@ const Profile = ({ email }: any) => {
                 <div className="flex items-center space-x-4">
                   <Avatar className="w-24 h-24">
                     <AvatarImage
-                      src={finalData?.profileImageUrl}
+                      src={finalData.profileImageUrl}
                       alt="Profile picture"
                     />
                     <AvatarFallback>
-                      {/* {' USER '} */}
-                      {finalData?.firstName?.charAt(0) +
-                        finalData?.lastName?.charAt(0) || 'USER'}
+                      {finalData.firstName?.charAt(0)}
+                      {finalData.lastName?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                 </div>
@@ -212,11 +202,7 @@ const Profile = ({ email }: any) => {
 
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last name</Label>
-                  <Input
-                    id="lastName"
-                    {...register('lastName')}
-                    className={errors.lastName ? 'border-red-500' : ''}
-                  />
+                  <Input id="lastName" {...register('lastName')} />
                   {errors.lastName && (
                     <p className="text-sm text-red-500">
                       {errors.lastName.message}
@@ -230,7 +216,6 @@ const Profile = ({ email }: any) => {
                     id="age"
                     type="number"
                     {...register('age', { valueAsNumber: true })}
-                    className={errors.age ? 'border-red-500' : ''}
                   />
                   {errors.age && (
                     <p className="text-sm text-red-500">{errors.age.message}</p>
@@ -239,12 +224,7 @@ const Profile = ({ email }: any) => {
 
                 <div className="space-y-2">
                   <Label htmlFor="phoneNo">Phone number</Label>
-                  <Input
-                    id="phoneNo"
-                    type="tel"
-                    {...register('phoneNo')}
-                    className={errors.phoneNo ? 'border-red-500' : ''}
-                  />
+                  <Input id="phoneNo" type="tel" {...register('phoneNo')} />
                   {errors.phoneNo && (
                     <p className="text-sm text-red-500">
                       {errors.phoneNo.message}
@@ -260,9 +240,7 @@ const Profile = ({ email }: any) => {
                     }
                     value={watch('gender')}
                   >
-                    <SelectTrigger
-                      className={errors.gender ? 'border-red-500' : ''}
-                    >
+                    <SelectTrigger>
                       <SelectValue placeholder="Select a gender" />
                     </SelectTrigger>
                     <SelectContent>
@@ -290,75 +268,63 @@ const Profile = ({ email }: any) => {
         </Dialog>
       </div>
 
-      {/* Profile View */}
-      {data && data.message === 'success' ? (
-        data.data.map((user: SellerInfo) => (
-          <Card key={user.id} className="mb-6">
-            <CardContent className="pt-6">
-              <div className="flex items-start">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <Avatar className="w-32 h-32">
-                    <AvatarImage
-                      src={user.profileImageUrl}
-                      alt="Profile picture"
-                    />
-                    <AvatarFallback>
-                      {' '}
-                      {user.firstName?.charAt(0) + user.lastName?.charAt(0) ||
-                        'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12">
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">
-                          Full Name
-                        </p>
-                        <p className="text-lg font-medium">
-                          <span className="mr-1">{user.firstName}</span>
-                          <span>{user.lastName}</span>
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Age</p>
-                        <p className="text-lg font-medium">{user.age} years</p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Email</p>
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium">{user.email}</p>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Phone</p>
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium">{user.phoneNo}</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Gender</p>
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium capitalize">
-                            {user.gender}
-                          </p>
-                        </div>
-                      </div>
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="flex items-start">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <Avatar className="w-32 h-32">
+                <AvatarImage
+                  src={finalData.profileImageUrl}
+                  alt="Profile picture"
+                />
+                <AvatarFallback>
+                  {finalData.firstName?.charAt(0)}
+                  {finalData.lastName?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Full Name</p>
+                    <p className="text-lg font-medium">
+                      {finalData.firstName} {finalData.lastName}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Age</p>
+                    <p className="text-lg font-medium">{finalData.age} years</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      <p className="text-lg font-medium">{finalData.email}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-muted-foreground" />
+                      <p className="text-lg font-medium">{finalData.phoneNo}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Gender</p>
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      <p className="text-lg font-medium capitalize">
+                        {finalData.gender}
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))
-      ) : (
-        <p className="text-xl text-gray-600">No products listed yet.</p>
-      )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default Profile;
+export default Main;
