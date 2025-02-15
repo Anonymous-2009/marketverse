@@ -99,15 +99,12 @@ export const paymentAccount = pgTable('paymentAccount', {
 
 export const buyerProfile = pgTable('buyerProfile', {
   id: serial('id'),
-  uniqueId: varchar('unique_id', { length: 50 })
-    .notNull()
-    .unique()
-    .primaryKey(),
+  uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
   firstName: varchar('first_name', { length: 50 }).notNull(),
   lastName: varchar('last_name', { length: 50 }),
   username: varchar('username', { length: 50 }).notNull(),
   age: integer('age').notNull(),
-  email: varchar('email', { length: 100 }).notNull().unique(),
+  email: varchar('email', { length: 100 }).notNull().unique().primaryKey(),
   phoneNo: integer('phone_no').notNull().unique(),
   gender: varchar('gender', { length: 10 }),
   profileImageUrl: varchar('profile_image_url', { length: 255 }),
@@ -117,6 +114,20 @@ export const buyerProfile = pgTable('buyerProfile', {
 
 export const buyerAddress = pgTable('buyerAddress', {
   id: serial('id'),
+  email: varchar('email', { length: 100 })
+    .notNull()
+    .references(() => buyerProfile.email, { onDelete: 'cascade' }),
+  addressID: integer('address_id').notNull().unique(),
+  isDefault: boolean('is_default').default(false).notNull(),
+  country: varchar('country', { length: 100 }).notNull(),
+  fullName: varchar('full_name', { length: 100 }).notNull(),
+  streetName: varchar('street_name', { length: 255 }),
+  city: varchar('city', { length: 100 }).notNull(),
+  state: varchar('state', { length: 100 }).notNull(),
+  pincode: varchar('pincode').notNull(),
+  phoneNo: varchar('phone_no', { length: 12 }).notNull(), // Adjusted to varchar for 12+ digits
+  createdAt: date('created_at').defaultNow().notNull(),
+  updatedAt: date('updated_at').defaultNow().notNull(),
 });
 
 export const buyerPayment = pgTable('buyerPayment', {

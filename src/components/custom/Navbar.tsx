@@ -174,12 +174,14 @@ export default function Navbar() {
                             <CreditCard size={16} />
                           </DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          Address
-                          <DropdownMenuShortcut>
-                            <MapPin size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                        <Link href="/common/address">
+                          <DropdownMenuItem>
+                            Address
+                            <DropdownMenuShortcut>
+                              <MapPin size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </Link>
                       </DropdownMenuGroup>
 
                       <DropdownMenuSeparator />
