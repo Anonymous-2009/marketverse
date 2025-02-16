@@ -149,6 +149,7 @@ const Profile = ({ email }: any) => {
 
   // for images loading
   const finalData = data.data[0];
+  // console.log(data)
   return (
     <div className="container mx-auto py-10">
       {/* work on later  */}
@@ -355,7 +356,7 @@ const Profile = ({ email }: any) => {
           </Card>
         ))
       ) : (
-        <p className="text-xl text-gray-600">No products listed yet.</p>
+        <p className="text-xl text-gray-600">No Seller data listed yet.</p>
       )}
     </div>
   );

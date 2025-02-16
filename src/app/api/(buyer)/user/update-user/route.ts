@@ -43,19 +43,30 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: 'Buyer not found' }, { status: 404 });
     }
 
+    console.log(data);
     // Update buyer profile
     const result = await db
       .update(buyerProfile)
       .set({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        age: data.age,
-        phoneNo: data.phoneNo,
-        gender: data.gender,
+        ...data,
         updatedAt: new Date().toISOString(),
       })
       .where(eq(buyerProfile.email, data.email))
       .returning();
+
+    // Update buyer profile
+    // const result = await db
+    // .update(buyerProfile)
+    // .set({
+    //   firstName: data.firstName,
+    //   lastName: data.lastName,
+    //   age: data.age,
+    //   phoneNo: data.phoneNo,
+    //   gender: data.gender,
+    //   updatedAt: new Date().toISOString(),
+    // })
+    // .where(eq(buyerProfile.email, data.email))
+    // .returning();
 
     if (!result.length) {
       return NextResponse.json({ message: 'Update failed' }, { status: 500 });

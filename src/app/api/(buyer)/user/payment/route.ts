@@ -1,15 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { paymentAccount } from '@/db/schema';
+import { buyerPayment } from '@/db/schema';
 import axios from 'axios';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
-  const { username, password, sellerId, sellerEmail } = body;
+  const { username, password, buyerId, buyerEmail } = body;
 
   if (!username || !password)
     return NextResponse.json({ message: 'all field are needed' });
-  if (!sellerEmail || !sellerId)
+  if (!buyerEmail || !buyerId)
     return NextResponse.json({ message: 'all field are needed' });
 
   try {
@@ -19,6 +19,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
 
     const finalData = await data.data;
+
     if (!data.data.success) {
       return NextResponse.json({
         message: 'plz given correct username and password',
@@ -27,14 +28,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.log(data.data);
     console.log(data.data.user.accountNumber);
 
-    const insertData: typeof paymentAccount.$inferInsert = {
+    const insertData: typeof buyerPayment.$inferInsert = {
       accountUsername: finalData.user.username,
       accountNumber: finalData.user.accountNumber,
-      sellerId,
-      sellerEmail,
+      buyerId,
+      buyerEmail,
     };
 
-    const value = await db.insert(paymentAccount).values(insertData);
+    const value = await db.insert(buyerPayment).values(insertData);
     console.log(value);
     return NextResponse.json({
       message: 'payment account link successfully',
