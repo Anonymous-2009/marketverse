@@ -168,12 +168,14 @@ export default function Navbar() {
                           </DropdownMenuItem>
                         </Link>
 
-                        <DropdownMenuItem>
-                          Payment Method
-                          <DropdownMenuShortcut>
-                            <CreditCard size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                        <Link href="/common/payment">
+                          <DropdownMenuItem>
+                            Payment Method
+                            <DropdownMenuShortcut>
+                              <CreditCard size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </Link>
                         <Link href="/common/address">
                           <DropdownMenuItem>
                             Address
