@@ -9,6 +9,7 @@ import {
   integer,
   numeric,
   json,
+  smallint,
 } from 'drizzle-orm/pg-core';
 
 // Define your table
@@ -139,4 +140,17 @@ export const buyerPayment = pgTable('buyerPayment', {
     .notNull()
     .references(() => buyerProfile.email, { onDelete: 'cascade' }), // Email of the seller
   // isSeller: boolean('is_seller'), if future use or we check if the user is a seller or need to add this field
+});
+
+export const reviews = pgTable('reviews', {
+  id: serial('id').primaryKey(),
+  productId: integer('product_id')
+    .notNull()
+    .references(() => products.productId, { onDelete: 'cascade' }),
+  reviewMessage: text('review_message').notNull(),
+  reviewDate: date('review_date').defaultNow(),
+  reviewStar: smallint('review_star').notNull(), // Rating out of 5
+  profileImageUrl: varchar('profile_image_url', { length: 255 }),
+  firstName: varchar('first_name', { length: 50 }).notNull(),
+  lastName: varchar('last_name', { length: 50 }),
 });

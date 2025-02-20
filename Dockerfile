@@ -17,7 +17,7 @@ COPY . .
 RUN yarn run build 
 
 # Base image for running
-FROM node:latest AS runner 
+FROM node:iron-alpine AS runner 
 
 # Initialize a working directory
 WORKDIR /app
