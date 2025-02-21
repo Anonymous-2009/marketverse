@@ -46,6 +46,7 @@ const Review: React.FC<ReviewProps> = ({ productId, email }) => {
       setLoading(true);
       const res = await axios.get(`/api/products/review/${productId}`);
       setReviews(res.data.data);
+      console.log('Reviews:', reviews);
     } catch (error) {
       console.error('Error fetching reviews:', error);
     } finally {

@@ -33,7 +33,7 @@ export async function GET(
 
     if (review.length === 0) {
       return NextResponse.json(
-        { message: `Product with ID ${num} not found.` },
+        { message: `Product with ID ${num} not found.`, data:review },
         { status: 200 }
       );
     }

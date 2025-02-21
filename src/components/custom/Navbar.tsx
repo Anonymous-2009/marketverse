@@ -209,9 +209,11 @@ export default function Navbar() {
                                 </DropdownMenuShortcut>
                               </DropdownMenuItem>
                               <DropdownMenuItem>Order</DropdownMenuItem>
+                              <Link href="/products/explore">
                               <DropdownMenuItem>
                                 Explore Products
                               </DropdownMenuItem>
+                              </Link>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>
                         </DropdownMenuSub>
