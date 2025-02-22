@@ -18,6 +18,7 @@ import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Heart, Star } from 'lucide-react';
 import Review from './Review';
 import { useUser } from '@clerk/nextjs';
+import { toast } from '@/hooks/use-toast';
 
 const page = ({ params }: { params: Promise<{ no: string }> }) => {
   const [product, setProduct] = useState<any>(null);
@@ -53,6 +54,38 @@ const page = ({ params }: { params: Promise<{ no: string }> }) => {
   if (!product) {
     return <NoProductsPage />;
   }
+
+  const handleClick = async (productId: number) => {
+    try {
+      const res = await axios.put('/api/products/cart/add', {
+        email: user?.primaryEmailAddress?.emailAddress,
+        productId,
+      });
+      toast({
+        title: 'Success',
+        description: res.data.message,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error');
+    }
+  };
+
+  const handleClickWishList = async (productId: number) => {
+    try {
+      const res = await axios.put('/api/products/wishlist/add', {
+        email: user?.primaryEmailAddress?.emailAddress,
+        productId,
+      });
+      toast({
+        title: 'Success',
+        description: res.data.message,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error');
+    }
+  };
 
   return (
     <>
@@ -113,11 +146,24 @@ const page = ({ params }: { params: Promise<{ no: string }> }) => {
                   <Button className="w-full" size="lg">
                     Buy Now
                   </Button>
-                  <Button variant="outline" size="lg" className="w-full">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => {
+                      handleClick(product.productId);
+                    }}
+                  >
                     <ShoppingCart className="mr-2 h-5 w-5" />
                     Add to Cart
                   </Button>
-                  <Button variant="ghost" className="w-full">
+                  <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => {
+                      handleClickWishList(product.productId);
+                    }}
+                  >
                     <Heart className="mr-2 h-5 w-5" />
                     Add to Wishlist
                   </Button>

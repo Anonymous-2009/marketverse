@@ -1,7 +1,7 @@
 'use client';
 
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-Skeleton';
-import ProductGrid from '@/components/products/ProductGrid';
+import ProductGrid from '@/components/custom/products/ProductGrid';
 import { useAuth, useUser } from '@clerk/nextjs';
 import axios from 'axios';
 import { useEffect } from 'react';

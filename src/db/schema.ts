@@ -11,6 +11,7 @@ import {
   json,
   smallint,
 } from 'drizzle-orm/pg-core';
+import { array } from 'zod';
 
 // Define your table
 export const newsletterTable = pgTable('newsletter', {
@@ -109,6 +110,8 @@ export const buyerProfile = pgTable('buyerProfile', {
   phoneNo: varchar('phone_no', { length: 12 }).notNull().unique(),
   gender: varchar('gender', { length: 40 }),
   profileImageUrl: varchar('profile_image_url', { length: 255 }),
+  cartItems: json('cart_items').default([]),
+  wishlistItems: json('wishlist_items').default([]),
   createdAt: date('created_at').defaultNow().notNull(),
   updatedAt: date('updated_at').defaultNow().notNull(),
 });

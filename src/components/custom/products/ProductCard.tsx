@@ -47,6 +47,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             product.productImages[0] || '/placeholder.svg?height=224&width=260'
           }
           alt={product.productName}
+          layout="fill"
           className={cn(
             'w-full h-full object-cover transition-transform duration-300',
             isHovered && 'scale-110'

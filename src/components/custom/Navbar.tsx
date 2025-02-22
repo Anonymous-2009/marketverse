@@ -196,18 +196,22 @@ export default function Navbar() {
                           </DropdownMenuSubTrigger>
                           <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                              <DropdownMenuItem>
-                                Cart
-                                <DropdownMenuShortcut>
-                                  <ShoppingCart size={15} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                WishLists
-                                <DropdownMenuShortcut>
-                                  <Logs size={16} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
+                              <Link href="/common/cart">
+                                <DropdownMenuItem>
+                                  Cart
+                                  <DropdownMenuShortcut>
+                                    <ShoppingCart size={15} />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                              </Link>
+                              <Link href="/common/wishlist">
+                                <DropdownMenuItem>
+                                  WishLists
+                                  <DropdownMenuShortcut>
+                                    <Logs size={16} />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                              </Link>
                               <DropdownMenuItem>Order</DropdownMenuItem>
                               <Link href="/products/explore">
                                 <DropdownMenuItem>

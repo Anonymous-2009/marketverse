@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import axios from 'axios';
+import { toast } from '@/hooks/use-toast';
+import { useUser } from '@clerk/nextjs';
+import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
 
 interface Product {
   id: number;
@@ -21,6 +25,28 @@ interface ProductListProps {
 
 export default function ProductList({ products }: ProductListProps) {
   const router = useRouter();
+
+  const { user, isLoaded } = useUser();
+  if (!isLoaded) {
+    return <SkeletonLoader />;
+  }
+
+  const handleClick = async (productId: number) => {
+    try {
+      const res = await axios.put('/api/products/cart/add', {
+        email: user?.primaryEmailAddress?.emailAddress,
+        productId,
+      });
+      toast({
+        title: 'Success',
+        description: res.data.message,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error');
+    }
+  };
+
   return (
     <div className="grid gap-8 max-w-6xl mx-auto px-4">
       {products.map((product) => (
@@ -50,7 +76,12 @@ export default function ProductList({ products }: ProductListProps) {
                   </p>
                 </div>
                 <div className="flex gap-4 pt-6">
-                  <Button className="flex-1">
+                  <Button
+                    className="flex-1"
+                    onClick={() => {
+                      handleClick(product.productId);
+                    }}
+                  >
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     Add to cart
                   </Button>

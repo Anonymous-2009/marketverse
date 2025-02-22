@@ -2,7 +2,7 @@
 
 import { useFetchProducts } from '@/service/product-detail/fetchDataByEmail';
 import ProductRow from './ProductRow';
-import ProductGridSkeleton from '../custom/skeleton/Products-Skeleton';
+import ProductGridSkeleton from '../skeleton/Products-Skeleton';
 
 const ProductGrid = () => {
   const { data, isLoading, isError, error } = useFetchProducts();
