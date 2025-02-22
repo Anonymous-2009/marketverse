@@ -210,9 +210,9 @@ export default function Navbar() {
                               </DropdownMenuItem>
                               <DropdownMenuItem>Order</DropdownMenuItem>
                               <Link href="/products/explore">
-                              <DropdownMenuItem>
-                                Explore Products
-                              </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  Explore Products
+                                </DropdownMenuItem>
                               </Link>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>

@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Product {
   id: number;
@@ -32,7 +33,7 @@ interface Product {
 
 const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Card
@@ -41,7 +42,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative h-56 overflow-hidden rounded-t-lg">
-        <img
+        <Image
           src={
             product.productImages[0] || '/placeholder.svg?height=224&width=260'
           }
@@ -82,7 +83,11 @@ const ProductCard = ({ product }: { product: Product }) => {
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Cart
         </Button>
-        <Button className="flex-1" variant="secondary" onClick={() => router.push(`/products/${product.productId}`)}>
+        <Button
+          className="flex-1"
+          variant="secondary"
+          onClick={() => router.push(`/products/${product.productId}`)}
+        >
           <Eye className="mr-2 h-4 w-4" />
           View
         </Button>

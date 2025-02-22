@@ -7,7 +7,7 @@ export async function GET(
   res: NextResponse
 ): Promise<NextResponse> {
   try {
-    const product = await db.select().from(products)
+    const product = await db.select().from(products);
 
     // const product = [
     //   {

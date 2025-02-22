@@ -186,225 +186,225 @@ const products: Product[] = [
       'https://example.com/images/ssd2.jpg',
     ],
   },
-    {
-      id: 12,
-      productId: 10012,
-      sellerId: 'SELLER66666',
-      sellerEmail: 'mobile@example.com',
-      productName: 'Phone Gimbal',
-      productPrice: 4999,
-      productDescription:
-        '3-axis smartphone gimbal with object tracking and time-lapse.',
-      productImages: [
-        'https://example.com/images/gimbal1.jpg',
-        'https://example.com/images/gimbal2.jpg',
-      ],
-    },
-    {
-      id: 13,
-      productId: 10013,
-      sellerId: 'SELLER77777',
-      sellerEmail: 'power@example.com',
-      productName: 'Power Bank',
-      productPrice: 2499,
-      productDescription:
-        '20000mAh power bank with PD fast charging and LCD display.',
-      productImages: [
-        'https://example.com/images/powerbank1.jpg',
-        'https://example.com/images/powerbank2.jpg',
-      ],
-    },
-    {
-      id: 14,
-      productId: 10014,
-      sellerId: 'SELLER88888',
-      sellerEmail: 'sound@example.com',
-      productName: 'Portable Speaker',
-      productPrice: 3999,
-      productDescription:
-        'Waterproof Bluetooth speaker with 24-hour battery life.',
-      productImages: [
-        'https://example.com/images/speaker1.jpg',
-        'https://example.com/images/speaker2.jpg',
-      ],
-    },
-    {
-      id: 15,
-      productId: 10015,
-      sellerId: 'SELLER99999',
-      sellerEmail: 'video@example.com',
-      productName: 'Capture Card',
-      productPrice: 6999,
-      productDescription:
-        '4K60 capture card with HDR pass-through and low latency.',
-      productImages: [
-        'https://example.com/images/capture1.jpg',
-        'https://example.com/images/capture2.jpg',
-      ],
-    },
-    {
-      id: 16,
-      productId: 10016,
-      sellerId: 'SELLER10101',
-      sellerEmail: 'stream@example.com',
-      productName: 'Stream Deck',
-      productPrice: 7499,
-      productDescription:
-        '15-key LCD stream deck for content creation and streaming.',
-      productImages: [
-        'https://example.com/images/streamdeck1.jpg',
-        'https://example.com/images/streamdeck2.jpg',
-      ],
-    },
-    {
-      id: 17,
-      productId: 10017,
-      sellerId: 'SELLER20202',
-      sellerEmail: 'network@example.com',
-      productName: 'WiFi 6 Router',
-      productPrice: 9999,
-      productDescription:
-        'Tri-band WiFi 6 router with mesh capability and parental controls.',
-      productImages: [
-        'https://example.com/images/router1.jpg',
-        'https://example.com/images/router2.jpg',
-      ],
-    },
-    {
-      id: 18,
-      productId: 10018,
-      sellerId: 'SELLER30303',
-      sellerEmail: 'comfort@example.com',
-      productName: 'Ergonomic Wrist Rest',
-      productPrice: 799,
-      productDescription:
-        'Memory foam keyboard wrist rest with cooling gel layer.',
-      productImages: [
-        'https://example.com/images/wristrest1.jpg',
-        'https://example.com/images/wristrest2.jpg',
-      ],
-    },
-    {
-      id: 19,
-      productId: 10019,
-      sellerId: 'SELLER40404',
-      sellerEmail: 'light@example.com',
-      productName: 'Ring Light',
-      productPrice: 2999,
-      productDescription:
-        '18-inch LED ring light with phone holder and remote control.',
-      productImages: [
-        'https://example.com/images/ringlight1.jpg',
-        'https://example.com/images/ringlight2.jpg',
-      ],
-    },
-    {
-      id: 20,
-      productId: 10020,
-      sellerId: 'SELLER50505',
-      sellerEmail: 'cable@example.com',
-      productName: 'Cable Management Kit',
-      productPrice: 999,
-      productDescription:
-        'Complete desk cable management solution with clips and sleeves.',
-      productImages: [
-        'https://example.com/images/cables1.jpg',
-        'https://example.com/images/cables2.jpg',
-      ],
-    },
-    {
-      id: 21,
-      productId: 10021,
-      sellerId: 'SELLER60606',
-      sellerEmail: 'desk@example.com',
-      productName: 'Monitor Mount',
-      productPrice: 3499,
-      productDescription:
-        'Dual monitor arm mount with gas spring and cable management.',
-      productImages: [
-        'https://example.com/images/mount1.jpg',
-        'https://example.com/images/mount2.jpg',
-      ],
-    },
-    {
-      id: 22,
-      productId: 10022,
-      sellerId: 'SELLER70707',
-      sellerEmail: 'cooling@example.com',
-      productName: 'Laptop Cooling Pad',
-      productPrice: 1799,
-      productDescription:
-        '5-fan laptop cooling pad with RGB lighting and height adjustment.',
-      productImages: [
-        'https://example.com/images/cooling1.jpg',
-        'https://example.com/images/cooling2.jpg',
-      ],
-    },
-    {
-      id: 23,
-      productId: 10023,
-      sellerId: 'SELLER80808',
-      sellerEmail: 'privacy@example.com',
-      productName: 'Webcam Cover',
-      productPrice: 299,
-      productDescription:
-        'Slim magnetic webcam cover compatible with laptops and tablets.',
-      productImages: [
-        'https://example.com/images/cover1.jpg',
-        'https://example.com/images/cover2.jpg',
-      ],
-    },
-    {
-      id: 24,
-      productId: 10024,
-      sellerId: 'SELLER90909',
-      sellerEmail: 'clean@example.com',
-      productName: 'Screen Cleaning Kit',
-      productPrice: 599,
-      productDescription:
-        'Professional screen cleaning kit with microfiber cloth and solution.',
-      productImages: [
-        'https://example.com/images/cleaning1.jpg',
-        'https://example.com/images/cleaning2.jpg',
-      ],
-    },
-    {
-      id: 25,
-      productId: 10025,
-      sellerId: 'SELLER01010',
-      sellerEmail: 'security@example.com',
-      productName: 'Security Key',
-      productPrice: 2499,
-      productDescription:
-        'FIDO2 security key with NFC and biometric authentication.',
-      productImages: [
-        'https://example.com/images/key1.jpg',
-        'https://example.com/images/key2.jpg',
-      ],
-    },
-    {
-      id: 26,
-      productId: 10026,
-      sellerId: 'SELLER12121',
-      sellerEmail: 'input@example.com',
-      productName: 'Trackball Mouse',
-      productPrice: 3999,
-      productDescription:
-        'Wireless ergonomic trackball mouse with precision sensor.',
-      productImages: [
-        'https://example.com/images/trackball1.jpg',
-        'https://example.com/images/trackball2.jpg',
-      ],
-    },
-    {
-      id: 27,
-      productId: 10027,
-      sellerId: 'SELLER23232',
-      sellerEmail: 'print@example.com',
-      productName: 'Label Printer',
-      productPrice: 4999,
-      productDescription:
-        'Wireless thermal label printer with smartphone connectivity.',
+  {
+    id: 12,
+    productId: 10012,
+    sellerId: 'SELLER66666',
+    sellerEmail: 'mobile@example.com',
+    productName: 'Phone Gimbal',
+    productPrice: 4999,
+    productDescription:
+      '3-axis smartphone gimbal with object tracking and time-lapse.',
+    productImages: [
+      'https://example.com/images/gimbal1.jpg',
+      'https://example.com/images/gimbal2.jpg',
+    ],
+  },
+  {
+    id: 13,
+    productId: 10013,
+    sellerId: 'SELLER77777',
+    sellerEmail: 'power@example.com',
+    productName: 'Power Bank',
+    productPrice: 2499,
+    productDescription:
+      '20000mAh power bank with PD fast charging and LCD display.',
+    productImages: [
+      'https://example.com/images/powerbank1.jpg',
+      'https://example.com/images/powerbank2.jpg',
+    ],
+  },
+  {
+    id: 14,
+    productId: 10014,
+    sellerId: 'SELLER88888',
+    sellerEmail: 'sound@example.com',
+    productName: 'Portable Speaker',
+    productPrice: 3999,
+    productDescription:
+      'Waterproof Bluetooth speaker with 24-hour battery life.',
+    productImages: [
+      'https://example.com/images/speaker1.jpg',
+      'https://example.com/images/speaker2.jpg',
+    ],
+  },
+  {
+    id: 15,
+    productId: 10015,
+    sellerId: 'SELLER99999',
+    sellerEmail: 'video@example.com',
+    productName: 'Capture Card',
+    productPrice: 6999,
+    productDescription:
+      '4K60 capture card with HDR pass-through and low latency.',
+    productImages: [
+      'https://example.com/images/capture1.jpg',
+      'https://example.com/images/capture2.jpg',
+    ],
+  },
+  {
+    id: 16,
+    productId: 10016,
+    sellerId: 'SELLER10101',
+    sellerEmail: 'stream@example.com',
+    productName: 'Stream Deck',
+    productPrice: 7499,
+    productDescription:
+      '15-key LCD stream deck for content creation and streaming.',
+    productImages: [
+      'https://example.com/images/streamdeck1.jpg',
+      'https://example.com/images/streamdeck2.jpg',
+    ],
+  },
+  {
+    id: 17,
+    productId: 10017,
+    sellerId: 'SELLER20202',
+    sellerEmail: 'network@example.com',
+    productName: 'WiFi 6 Router',
+    productPrice: 9999,
+    productDescription:
+      'Tri-band WiFi 6 router with mesh capability and parental controls.',
+    productImages: [
+      'https://example.com/images/router1.jpg',
+      'https://example.com/images/router2.jpg',
+    ],
+  },
+  {
+    id: 18,
+    productId: 10018,
+    sellerId: 'SELLER30303',
+    sellerEmail: 'comfort@example.com',
+    productName: 'Ergonomic Wrist Rest',
+    productPrice: 799,
+    productDescription:
+      'Memory foam keyboard wrist rest with cooling gel layer.',
+    productImages: [
+      'https://example.com/images/wristrest1.jpg',
+      'https://example.com/images/wristrest2.jpg',
+    ],
+  },
+  {
+    id: 19,
+    productId: 10019,
+    sellerId: 'SELLER40404',
+    sellerEmail: 'light@example.com',
+    productName: 'Ring Light',
+    productPrice: 2999,
+    productDescription:
+      '18-inch LED ring light with phone holder and remote control.',
+    productImages: [
+      'https://example.com/images/ringlight1.jpg',
+      'https://example.com/images/ringlight2.jpg',
+    ],
+  },
+  {
+    id: 20,
+    productId: 10020,
+    sellerId: 'SELLER50505',
+    sellerEmail: 'cable@example.com',
+    productName: 'Cable Management Kit',
+    productPrice: 999,
+    productDescription:
+      'Complete desk cable management solution with clips and sleeves.',
+    productImages: [
+      'https://example.com/images/cables1.jpg',
+      'https://example.com/images/cables2.jpg',
+    ],
+  },
+  {
+    id: 21,
+    productId: 10021,
+    sellerId: 'SELLER60606',
+    sellerEmail: 'desk@example.com',
+    productName: 'Monitor Mount',
+    productPrice: 3499,
+    productDescription:
+      'Dual monitor arm mount with gas spring and cable management.',
+    productImages: [
+      'https://example.com/images/mount1.jpg',
+      'https://example.com/images/mount2.jpg',
+    ],
+  },
+  {
+    id: 22,
+    productId: 10022,
+    sellerId: 'SELLER70707',
+    sellerEmail: 'cooling@example.com',
+    productName: 'Laptop Cooling Pad',
+    productPrice: 1799,
+    productDescription:
+      '5-fan laptop cooling pad with RGB lighting and height adjustment.',
+    productImages: [
+      'https://example.com/images/cooling1.jpg',
+      'https://example.com/images/cooling2.jpg',
+    ],
+  },
+  {
+    id: 23,
+    productId: 10023,
+    sellerId: 'SELLER80808',
+    sellerEmail: 'privacy@example.com',
+    productName: 'Webcam Cover',
+    productPrice: 299,
+    productDescription:
+      'Slim magnetic webcam cover compatible with laptops and tablets.',
+    productImages: [
+      'https://example.com/images/cover1.jpg',
+      'https://example.com/images/cover2.jpg',
+    ],
+  },
+  {
+    id: 24,
+    productId: 10024,
+    sellerId: 'SELLER90909',
+    sellerEmail: 'clean@example.com',
+    productName: 'Screen Cleaning Kit',
+    productPrice: 599,
+    productDescription:
+      'Professional screen cleaning kit with microfiber cloth and solution.',
+    productImages: [
+      'https://example.com/images/cleaning1.jpg',
+      'https://example.com/images/cleaning2.jpg',
+    ],
+  },
+  {
+    id: 25,
+    productId: 10025,
+    sellerId: 'SELLER01010',
+    sellerEmail: 'security@example.com',
+    productName: 'Security Key',
+    productPrice: 2499,
+    productDescription:
+      'FIDO2 security key with NFC and biometric authentication.',
+    productImages: [
+      'https://example.com/images/key1.jpg',
+      'https://example.com/images/key2.jpg',
+    ],
+  },
+  {
+    id: 26,
+    productId: 10026,
+    sellerId: 'SELLER12121',
+    sellerEmail: 'input@example.com',
+    productName: 'Trackball Mouse',
+    productPrice: 3999,
+    productDescription:
+      'Wireless ergonomic trackball mouse with precision sensor.',
+    productImages: [
+      'https://example.com/images/trackball1.jpg',
+      'https://example.com/images/trackball2.jpg',
+    ],
+  },
+  {
+    id: 27,
+    productId: 10027,
+    sellerId: 'SELLER23232',
+    sellerEmail: 'print@example.com',
+    productName: 'Label Printer',
+    productPrice: 4999,
+    productDescription:
+      'Wireless thermal label printer with smartphone connectivity.',
     productImages: [
       'https://example.com/images/printer1.jpg',
       'https://example.com/images/printer2.jpg',
@@ -546,13 +546,15 @@ const ProductRow = ({
 
 const ProductGrid = () => {
   // Split products into sections
-  const newArrivals = products.slice(0, 10)
-  const bestSellers = products.slice(10, 20)
-  const specialOffers = products.slice(20)
+  const newArrivals = products.slice(0, 10);
+  const bestSellers = products.slice(10, 20);
+  const specialOffers = products.slice(20);
 
   return (
     <div className="container mx-auto p-8">
-      <h2 className="text-4xl font-bold mb-16 text-center">Discover Our Products</h2>
+      <h2 className="text-4xl font-bold mb-16 text-center">
+        Discover Our Products
+      </h2>
       <div className="space-y-20">
         {/* First row */}
         <ProductRow title="New Arrivals" products={newArrivals} />
@@ -563,12 +565,14 @@ const ProductGrid = () => {
         )}
 
         {/* Third row - only show if first and second rows have products */}
-        {newArrivals.length > 0 && bestSellers.length > 0 && specialOffers.length > 0 && (
-          <ProductRow title="Special Offers" products={specialOffers} />
-        )}
+        {newArrivals.length > 0 &&
+          bestSellers.length > 0 &&
+          specialOffers.length > 0 && (
+            <ProductRow title="Special Offers" products={specialOffers} />
+          )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductGrid
+export default ProductGrid;
