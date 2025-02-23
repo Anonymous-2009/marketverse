@@ -70,7 +70,7 @@ export default function Footer() {
                 (item) => (
                   <li key={item}>
                     <Link
-                      href="#"
+                      href="/"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {item}
@@ -88,7 +88,7 @@ export default function Footer() {
                 (item) => (
                   <li key={item}>
                     <Link
-                      href="#"
+                      href="/"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {item}
@@ -105,7 +105,7 @@ export default function Footer() {
               {['About Us', 'Careers', 'Press', 'Partners'].map((item) => (
                 <li key={item}>
                   <Link
-                    href="#"
+                    href="/"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {item}

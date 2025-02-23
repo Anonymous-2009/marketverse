@@ -3,19 +3,13 @@ import { db } from '@/db/index';
 import { desc, eq } from 'drizzle-orm';
 import { buyerAddress } from '@/db/schema';
 
-interface Context {
-  params: {
-    email: string;
-  };
-}
 
 export async function GET(
   req: NextRequest,
-  context: Context
+  { params }: { params: Promise<{ email: string }> }
 ): Promise<NextResponse> {
-  const { params } = await context;
-  const { email } = await params;
 
+  const email = (await params).email
   try {
     // Validate input
     if (!email) {

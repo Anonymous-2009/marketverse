@@ -3,18 +3,11 @@ import { db } from '@/db/index';
 import { paymentAccount } from '@/db/schema'; // Adjust the schema path if needed
 import { eq } from 'drizzle-orm';
 
-interface Context {
-  params: {
-    username: string;
-  };
-}
-
 export async function DELETE(
   req: NextRequest,
-  context: Context
+  { params }: { params: Promise<{ username: string }> }
 ): Promise<NextResponse> {
-  const { params } = await context;
-  const { username } = await params;
+  const username = (await params).username
 
   try {
     await db

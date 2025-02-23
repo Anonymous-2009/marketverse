@@ -15,12 +15,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, Heart, Star } from 'lucide-react';
+import { ShoppingCart, Heart } from 'lucide-react';
 import Review from './Review';
 import { useUser } from '@clerk/nextjs';
 import { toast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const page = ({ params }: { params: Promise<{ no: string }> }) => {
+  const router = useRouter();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -143,7 +145,13 @@ const page = ({ params }: { params: Promise<{ no: string }> }) => {
 
               <Card className="p-6">
                 <div className="space-y-4">
-                  <Button className="w-full" size="lg">
+                  <Button
+                    className="w-full"
+                    size="lg"
+                    onClick={() => {
+                      router.push(`/products/buynow/${product.productId}`);
+                    }}
+                  >
                     Buy Now
                   </Button>
                   <Button

@@ -13,7 +13,7 @@ import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
-import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
+import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 
 interface ProductDetailProps {
   id: number;
@@ -36,7 +36,7 @@ export function ProductDetail({
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
-    return <SkeletonLoader />;
+    return <ProductGridSkeleton />;
   }
 
   const { toast } = useToast();
@@ -111,17 +111,13 @@ export function ProductDetail({
           {/* Buttons for Cart & Purchase */}
           <div className="mt-8 flex flex-col gap-4">
             <Button
-              variant="outline"
+              variant="ghost"
               className="w-full"
               onClick={handleRemoveFromWishlist}
             >
               Remove from Wish:List
             </Button>
-            <Button
-              variant="default"
-              className="w-full bg-green-600 hover:bg-green-700"
-              onClick={handleToCart}
-            >
+            <Button variant="default" className="w-full" onClick={handleToCart}>
               Add to Cart
             </Button>
           </div>

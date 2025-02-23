@@ -1,13 +1,13 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
 import { ProductList } from './product-list';
-import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
+import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 
 export default function Home() {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
-    return <ProfileSkelCreateProductSkeleton />;
+    return <ProductGridSkeleton />;
   }
 
   return (

@@ -8,7 +8,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useUser } from '@clerk/nextjs';
-import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
+import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 
 interface Product {
   id: number;
@@ -28,7 +28,7 @@ export default function ProductList({ products }: ProductListProps) {
 
   const { user, isLoaded } = useUser();
   if (!isLoaded) {
-    return <SkeletonLoader />;
+    return <ProductGridSkeleton />;
   }
 
   const handleClick = async (productId: number) => {

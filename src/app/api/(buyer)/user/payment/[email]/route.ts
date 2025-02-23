@@ -3,18 +3,13 @@ import { db } from '@/db'; // Adjust the import path if needed
 import { buyerPayment } from '@/db/schema'; // Adjust the schema path if needed
 import { eq } from 'drizzle-orm';
 
-interface Context {
-  params: {
-    email: string;
-  };
-}
 
 export async function GET(
   req: NextRequest,
-  context: Context
+  { params }: { params: Promise<{ email: string }> }
 ): Promise<NextResponse> {
-  const { params } = await context;
-  const { email } = await params;
+
+  const email = (await params).email
 
   if (!email)
     return NextResponse.json({ message: 'email is requreid' }, { status: 200 });

@@ -157,3 +157,14 @@ export const reviews = pgTable('reviews', {
   firstName: varchar('first_name', { length: 50 }).notNull(),
   lastName: varchar('last_name', { length: 50 }),
 });
+
+export const orders = pgTable('orders', {
+  id: serial('id'), // Auto-incrementing ID
+  orderId: integer('orderId').notNull().unique().primaryKey(), // Unique integer order ID
+  buyerEmail: varchar('buyerEmail', { length: 255 }).notNull(),
+  sellerEmail: varchar('sellerEmail', { length: 255 }).notNull(),
+  orderAt: date('orderAt').defaultNow().notNull(),
+  status: text('status', { enum: ['decline', 'pending', 'approve'] }).notNull(),
+  productId: integer('productId').notNull(),
+  addressID: integer('addressID').notNull(),
+});

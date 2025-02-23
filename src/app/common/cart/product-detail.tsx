@@ -13,7 +13,8 @@ import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
-import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
+import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
+import { useRouter } from 'next/navigation';
 
 interface ProductDetailProps {
   id: number;
@@ -33,10 +34,11 @@ export function ProductDetail({
   productDescription,
   productImages,
 }: ProductDetailProps) {
+  const router = useRouter();
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
-    return <SkeletonLoader />;
+    return <ProductGridSkeleton />;
   }
 
   const { toast } = useToast();
@@ -63,19 +65,6 @@ export function ProductDetail({
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     }
-  };
-
-  // Buy Now action
-  const handleBuyNow = async () => {
-    toast({
-      title: 'Proceeding to Checkout',
-      description: `Buying ${productName} for ₹${productPrice}`,
-    });
-
-    // Redirect to checkout or payment gateway (placeholder)
-    setTimeout(() => {
-      console.log('Redirecting to payment gateway...');
-    }, 1000);
   };
 
   return (
@@ -107,7 +96,7 @@ export function ProductDetail({
           {/* Buttons for Cart & Purchase */}
           <div className="mt-8 flex flex-col gap-4">
             <Button
-              variant="outline"
+              variant="ghost"
               className="w-full"
               onClick={handleRemoveFromCart}
             >
@@ -115,8 +104,10 @@ export function ProductDetail({
             </Button>
             <Button
               variant="default"
-              className="w-full bg-green-600 hover:bg-green-700"
-              onClick={handleBuyNow}
+              className="w-full"
+              onClick={() => {
+                router.push(`/products/buynow/${productId}`);
+              }}
             >
               Buy Now
             </Button>

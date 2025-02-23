@@ -3,18 +3,13 @@ import { products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface Context {
-  params: {
-    no: string;
-  };
-}
-
 export async function GET(
   req: NextRequest,
-  context: Context
+
+  { params }: { params: Promise<{ no: string }> }
 ): Promise<NextResponse> {
   try {
-    const { no } = await context.params;
+    const no = (await params).no;
     const num = parseInt(no, 10);
 
     if (isNaN(num)) {
