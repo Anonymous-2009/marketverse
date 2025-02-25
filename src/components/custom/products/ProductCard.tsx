@@ -19,6 +19,9 @@ import {
 } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import axios from 'axios';
+import { toast } from '@/hooks/use-toast';
+import { useClerk } from '@clerk/nextjs';
 
 interface Product {
   id: number;
@@ -34,7 +37,24 @@ interface Product {
 const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  const { user } = useClerk();
 
+  // Buy Now action
+  const handleToCart = async (productId: number) => {
+    try {
+      const res = await axios.put('/api/products/cart/add', {
+        email: user?.primaryEmailAddress?.emailAddress,
+        productId,
+      });
+      toast({
+        title: 'Success',
+        description: res.data.message,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error');
+    }
+  };
   return (
     <Card
       className="relative group transition-all duration-300 hover:shadow-xl"
@@ -80,7 +100,11 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 gap-2">
-        <Button className="flex-1" variant="default">
+        <Button
+          className="flex-1"
+          variant="default"
+          onClick={() => handleToCart(product.productId)}
+        >
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Cart
         </Button>

@@ -266,12 +266,6 @@ export default function Navbar() {
                           <DropdownMenuPortal>
                             <DropdownMenuSubContent>
                               <DropdownMenuItem>
-                                Previews Orders
-                                <DropdownMenuShortcut className="pl-12">
-                                  <ChartNoAxesGantt size={16} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
                                 Pending Orders
                                 <DropdownMenuShortcut>
                                   <Kanban size={16} />
@@ -280,7 +274,6 @@ export default function Navbar() {
                               <DropdownMenuItem>
                                 Completed Orders
                               </DropdownMenuItem>
-
                               <DropdownMenuItem>
                                 Accept Orders
                                 <DropdownMenuShortcut>

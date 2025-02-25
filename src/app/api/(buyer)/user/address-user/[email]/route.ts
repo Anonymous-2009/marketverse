@@ -3,13 +3,11 @@ import { db } from '@/db/index';
 import { desc, eq } from 'drizzle-orm';
 import { buyerAddress } from '@/db/schema';
 
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ email: string }> }
 ): Promise<NextResponse> {
-
-  const email = (await params).email
+  const email = (await params).email;
   try {
     // Validate input
     if (!email) {

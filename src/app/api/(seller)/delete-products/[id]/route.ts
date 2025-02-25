@@ -3,16 +3,11 @@ import { db } from '@/db'; // Adjust the import path if needed
 import { products } from '@/db/schema'; // Adjust the schema path if needed
 import { eq } from 'drizzle-orm';
 
-
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
-
-
-  const id = (await params).id
-
+  const id = (await params).id;
 
   const productId = Number(id);
   console.log('productId', productId);

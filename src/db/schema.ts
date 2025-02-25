@@ -164,7 +164,12 @@ export const orders = pgTable('orders', {
   buyerEmail: varchar('buyerEmail', { length: 255 }).notNull(),
   sellerEmail: varchar('sellerEmail', { length: 255 }).notNull(),
   orderAt: date('orderAt').defaultNow().notNull(),
-  status: text('status', { enum: ['decline', 'pending', 'approve'] }).notNull(),
+  status: text('status', {
+    enum: ['decline', 'pending', 'approve', 'cancelled', 'delivered'],
+  }).notNull(),
   productId: integer('productId').notNull(),
   addressID: integer('addressID').notNull(),
+  accountNumber: numeric('accountNumber').notNull(),
+  accountUsername: varchar('account_username'),
+  transactionN0: varchar('transaction_no', { length: 255 }),
 });

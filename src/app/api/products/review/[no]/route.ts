@@ -3,16 +3,13 @@ import { reviews } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ no: string }> }
 ): Promise<NextResponse> {
   try {
- 
-    const no = (await params).no
+    const no = (await params).no;
     const num = parseInt(no, 10);
-
 
     if (isNaN(num)) {
       return NextResponse.json(

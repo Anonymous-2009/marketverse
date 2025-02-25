@@ -7,7 +7,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ username: string }> }
 ): Promise<NextResponse> {
-  const username = (await params).username
+  const username = (await params).username;
 
   try {
     await db

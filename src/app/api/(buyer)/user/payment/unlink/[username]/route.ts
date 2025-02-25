@@ -3,12 +3,11 @@ import { db } from '@/db/index';
 import { buyerPayment } from '@/db/schema'; // Adjust the schema path if needed
 import { eq } from 'drizzle-orm';
 
-
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ username: string }> }
 ): Promise<NextResponse> {
-  const username = (await params).username
+  const username = (await params).username;
   try {
     await db
       .delete(buyerPayment)

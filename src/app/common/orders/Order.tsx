@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 interface Address {
   fullName: string;
@@ -31,7 +32,7 @@ interface PaymentAccount {
 }
 
 interface Order {
-  orderID: string;
+  orderID: number;
   orderStatus: 'pending' | 'approved' | 'cancelled' | 'delivered';
   orderDate: string; // Added order date
   sellerEmail: string;
@@ -41,15 +42,14 @@ interface Order {
   paymentAccount: PaymentAccount;
 }
 
-export default function OrdersPage() {
+export default function OrdersPage({ email }: { email: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(
-          `/api/products/order/krishnabag751@gmail.com`
-        );
+        const response = await axios.get(`/api/products/order/${email}`);
         setOrders(response.data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -74,11 +74,22 @@ export default function OrdersPage() {
     });
   };
 
-  const handleCancelOrder = (orderID: string) => {
-    toast({
-      title: 'Order Cancelled',
-      description: `Order ${orderID} has been cancelled.`,
-    });
+  const handleCancelOrder = async (orderID: number) => {
+    try {
+      const response = await axios.get(`/api/products/order/cancel/${orderID}`);
+      toast({
+        title: 'Order Cancelled',
+        description: response.data.message,
+      });
+      router.push('/common/orders');
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'server is giving error, plz wait',
+      });
+    }
   };
 
   const handleContactSeller = (sellerEmail: string) => {
@@ -87,6 +98,14 @@ export default function OrdersPage() {
       description: `Opening chat with ${sellerEmail}`,
     });
   };
+
+  if (orders.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <h1 className="text-2xl"> No Order's to display in your's account </h1>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background px-4 py-8 md:px-6 md:py-12">
@@ -155,22 +174,25 @@ export default function OrdersPage() {
                   reserved.
                 </p>
                 <div className="flex gap-2">
-                  <Button
+                  {/* i will add a realtime chatting with socker io with seller maybe or maybe not let's see for no choice */}
+                  {/* <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleContactSeller(order.sellerEmail)}
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Contact Seller
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleCancelOrder(order.orderID)}
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Cancel Order
-                  </Button>
+                  </Button> */}
+                  {order.orderStatus === 'pending' && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleCancelOrder(order.orderID)}
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel Order
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>

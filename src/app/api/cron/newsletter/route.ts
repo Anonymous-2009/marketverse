@@ -1,20 +1,11 @@
 // app/api/cron/newsletter/route.ts
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 import { db } from '@/db/index';
 import { newsletterTable } from '@/db/schema';
 import cron from 'node-cron';
 
 // Configure nodemailer
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+import transporter from '@/utils/nodemailer';
 
 // Function to send weekly newsletter
 async function sendWeeklyNewsletter() {
