@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MessageSquare, X } from 'lucide-react';
+import { MessageSquare, PackageSearch, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -101,9 +101,19 @@ export default function OrdersPage({ email }: { email: string }) {
 
   if (orders.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <h1 className="text-2xl"> No Order's to display in your's account </h1>
-      </div>
+      <Card className="bg-card">
+        <CardContent className="flex flex-col items-center justify-center py-16">
+          <PackageSearch className="w-16 h-16 text-muted-foreground mb-4" />
+          <h2 className="text-2xl font-semibold mb-2">No Orders Found</h2>
+          <p className="text-muted-foreground text-center max-w-md">
+            It looks like you haven't placed any orders yet. Start shopping to
+            see your orders here!
+          </p>
+          <Button className="mt-6" onClick={() => (window.location.href = '/')}>
+            Start Shopping
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
