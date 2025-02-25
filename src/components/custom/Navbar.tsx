@@ -265,27 +265,35 @@ export default function Navbar() {
                           </DropdownMenuSubTrigger>
                           <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                              <DropdownMenuItem>
-                                Pending Orders
-                                <DropdownMenuShortcut>
-                                  <Kanban size={16} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Completed Orders
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Accept Orders
-                                <DropdownMenuShortcut>
-                                  <FileCheck2 size={16} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Decline Orders
-                                <DropdownMenuShortcut>
-                                  <Ban size={16} />
-                                </DropdownMenuShortcut>
-                              </DropdownMenuItem>
+                              <Link href="/dashboard/order/pending">
+                                <DropdownMenuItem>
+                                  Pending Orders
+                                  <DropdownMenuShortcut>
+                                    <Kanban size={16} />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                              </Link>
+                              <Link href="/dashboard/order/complete">
+                                <DropdownMenuItem>
+                                  Completed Orders
+                                </DropdownMenuItem>
+                              </Link>
+                              <Link href="/dashboard/order/accept">
+                                <DropdownMenuItem>
+                                  Accept Orders
+                                  <DropdownMenuShortcut>
+                                    <FileCheck2 size={16} />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                              </Link>
+                              <Link href="/dashboard/order/decline">
+                                <DropdownMenuItem>
+                                  Decline Orders
+                                  <DropdownMenuShortcut>
+                                    <Ban size={16} />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                              </Link>
                             </DropdownMenuSubContent>
                           </DropdownMenuPortal>
                         </DropdownMenuSub>
