@@ -51,7 +51,7 @@ export async function GET(
     const result = await db
       .update(orders)
       .set({ status: 'cancelled' })
-      .where(and(eq(orders.status, 'pending')))
+      .where(and(eq(orders.status, 'pending'), eq(orders.orderId, ID)))
       .returning();
 
     console.log(result);
