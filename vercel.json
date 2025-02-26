@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/products/order/auto-cancel",
-      "schedule": "0 10 * * 1"
+      "schedule": "0 0 */2 * *"
     }
   ]
 }
