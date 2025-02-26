@@ -320,6 +320,13 @@ export default function Navbar() {
                           <PersonStanding size={16} />
                         </DropdownMenuShortcut>
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => signOut()}>
+                        Log out
+                        <DropdownMenuShortcut>
+                          <LogOut size={15} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   )}
                 </DropdownMenu>

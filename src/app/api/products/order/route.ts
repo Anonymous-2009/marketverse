@@ -13,35 +13,26 @@ import axios from 'axios';
 import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(
-  req: NextRequest,
-  res: NextResponse
-): Promise<NextResponse> {
-  const data = await req.json();
-  if (!data) {
-    return NextResponse.json(
-      {
-        message: 'Invalid data',
-      },
-      { status: 200 }
-    );
-  }
-
-  console.log('data', data);
-  const {
-    buyerEmail,
-    sellerEmail,
-    productId,
-    addressID,
-    accountNumber,
-    accountUsername,
-    password,
-    productPrice,
-  } = data;
-
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    // check if buyer, and seller email exists with product id
-    // Fetch buyer's
+    const data = await req.json();
+    if (!data) {
+      return NextResponse.json({ message: 'Invalid data' }, { status: 400 });
+    }
+
+    console.log('data', data);
+    const {
+      buyerEmail,
+      sellerEmail,
+      productId,
+      addressID,
+      accountNumber,
+      accountUsername,
+      password,
+      productPrice,
+    } = data;
+
+    // Fetch buyer details
     const buyer = (await db
       .select()
       .from(buyerProfile)
@@ -51,10 +42,10 @@ export async function POST(
       cartItems: { id: number }[];
     }[];
 
-    if (!buyer.length) {
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 200 });
-    }
-    console.log(buyer);
+    if (!buyer.length)
+      return NextResponse.json({ error: 'Buyer not found' }, { status: 404 });
+
+    console.log('Buyer:', buyer);
 
     // Fetch seller
     const seller = await db
@@ -63,52 +54,46 @@ export async function POST(
       .where(eq(sellersInfoTable.email, sellerEmail))
       .limit(1);
 
-    if (!seller.length) {
-      return NextResponse.json({ error: 'seller not found' }, { status: 200 });
-    }
+    if (!seller.length)
+      return NextResponse.json({ error: 'Seller not found' }, { status: 404 });
 
-    console.log('seller', seller);
-    // check if seller has payment account
+    console.log('Seller:', seller);
+
+    // Check if seller has a payment account
     const sellerPayment = await db
       .select()
       .from(paymentAccount)
       .where(eq(paymentAccount.sellerEmail, sellerEmail))
-
       .limit(1);
 
     if (!sellerPayment.length) {
       return NextResponse.json(
-        { error: 'seller payment account not found' },
-        { status: 200 }
+        { error: 'Seller payment account not found' },
+        { status: 404 }
       );
     }
 
-    // Fetch address
+    // Fetch buyer address
     const address = await db
       .select()
       .from(buyerAddress)
       .where(eq(buyerAddress.addressID, addressID))
       .limit(1);
 
-    if (!address.length) {
-      return NextResponse.json({ error: 'address not found' }, { status: 200 });
-    }
+    if (!address.length)
+      return NextResponse.json({ error: 'Address not found' }, { status: 404 });
 
-    // Fetch products
+    // Fetch product details
     const product = await db
       .select()
       .from(products)
       .where(eq(products.productId, productId))
       .limit(1);
 
-    if (!product.length) {
-      return NextResponse.json(
-        { error: 'products not found' },
-        { status: 200 }
-      );
-    }
+    if (!product.length)
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
-    // Fetch payment
+    // Validate buyer's payment
     const payment = await db
       .select()
       .from(buyerPayment)
@@ -120,11 +105,10 @@ export async function POST(
       )
       .limit(1);
 
-    if (!payment.length) {
-      return NextResponse.json({ error: 'payment not found' }, { status: 200 });
-    }
+    if (!payment.length)
+      return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
 
-    // here we will simulate a payment gateway transfer
+    // Simulate a payment gateway transaction
     const orderData = {
       senderAccNo: accountNumber,
       senderAccPassword: password,
@@ -139,14 +123,15 @@ export async function POST(
 
     if (orderCall.data.message !== 'Transaction successful') {
       return NextResponse.json(
-        { message: 'payment failed due to ' + orderCall.data.message + '' },
-        { status: 200 }
+        { message: `Payment failed: ${orderCall.data.message}` },
+        { status: 400 }
       );
     }
 
-    // // add order to order table
-    const info: typeof orders.$inferInsert = {
-      orderId: Math.floor(10000 + Math.random() * 90000),
+    // Insert order into database
+    const orderId = Math.floor(10000 + Math.random() * 90000);
+    const result = await db.insert(orders).values({
+      orderId,
       buyerEmail,
       sellerEmail,
       status: 'pending',
@@ -155,39 +140,40 @@ export async function POST(
       accountNumber,
       accountUsername,
       transactionN0: orderCall.data.transaction.transactionNo,
-    };
-
-    const result = await db.insert(orders).values(info);
+    });
 
     if (!result.rowCount || result.rowCount === 0) {
       return NextResponse.json(
-        { message: 'order not placed' },
-        { status: 200 }
+        { message: 'Order not placed' },
+        { status: 500 }
       );
     }
 
-    const updatedCart = buyer[0].cartItems.filter((item) => item !== productId);
-    const updateWishlist = buyer[0].wishlistItems.filter(
-      (item) => item !== productId
+    // Update buyer's cart & wishlist
+    const updatedCart = buyer[0].cartItems.filter(
+      (item) => item.id !== productId
     );
+    const updatedWishlist = buyer[0].wishlistItems.filter(
+      (item) => item.id !== productId
+    );
+
     await db
       .update(buyerProfile)
       .set({ cartItems: updatedCart })
       .where(eq(buyerProfile.email, buyerEmail));
     await db
       .update(buyerProfile)
-      .set({ wishlistItems: updateWishlist })
+      .set({ wishlistItems: updatedWishlist })
       .where(eq(buyerProfile.email, buyerEmail));
 
     // Send email notification
     const mailOptions = {
-      from: process.env.EMAIL_USER, // Your email
+      from: process.env.EMAIL_USER || 'default@example.com',
       to: buyerEmail,
       subject: 'Order Confirmation',
       html: `
         <h1>Order Confirmation</h1>
-        <p>Dear Customer,</p>
-        <p>Thank you for your order. Your order ID is <strong>${info.orderId}</strong>.</p>
+        <p>Your order ID is <strong>${orderId}</strong>.</p>
         <p>Product: ${product[0].productName}</p>
         <p>Price: ₹${productPrice}</p>
         <p>Status: <strong>Pending</strong></p>
@@ -198,16 +184,11 @@ export async function POST(
 
     await transporter.sendMail(mailOptions);
     return NextResponse.json(
-      {
-        message: 'Order placed successfully!',
-      },
+      { message: 'Order placed successfully!' },
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { message: 'some error occur in server' },
-      { status: 500 }
-    );
+    console.error('Error:', error);
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }

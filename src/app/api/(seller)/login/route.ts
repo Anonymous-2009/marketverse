@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       age: 0,
       email: emailAddress,
       username,
-      phoneNo: 0,
+      phoneNo: '',
       gender: null,
       profileImageUrl: imageURL,
     };
