@@ -149,13 +149,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // fix the below error
     // Update buyer's cart & wishlist
-    const updatedCart = buyer[0].cartItems.filter(
-      (item) => item.id !== productId
-    );
+    const updatedCart = buyer[0].cartItems.filter((item) => item !== productId);
     const updatedWishlist = buyer[0].wishlistItems.filter(
-      (item) => item.id !== productId
+      (item) => item !== productId
     );
+    console.log(updatedCart, updatedWishlist, 'here my bio');
 
     await db
       .update(buyerProfile)
