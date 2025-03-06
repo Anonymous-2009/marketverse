@@ -1,6 +1,6 @@
 {
   "name": "marketverse",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": true,
   "main": "src/app/layout.tsx",
   "description": "Marketverse is a platform that allows users to create and manage their own virtual marketplaces.",
