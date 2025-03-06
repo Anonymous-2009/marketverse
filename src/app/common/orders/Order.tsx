@@ -10,47 +10,20 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { type Order, type ApiResponseCommon, ApiResponse } from '@/types';
 
-interface Address {
-  fullName: string;
-  streetName: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phoneNo: string;
-}
-
-interface Product {
-  name: string;
-  price: number;
-  description: string;
-}
-
-interface PaymentAccount {
-  accountUsername: string;
-  accountNumber: string;
-}
-
-interface Order {
-  orderID: number;
-  orderStatus: 'pending' | 'approved' | 'cancelled' | 'delivered';
-  orderDate: string; // Added order date
-  sellerEmail: string;
-  buyerEmail: string;
-  address: Address;
-  products: Product;
-  paymentAccount: PaymentAccount;
-}
-
-export default function OrdersPage({ email }: { email: string }) {
+const OrderPage = ({ email }: { email: string }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const getData = async () => {
+    const getData = async (): Promise<void> => {
       try {
-        const response = await axios.get(`/api/products/order/${email}`);
-        setOrders(response.data.data);
+        const response = await axios.get<ApiResponse<Order[]>>(
+          `/api/products/order/${email}`
+        );
+        setOrders(Array.isArray(response.data.data) ? response.data.data : []);
       } catch (error) {
         console.error('Error fetching data:', error);
         toast({
@@ -62,11 +35,10 @@ export default function OrdersPage({ email }: { email: string }) {
     };
 
     getData();
-  }, []);
+  }, [email, toast]);
+  // not i an mood to change this
 
-  const { toast } = useToast();
-
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -74,15 +46,17 @@ export default function OrdersPage({ email }: { email: string }) {
     });
   };
 
-  const handleCancelOrder = async (orderID: number) => {
+  const handleCancelOrder = async (orderID: number): Promise<void> => {
     try {
-      const response = await axios.get(`/api/products/order/cancel/${orderID}`);
+      const response = await axios.get<ApiResponseCommon>(
+        `/api/products/order/cancel/${orderID}`
+      );
       toast({
-        title: 'Order Cancelled',
+        title: 'Message',
         description: response.data.message,
       });
       router.push('/common/orders');
-    } catch (error) {
+    } catch (error: unknown) {
       console.log(error);
       toast({
         variant: 'destructive',
@@ -106,8 +80,8 @@ export default function OrdersPage({ email }: { email: string }) {
           <PackageSearch className="w-16 h-16 text-muted-foreground mb-4" />
           <h2 className="text-2xl font-semibold mb-2">No Orders Found</h2>
           <p className="text-muted-foreground text-center max-w-md">
-            It looks like you haven't placed any orders yet. Start shopping to
-            see your orders here!
+            It looks like you haven&apos;t placed any orders yet. Start shopping
+            to see your orders here!
           </p>
           <Button className="mt-6" onClick={() => (window.location.href = '/')}>
             Start Shopping
@@ -142,23 +116,30 @@ export default function OrdersPage({ email }: { email: string }) {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <h3 className="font-semibold mb-2">Product Details</h3>
-                  <p className="text-lg font-medium">{order.products.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {order.products.description}
-                  </p>
-                  <p className="text-lg font-bold mt-2">
-                    ₹{order.products.price}
-                  </p>
+                  {order.products && (
+                    <>
+                      <p className="text-lg font-medium">
+                        {order.products.productName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {order.products.productDescription}
+                      </p>
+                      <p className="text-lg font-bold mt-2">
+                        ₹{order.products.productPrice}
+                      </p>
+                    </>
+                  )}
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Shipping Address</h3>
-                  <p>{order.address.fullName}</p>
-                  <p>{order.address.streetName}</p>
+                  <p>{order.address?.fullName ?? 'N/A'}</p>
+                  <p>{order.address?.streetName ?? 'N/A'}</p>
                   <p>
-                    {order.address.city}, {order.address.state}{' '}
-                    {order.address.pincode}
+                    {order.address?.city ?? 'N/A'},{' '}
+                    {order.address?.state ?? 'N/A'}{' '}
+                    {order.address?.pincode ?? 'N/A'}
                   </p>
-                  <p>Phone: {order.address.phoneNo}</p>
+                  <p>Phone: {order.address?.phoneNo ?? 'N/A'}</p>
                 </div>
               </div>
               <Separator />
@@ -185,14 +166,14 @@ export default function OrdersPage({ email }: { email: string }) {
                 </p>
                 <div className="flex gap-2">
                   {/* i will add a realtime chatting with socker io with seller maybe or maybe not let's see for no choice */}
-                  {/* <Button
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleContactSeller(order.sellerEmail)}
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Contact Seller
-                  </Button> */}
+                  </Button>
                   {order.orderStatus === 'pending' && (
                     <Button
                       variant="destructive"
@@ -211,4 +192,5 @@ export default function OrdersPage({ email }: { email: string }) {
       </div>
     </div>
   );
-}
+};
+export default OrderPage;

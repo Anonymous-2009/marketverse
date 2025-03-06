@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import Address from './Address';
 import AddressListSkeleton from '@/components/custom/skeleton/Address-Skeleton';
 
-export default function Page() {
+const Page: React.FC = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -13,4 +13,6 @@ export default function Page() {
   }
 
   return <Address email={user?.emailAddresses[0].emailAddress || ''} />;
-}
+};
+
+export default Page;

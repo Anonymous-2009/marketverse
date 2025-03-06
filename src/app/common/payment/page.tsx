@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import Main from './payment';
 import Loading from '@/components/custom/skeleton/Payment-Skeleton';
 
-export default function Page() {
+const Page: React.FunctionComponent = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -26,4 +26,6 @@ export default function Page() {
       </main>
     </div>
   );
-}
+};
+
+export default Page;

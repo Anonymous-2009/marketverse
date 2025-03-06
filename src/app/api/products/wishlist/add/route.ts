@@ -2,14 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db'; // Import your Drizzle DB instance
 import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { type AddToCartRequest, type ApiResponseCommon } from '@/types';
 
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
-    const { email, productId } = await req.json();
+    const body: AddToCartRequest = await req.json();
+    const { email, productId } = body;
 
     if (!email || !productId) {
       return NextResponse.json(
-        { error: 'Email and productId are required' },
+        { message: 'Email and productId are required' },
         { status: 400 }
       );
     }
@@ -22,10 +26,10 @@ export async function PUT(req: NextRequest) {
       .limit(1);
 
     if (!buyer.length) {
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Buyer not found' }, { status: 200 });
     }
 
-    let wishItems: number[] = Array.isArray(buyer[0].wishlistItems)
+    const wishItems: number[] = Array.isArray(buyer[0].wishlistItems)
       ? buyer[0].wishlistItems
       : [];
 
@@ -48,11 +52,11 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({
       message: 'Product added to wishlist',
-      wishItems,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log(error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

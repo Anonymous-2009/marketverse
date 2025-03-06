@@ -8,19 +8,22 @@ import {
   products,
   sellersInfoTable,
 } from '@/db/schema';
+import { type Order, type ApiResponse } from '@/types';
 import transporter from '@/utils/nodemailer';
 import axios from 'axios';
 import { and, eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponse<Order>>> {
   try {
     const data = await req.json();
     if (!data) {
-      return NextResponse.json({ message: 'Invalid data' }, { status: 400 });
+      return NextResponse.json({ message: 'Invalid data' }, { status: 200 });
     }
 
-    console.log('data', data);
+    // console.log('data', data);
     const {
       buyerEmail,
       sellerEmail,
@@ -43,9 +46,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }[];
 
     if (!buyer.length)
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Buyer not found' }, { status: 200 });
 
-    console.log('Buyer:', buyer);
+    // console.log('Buyer:', buyer);
 
     // Fetch seller
     const seller = await db
@@ -55,9 +58,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .limit(1);
 
     if (!seller.length)
-      return NextResponse.json({ error: 'Seller not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Seller not found' },
+        { status: 404 }
+      );
 
-    console.log('Seller:', seller);
+    // console.log('Seller:', seller);
 
     // Check if seller has a payment account
     const sellerPayment = await db
@@ -68,7 +74,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (!sellerPayment.length) {
       return NextResponse.json(
-        { error: 'Seller payment account not found' },
+        { message: 'Seller payment account not found' },
         { status: 404 }
       );
     }
@@ -81,7 +87,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .limit(1);
 
     if (!address.length)
-      return NextResponse.json({ error: 'Address not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Address not found' },
+        { status: 404 }
+      );
 
     // Fetch product details
     const product = await db
@@ -91,7 +100,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .limit(1);
 
     if (!product.length)
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Product not found' },
+        { status: 404 }
+      );
 
     // Validate buyer's payment
     const payment = await db
@@ -106,7 +118,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .limit(1);
 
     if (!payment.length)
-      return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Payment not found' },
+        { status: 404 }
+      );
 
     // Simulate a payment gateway transaction
     const orderData = {
@@ -155,8 +170,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const updatedWishlist = buyer[0].wishlistItems.filter(
       (item) => item !== productId
     );
-    console.log(updatedCart, updatedWishlist, 'here my bio');
 
+    // console.log(updatedCart, updatedWishlist, 'here my bio');
+
+    // console.log(updatedCart, updatedWishlist, 'here my bio');
     await db
       .update(buyerProfile)
       .set({ cartItems: updatedCart })
@@ -192,3 +209,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
+
+// will check or later

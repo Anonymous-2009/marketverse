@@ -1,13 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { type Product, type ApiResponse } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponse<Product[]>>> {
   try {
     // Parse the JSON body
     const body = await req.json();
-    const { email } = body;
+    const { email }: { email: string } = body;
 
     // Validate input
     if (!email) {
@@ -29,11 +32,11 @@ export async function POST(req: NextRequest) {
         { status: 200 }
       );
     }
-    console.log(product);
+    // console.log(product);
 
     // Return seller details
     return NextResponse.json(
-      { message: 'data retrive', products: product },
+      { message: 'data retrive', data: product },
       { status: 200 }
     );
   } catch (error) {

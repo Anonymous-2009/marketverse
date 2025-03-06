@@ -8,12 +8,13 @@ import ThemeToggle from './Theme-Toggle';
 import axios from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NewsLetterType, NewsLetterSchema } from '../../validation';
+import { type NewsLetterType, NewsLetterSchema } from '../../validation';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import TypedText from './TypedText';
+import { type ApiResponseCommon } from '@/types';
 
-export default function Footer() {
+const Footer: React.FC = () => {
   const { toast } = useToast();
 
   const {
@@ -25,17 +26,20 @@ export default function Footer() {
     resolver: zodResolver(NewsLetterSchema),
   });
 
-  const handleClick: SubmitHandler<NewsLetterType> = async (data) => {
+  const handleClick: SubmitHandler<NewsLetterType> = async (
+    data: NewsLetterType
+  ): Promise<void> => {
     try {
-      const response = await axios.post('/api/newsletter', data);
-      const result = response.data;
-      // console.log("Response:", result);
+      const response = await axios.post<ApiResponseCommon>(
+        '/api/newsletter',
+        data
+      );
       toast({
         title: 'Message',
-        description: result.message,
+        description: response.data.message,
         action: <ToastAction altText="OK">OK</ToastAction>,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error:', error);
       toast({
         variant: 'destructive',
@@ -67,7 +71,7 @@ export default function Footer() {
             <h3 className="font-medium mb-4">Let us Help You</h3>
             <ul className="space-y-3">
               {['Payment', 'Your Account', 'Order Status', 'View Profile'].map(
-                (item) => (
+                (item: string) => (
                   <li key={item}>
                     <Link
                       href="/"
@@ -85,7 +89,7 @@ export default function Footer() {
             <h3 className="font-medium mb-4">Seller</h3>
             <ul className="space-y-3">
               {['Sell On MarketVerse', 'Pricing', 'Create A Store'].map(
-                (item) => (
+                (item: string) => (
                   <li key={item}>
                     <Link
                       href="/"
@@ -102,16 +106,18 @@ export default function Footer() {
           <div>
             <h3 className="font-medium mb-4">About MarketVerse</h3>
             <ul className="space-y-3">
-              {['About Us', 'Careers', 'Press', 'Partners'].map((item) => (
-                <li key={item}>
-                  <Link
-                    href="/"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              {['About Us', 'Careers', 'Press', 'Partners'].map(
+                (item: string) => (
+                  <li key={item}>
+                    <Link
+                      href="/"
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </div>
 
@@ -166,4 +172,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

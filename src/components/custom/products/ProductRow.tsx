@@ -1,29 +1,16 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
+import { type Product } from '@/types';
 
-interface Product {
-  id: number;
-  productId: number;
-  sellerId: string;
-  sellerEmail: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
-  productImages: string[];
-}
-
-const ProductRow = ({
+const ProductRow: React.FC<{ products: Product[]; title: string }> = ({
   products,
   title,
-}: {
-  products: Product[];
-  title: string;
 }) => {
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState<number>(0);
   const rowRef = React.useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = (direction: 'left' | 'right'): void => {
     if (rowRef.current) {
       const scrollAmount = 300;
       const newPosition =
@@ -46,7 +33,7 @@ const ProductRow = ({
         ref={rowRef}
         className="flex overflow-x-auto gap-6 pb-6 px-2 scroll-smooth hide-scrollbar"
       >
-        {products.map((product) => (
+        {products.map((product: Product) => (
           <div key={product.id} className="min-w-[280px] flex-shrink-0">
             <ProductCard product={product} />
           </div>

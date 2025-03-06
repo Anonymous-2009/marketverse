@@ -3,7 +3,7 @@ import { useUser } from '@clerk/nextjs';
 import { ProductList } from './product-list';
 import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
 
-export default function Home() {
+const Page = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -15,4 +15,6 @@ export default function Home() {
       <ProductList email={user?.primaryEmailAddress?.emailAddress || ''} />
     </main>
   );
-}
+};
+
+export default Page;

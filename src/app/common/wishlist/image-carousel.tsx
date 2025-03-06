@@ -11,16 +11,12 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
+import { type ImageCarouselProps } from '@/types';
 
-interface ImageCarouselProps {
-  productImages: string[];
-  className?: string;
-}
-
-export function ImageCarousel({
+export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   productImages,
   className,
-}: ImageCarouselProps) {
+}: ImageCarouselProps) => {
   return (
     <Card className={cn('w-full', className)}>
       <CardContent className="p-0">
@@ -51,4 +47,4 @@ export function ImageCarousel({
       </CardContent>
     </Card>
   );
-}
+};

@@ -2,12 +2,13 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { paymentAccount } from '@/db/schema'; // Adjust the schema path if needed
 import { eq } from 'drizzle-orm';
+import { type ApiResponseCommon } from '@/types';
 
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ username: string }> }
-): Promise<NextResponse> {
-  const username = (await params).username;
+): Promise<NextResponse<ApiResponseCommon>> {
+  const username: string = (await params).username;
 
   try {
     await db
@@ -17,7 +18,7 @@ export async function DELETE(
       { message: 'payment account unlink' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.log(error);
   }
   return NextResponse.json(

@@ -1,15 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db'; // Import your Drizzle DB instance
 import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { ApiResponseCommon } from '@/types';
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
-    const { email, productId } = await req.json();
+    const { email, productId }: { email: string; productId: number } =
+      await req.json();
 
     if (!email || !productId) {
       return NextResponse.json(
-        { error: 'Email and productId are required' },
+        { message: 'Email and productId are required' },
         { status: 200 }
       );
     }
@@ -21,8 +25,8 @@ export async function DELETE(req: NextRequest) {
       .where(eq(buyerProfile.email, email))
       .limit(1);
 
-    if (!buyer.length) {
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 404 });
+    if (buyer.length === 0) {
+      return NextResponse.json({ message: 'Buyer not found' }, { status: 404 });
     }
 
     let cartItems: number[] = (buyer[0].cartItems as number[]) || [];
@@ -46,11 +50,11 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({
       message: 'Product removed from cart',
-      cartItems,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log(error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

@@ -37,6 +37,7 @@ yarn-error.log*
 .env.local
 drizzle
 file
+pnpm-lock.yaml
 
 # vercel
 .vercel

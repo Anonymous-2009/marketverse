@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -26,13 +26,10 @@ import { addressSchema, type AddressFormValues } from '@/validation';
 import { Card, CardContent } from '@/components/ui/card';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-
-interface AddressProps {
-  email: string;
-}
+import { type ApiResponseCommon, type AddressProps } from '@/types';
 
 export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
@@ -49,10 +46,15 @@ export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
     },
   });
 
-  async function onSubmit(data: AddressFormValues) {
-    console.log(data);
+  const onSubmit: SubmitHandler<AddressFormValues> = async (
+    data: AddressFormValues
+  ): Promise<void> => {
+    // console.log(data);
     try {
-      const response = await axios.post('/api/user/address-user', data);
+      const response = await axios.post<ApiResponseCommon>(
+        '/api/user/address-user',
+        data
+      );
       toast({
         title: 'Message',
         description: response.data.message,
@@ -68,7 +70,7 @@ export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
         description: 'There was a problem with your request.',
       });
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

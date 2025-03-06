@@ -10,21 +10,19 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
+import {
+  type ApiResponseCommon,
+  type ProductFormData,
+  type SellerType,
+} from '@/types';
+import Image from 'next/image';
 
-export interface ProductFormData {
-  productName: string;
-  productPrice: number;
-  productDescription: string;
-  productImages: FileList;
-  sellerEmail?: string;
-}
-
-export default function CreateProduct({ email, sellerId }: any) {
+const CreateProduct: React.FC<SellerType> = ({ email, sellerId }) => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const {
     register,
@@ -32,27 +30,34 @@ export default function CreateProduct({ email, sellerId }: any) {
     formState: { errors },
   } = useForm<ProductFormData>();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const files: File[] = Array.from(e.target.files || []);
     processFiles(files);
   };
 
-  const processFiles = (files: File[]) => {
-    if (files.length + selectedImages.length > 5) {
-      alert('You can only upload up to 5 images');
-      return;
-    }
+  const processFiles = useCallback(
+    (files: File[]): void => {
+      if (files.length + selectedImages.length > 5) {
+        alert('You can only upload up to 5 images');
+        return;
+      }
 
-    // Filter for only image files
-    const imageFiles = files.filter((file) => file.type.startsWith('image/'));
+      // Filter for only image files
+      const imageFiles: File[] = files.filter((file) =>
+        file.type.startsWith('image/')
+      );
 
-    // Add new images to existing ones
-    setSelectedImages((prev) => [...prev, ...imageFiles]);
+      // Add new images to existing ones
+      setSelectedImages((prev) => [...prev, ...imageFiles]);
 
-    // Create preview URLs for new images
-    const newPreviewUrls = imageFiles.map((file) => URL.createObjectURL(file));
-    setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
-  };
+      // Create preview URLs for new images
+      const newPreviewUrls = imageFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
+      setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+    },
+    [selectedImages.length]
+  );
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -71,16 +76,19 @@ export default function CreateProduct({ email, sellerId }: any) {
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
 
-    const files = Array.from(e.dataTransfer.files);
-    processFiles(files);
-  }, []);
+      const files: File[] = Array.from(e.dataTransfer.files);
+      processFiles(files);
+    },
+    [processFiles]
+  );
 
-  const removeImage = (index: number) => {
+  const removeImage = (index: number): void => {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
     setPreviewUrls((prev) => {
       URL.revokeObjectURL(prev[index]);
@@ -101,19 +109,22 @@ export default function CreateProduct({ email, sellerId }: any) {
 
     setIsSubmitting(true);
 
-    const formData = new FormData();
+    const formData: FormData = new FormData();
     formData.append('productName', data.productName);
     formData.append('productPrice', data.productPrice.toLocaleString());
     formData.append('productDescription', data.productDescription);
     formData.append('sellerEmail', email);
     formData.append('sellerID', sellerId);
 
-    selectedImages.forEach((image, index) => {
+    selectedImages.forEach((image: File) => {
       formData.append('productImages', image);
     });
 
     try {
-      const response = await axios.post('/api/add-product', formData);
+      const response = await axios.post<ApiResponseCommon>(
+        '/api/add-product',
+        formData
+      );
       // console.log(response.data)
       toast({
         title: 'Message',
@@ -122,7 +133,7 @@ export default function CreateProduct({ email, sellerId }: any) {
       previewUrls.forEach((url) => URL.revokeObjectURL(url));
       setSelectedImages([]);
       setPreviewUrls([]);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating product:', error);
       // alert('Failed to list a product')
     } finally {
@@ -228,16 +239,18 @@ export default function CreateProduct({ email, sellerId }: any) {
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {previewUrls.map((url, index) => (
                       <div key={url} className="relative group">
-                        <img
+                        <Image
                           src={url}
                           alt={`Preview ${index + 1}`}
                           className="w-full h-32 object-cover rounded-lg"
+                          width={180}
+                          height={150}
                         />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}
                           className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                         >
                           <X size={16} />
                         </button>
@@ -277,4 +290,6 @@ export default function CreateProduct({ email, sellerId }: any) {
       </Card>
     </div>
   );
-}
+};
+
+export default CreateProduct;

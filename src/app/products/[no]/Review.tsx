@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Star } from 'lucide-react';
@@ -16,47 +16,40 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
-import { ReviewFormData, reviewSchema } from '@/validation';
+import { type ReviewFormData, reviewSchema } from '@/validation';
 import axios from 'axios';
-
-interface ReviewProps {
-  productId: number;
-  email: string;
-}
+import {
+  type Review,
+  type ApiResponse,
+  type ApiResponseCommon,
+  type ReviewProps,
+} from '@/types';
 
 const Review: React.FC<ReviewProps> = ({ productId, email }) => {
-  interface Review {
-    id: number;
-    reviewDate: string;
-    reviewStar: number;
-    reviewMessage: string;
-    profileImageUrl: string;
-    firstName: string;
-    lastName: string;
-  }
-
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [visibleReviews, setVisibleReviews] = useState(3);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [visibleReviews, setVisibleReviews] = useState<number>(3);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
-      const res = await axios.get(`/api/products/review/${productId}`);
-      setReviews(res.data.data);
-      console.log('Reviews:', reviews);
-    } catch (error) {
+      const res = await axios.get<ApiResponse<Review>>(
+        `/api/products/review/${productId}`
+      );
+      setReviews(Array.isArray(res.data.data) ? res.data.data : []);
+      // console.log('Reviews:', reviews);
+    } catch (error: unknown) {
       console.error('Error fetching reviews:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
 
   useEffect(() => {
     fetchReviews();
-  }, []);
+  }, [fetchReviews]);
 
   const {
     register,
@@ -75,9 +68,9 @@ const Review: React.FC<ReviewProps> = ({ productId, email }) => {
     },
   });
 
-  const selectedStars = watch('reviewStar');
+  const selectedStars: number = watch('reviewStar');
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
       month: 'long',
@@ -86,14 +79,18 @@ const Review: React.FC<ReviewProps> = ({ productId, email }) => {
     }).format(date);
   };
 
-  const onSubmit = async (data: ReviewFormData) => {
+  const onSubmit = async (data: ReviewFormData): Promise<void> => {
     try {
-      const res = await axios.post(`/api/products/review`, data);
-      toast({ title: 'Review Submitted', description: res.data.message });
+      const res = await axios.post<ApiResponseCommon>(
+        `/api/products/review`,
+        data
+      );
+      toast({ title: 'Message', description: res.data.message });
       setDialogOpen(false);
       reset();
       fetchReviews(); // Refetch reviews after submission
-    } catch (error) {
+    } catch (error: unknown) {
+      console.log(error);
       toast({
         title: 'Error',
         description: 'An error occurred while submitting your review.',
@@ -136,7 +133,7 @@ const Review: React.FC<ReviewProps> = ({ productId, email }) => {
                   ) : (
                     <AvatarFallback>
                       {review.firstName[0]}
-                      {review.lastName[0]}
+                      {review.lastName ? review.lastName[0] : ''}
                     </AvatarFallback>
                   )}
                 </Avatar>
@@ -146,7 +143,9 @@ const Review: React.FC<ReviewProps> = ({ productId, email }) => {
                       {review.firstName} {review.lastName}
                     </span>
                     <span className="text-muted-foreground">
-                      {formatDate(review.reviewDate)}
+                      {review.reviewDate
+                        ? formatDate(review.reviewDate)
+                        : 'N/A'}
                     </span>
                   </div>
                   <div className="flex items-center mt-1">

@@ -1,20 +1,25 @@
+import { type ApiResponse, type Product } from '@/types';
 import axios from 'axios';
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (): Promise<ApiResponse<Product[]>> => {
   try {
-    const { data } = await axios.get('/api/products/fetch/');
+    const { data } = await axios.get<ApiResponse<Product[]>>(
+      '/api/products/fetch/'
+    );
     return data;
-  } catch (error: any) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      throw new Error(error.response.data.error || 'Server error');
-    } else if (error.request) {
-      // The request was made but no response was received
-      throw new Error('No response from server');
-    } else {
-      // Something happened in setting up the request
-      throw new Error(`Error: ${error.message}`);
+  } catch (error: unknown) {
+    let errorMessage = 'Unknown error occurred';
+
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        errorMessage = error.response.data?.error || 'Server error';
+      } else if (error.request) {
+        errorMessage = 'No response from server';
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
+
+    return { message: errorMessage, data: [] }; // Ensure consistency
   }
 };

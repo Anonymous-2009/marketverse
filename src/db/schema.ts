@@ -8,10 +8,9 @@ import {
   boolean,
   integer,
   numeric,
-  json,
   smallint,
+  json,
 } from 'drizzle-orm/pg-core';
-import { array } from 'zod';
 
 // Define your table
 export const newsletterTable = pgTable('newsletter', {
@@ -20,13 +19,6 @@ export const newsletterTable = pgTable('newsletter', {
   createdAt: date('created_at').defaultNow(), // Date field with default as current timestamp
   time: time('time').defaultNow(), // Date field with default as current timestamp
 });
-
-export interface Newsletter {
-  id: number;
-  email: string;
-  createdAt: Date;
-  time: string;
-}
 
 export const sellersTable = pgTable('sellers', {
   id: serial('id'),
@@ -37,16 +29,6 @@ export const sellersTable = pgTable('sellers', {
   lastName: varchar('last_name', { length: 50 }),
   isSeller: boolean('is_seller').default(true),
 });
-
-export interface Seller {
-  id: number;
-  email: string;
-  uniqueId: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  isSeller: boolean;
-}
 
 export const sellersInfoTable = pgTable('sellers_info', {
   id: serial('id').primaryKey(),
@@ -63,20 +45,6 @@ export const sellersInfoTable = pgTable('sellers_info', {
   updatedAt: date('updated_at').defaultNow().notNull(),
 });
 
-export interface SellerInfo {
-  id: number;
-  uniqueId: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  email: string;
-  phoneNo: string;
-  gender: string;
-  profileImageUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export const products = pgTable('products', {
   id: serial('id'),
   productId: integer('product_id').primaryKey().notNull(), // 5-digit ID
@@ -85,7 +53,7 @@ export const products = pgTable('products', {
   productName: varchar('product_name', { length: 255 }).notNull(), // Name of the product
   productPrice: integer('product_price').notNull(), // Price of the product
   productDescription: text('product_description').notNull(), // Description of the product
-  productImages: json('product-images').array().notNull(), // Array of product image URLs
+  productImages: varchar('product-images', { length: 255 }).array().notNull(), // Array of product image URLs
 });
 
 export const paymentAccount = pgTable('paymentAccount', {

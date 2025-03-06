@@ -1,21 +1,21 @@
 import { db } from '@/db';
 import { products } from '@/db/schema';
+import { type ApiResponse, type Product } from '@/types';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  req: NextRequest,
-
+  _req: NextRequest,
   { params }: { params: Promise<{ no: string }> }
-): Promise<NextResponse> {
+): Promise<NextResponse<ApiResponse<Product>>> {
   try {
-    const no = (await params).no;
-    const num = parseInt(no, 10);
+    const no: string = (await params).no;
+    const num: number = parseInt(no, 10);
 
     if (isNaN(num)) {
       return NextResponse.json(
         { message: 'Invalid product ID. It must be a number.' },
-        { status: 400 }
+        { status: 200 }
       );
     }
 

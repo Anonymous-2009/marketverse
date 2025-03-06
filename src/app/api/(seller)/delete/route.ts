@@ -1,15 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { sellersTable, sellersInfoTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
-    const { email } = body;
-    console.log('email:', email);
-    console.log('body:', body.primaryEmailAddress.emailAddress);
-    // Validate input
     if (!body.primaryEmailAddress.emailAddress) {
       return NextResponse.json(
         { message: 'Email is required.' },
@@ -39,17 +35,14 @@ export async function POST(req: NextRequest) {
     await db
       .delete(sellersInfoTable)
       .where(eq(sellersInfoTable.email, body.primaryEmailAddress.emailAddress));
-    //     await db
-    // .update(sellersTable)
-    // .set({ isSeller: false })
-    // .where(eq(sellersTable.email, body.primaryEmailAddress.emailAddress));
+
     return NextResponse.json(
       {
         message: `Seller with email '${body.primaryEmailAddress.emailAddress}' has been deleted successfully.`,
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error deleting seller:', error);
     return NextResponse.json(
       { message: 'Internal Server Error.' },

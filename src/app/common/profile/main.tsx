@@ -24,16 +24,17 @@ import { useFetchDataByEmailForBuyer } from '@/service/buyer-detail/fetchDataByE
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { updateSchema, updateType } from '@/validation';
+import { updateSchema, type updateType } from '@/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { type ApiResponseCommon } from '@/types';
 
 const Main = ({ email }: { email: string }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isUploading, setUploading] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isUploading, setUploading] = useState<boolean>(false);
 
   const { data, isLoading, isError } = useFetchDataByEmailForBuyer(email);
 
@@ -59,14 +60,23 @@ const Main = ({ email }: { email: string }) => {
 
   // Update form values when data is loaded
   useEffect(() => {
-    if (data?.data?.[0]) {
-      const userData = data.data[0];
+    if (data?.data) {
+      const userData = data.data;
       reset({
         firstName: userData.firstName || '',
         lastName: userData.lastName || '',
         age: userData.age || 0,
         phoneNo: userData.phoneNo || '',
-        gender: userData.gender || 'prefer-not-to-say',
+        gender: (userData.gender &&
+        ['male', 'female', 'other', 'prefer-not-to-say'].includes(
+          userData.gender
+        )
+          ? userData.gender
+          : 'prefer-not-to-say') as
+          | 'male'
+          | 'female'
+          | 'other'
+          | 'prefer-not-to-say',
         profileImageUrl: userData.profileImageUrl || '',
         email: email,
       });
@@ -78,24 +88,29 @@ const Main = ({ email }: { email: string }) => {
     return <ProfileSkeleton />;
   }
 
-  if (isError || !data?.data?.[0]) {
+  if (isError || !data?.data) {
     return <p className="text-xl text-gray-600">No buyer info listed yet.</p>;
   }
 
   // Extract the first item from the data array and assign it to finalData and it's a good way, but in for seller i use a different way like array map method, but i should use this way for seller too.
-  const finalData = data.data[0];
+  const finalData = data.data;
 
-  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     if (!event.target.files?.[0]) return;
 
     try {
       setUploading(true);
-      const file = event.target.files[0];
-      const formData = new FormData();
+      const file: File = event.target.files[0];
+      const formData: FormData = new FormData();
       formData.append('file', file);
       formData.append('email', email);
 
-      const response = await axios.put('/api/user/upload-image', formData);
+      const response = await axios.put<ApiResponseCommon>(
+        '/api/user/upload-image',
+        formData
+      );
       toast({
         title: 'Message',
         description: response.data.message,
@@ -105,7 +120,7 @@ const Main = ({ email }: { email: string }) => {
           </ToastAction>
         ),
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error uploading image:', error);
       toast({
         variant: 'destructive',
@@ -118,9 +133,12 @@ const Main = ({ email }: { email: string }) => {
     }
   };
 
-  const handleFormSubmit = async (formData: updateType) => {
+  const handleFormSubmit = async (formData: updateType): Promise<void> => {
     try {
-      const response = await axios.put('/api/user/update-user', formData);
+      const response = await axios.put<ApiResponseCommon>(
+        '/api/user/update-user',
+        formData
+      );
       toast({
         title: 'Message',
         description: response.data.message,
@@ -131,7 +149,7 @@ const Main = ({ email }: { email: string }) => {
         ),
       });
       setIsOpen(false);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({
         variant: 'destructive',
@@ -162,7 +180,7 @@ const Main = ({ email }: { email: string }) => {
                 <div className="flex items-center space-x-4">
                   <Avatar className="w-24 h-24">
                     <AvatarImage
-                      src={finalData.profileImageUrl}
+                      src={finalData.profileImageUrl || ''}
                       alt="Profile picture"
                     />
                     <AvatarFallback>
@@ -274,7 +292,7 @@ const Main = ({ email }: { email: string }) => {
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <Avatar className="w-32 h-32">
                 <AvatarImage
-                  src={finalData.profileImageUrl}
+                  src={finalData.profileImageUrl || ''}
                   alt="Profile picture"
                 />
                 <AvatarFallback>

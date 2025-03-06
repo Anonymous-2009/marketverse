@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { buyerAddress } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { ApiResponseCommon } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     const data = await req.json();
 
-    const { email, addressID, isDefault } = data;
+    const {
+      email,
+      addressID,
+      isDefault,
+    }: { email: string; addressID: number; isDefault: boolean } = data;
     if (!email || !addressID) {
       return NextResponse.json(
         { message: 'Email and address ID are required' },

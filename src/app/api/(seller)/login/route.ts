@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { sellersTable, sellersInfoTable, buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
 
     const { userId, email, firstName, lastName, username, imageURL } = body;
-    console.log(body);
+    // console.log(body);
     // Validate input
     if (
       !userId ||
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     // Insert data into sellers table
 
-    const newSeller = await db.insert(sellersTable).values({
+    await db.insert(sellersTable).values({
       email: emailAddress,
       uniqueId: userId,
       username,
@@ -72,10 +72,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: 'Seller added successfully.', seller: newSeller },
+      { message: 'Seller added successfully.' },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding seller:', error);
     return NextResponse.json(
       { message: 'Internal Server Error.' },

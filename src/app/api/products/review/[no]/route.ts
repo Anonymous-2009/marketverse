@@ -1,15 +1,16 @@
 import { db } from '@/db';
+import { type Review, type ApiResponse } from '@/types';
 import { reviews } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ no: string }> }
-): Promise<NextResponse> {
+): Promise<NextResponse<ApiResponse<Review[]>>> {
   try {
-    const no = (await params).no;
-    const num = parseInt(no, 10);
+    const no: string = (await params).no;
+    const num: number = parseInt(no, 10);
 
     if (isNaN(num)) {
       return NextResponse.json(
@@ -22,8 +23,6 @@ export async function GET(
       .select()
       .from(reviews)
       .where(eq(reviews.productId, num));
-
-    console.log(review);
 
     if (review.length === 0) {
       return NextResponse.json(

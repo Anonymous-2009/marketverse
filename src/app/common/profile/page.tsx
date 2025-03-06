@@ -5,7 +5,7 @@ import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton';
 import { useUser } from '@clerk/nextjs';
 import Main from './main';
 
-export default function Page() {
+const Page: React.FC = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -13,4 +13,6 @@ export default function Page() {
   }
 
   return <Main email={user?.emailAddresses[0].emailAddress || ''} />;
-}
+};
+
+export default Page;

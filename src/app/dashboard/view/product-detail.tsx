@@ -1,4 +1,5 @@
 'use client';
+
 import { ImageCarousel } from './image-carousel';
 import {
   Card,
@@ -19,36 +20,28 @@ import { Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { Product, type ApiResponseCommon } from '@/types';
 
-interface ProductDetailProps {
-  id: number;
-  productId: number;
-  sellerId: string;
-  sellerEmail: string;
-  productName: string;
-  productPrice: number;
-  productDescription: string;
-  productImages: string[];
-}
-
-export function ProductDetail({
+export const ProductDetail = ({
   productId,
   productName,
   productPrice,
   productDescription,
   productImages,
-}: ProductDetailProps) {
+}: Product) => {
   const { toast } = useToast();
   const handleDelete = async () => {
-    console.log('Delete product:', productId);
+    // console.log('Delete product:', productId);
     try {
-      const response = await axios.get(`/api/delete-products/${productId}`);
+      const response = await axios.get<ApiResponseCommon>(
+        `/api/delete-products/${productId}`
+      );
       // console.log(response.data.message);
       toast({
         title: 'Message',
         description: response.data.message,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error deleting product:', error);
       toast({
         variant: 'destructive',
@@ -104,4 +97,4 @@ export function ProductDetail({
       </div>
     </Card>
   );
-}
+};

@@ -40,25 +40,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PaymentSchema, type PaymentType } from '@/validation'; // Adjust this import path as needed
+import {
+  type ApiResponse,
+  type AccountData,
+  type SellerType,
+  type ApiResponseCommon,
+} from '@/types';
 
-interface MainProps {
-  email: string | undefined;
-  sellerId: string | undefined;
-}
-
-interface AccountData {
-  accountUsername: string;
-  accountNumber: string;
-  sellerId: string;
-  sellerEmail: string;
-}
-
-const Main: React.FC<MainProps> = ({ email, sellerId }) => {
-  const [data, setData] = useState<AccountData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLinking, setIsLinking] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Added showPassword state
+const Main: React.FC<SellerType> = ({ email, sellerId }) => {
+  const [data, setData] = useState<AccountData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLinking, setIsLinking] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false); // Added showPassword state
   const { toast } = useToast();
 
   const form = useForm<PaymentType>({
@@ -67,11 +61,14 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
   });
 
   useEffect(() => {
-    const getData = async () => {
+    const getData = async (): Promise<void> => {
       try {
-        const response = await axios.get(`/api/payment/${email}`);
-        setData(response.data.result);
-      } catch (error) {
+        const response = await axios.get<ApiResponse<AccountData>>(
+          `/api/payment/${email}`
+        );
+        setData(response.data.data || null);
+        // console.log(response.data)
+      } catch (error: unknown) {
         console.error('Error fetching data:', error);
         toast({
           variant: 'destructive',
@@ -86,18 +83,18 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
     if (email) getData();
   }, [email, toast]);
 
-  const handleUnlink = async () => {
+  const handleUnlink = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `/api/payment/unlink/${data[0].accountUsername}`
+      const response = await axios.delete<ApiResponseCommon>(
+        `/api/payment/unlink/${data?.accountUsername}`
       );
       toast({
-        title: 'Success',
+        title: 'Message',
         description: response.data.message,
       });
-      setData([]);
-    } catch (error) {
+      setData(null);
+    } catch (error: unknown) {
       console.error('Error unlinking account:', error);
       toast({
         variant: 'destructive',
@@ -109,7 +106,7 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
     }
   };
 
-  const handleLink = async (formData: PaymentType) => {
+  const handleLink = async (formData: PaymentType): Promise<void> => {
     try {
       setIsLinking(true);
       const value = {
@@ -118,15 +115,18 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
         username: formData.username,
         password: formData.password,
       };
-      console.log(value);
-      const response = await axios.post('/api/payment', value);
-      setData(response.data.result);
+      // console.log(value);
+      const response = await axios.post<ApiResponse<AccountData>>(
+        '/api/payment',
+        value
+      );
+      setData(response.data.data ?? null);
       toast({
-        title: 'Success',
+        title: 'Message',
         description: response.data.message,
       });
       setIsDialogOpen(false);
-      setData([]);
+      setData(null);
     } catch (error) {
       console.error('Error linking account:', error);
       toast({
@@ -151,7 +151,7 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
 
   return (
     <>
-      {!data || data.length === 0 ? (
+      {!data || data === null ? (
         <Card className="w-full max-w-md mx-auto">
           <CardContent className="flex flex-col justify-center items-center h-40 space-y-4">
             <p className="text-muted-foreground">No account linked.</p>
@@ -239,49 +239,45 @@ const Main: React.FC<MainProps> = ({ email, sellerId }) => {
           </CardContent>
         </Card>
       ) : (
-        data.map((data: AccountData) => {
-          return (
-            <Card className="w-full max-w-md mx-auto" key={data.accountNumber}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Linked Account
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <p>
-                    <span className="font-medium">Username:</span>{' '}
-                    {data.accountUsername}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                  <p>
-                    <span className="font-medium">Account Number:</span>{' '}
-                    {data.accountNumber}
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  variant="destructive"
-                  onClick={handleUnlink}
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  ) : (
-                    <Unlink className="h-4 w-4 mr-2" />
-                  )}
-                  Unlink Account
-                </Button>
-              </CardFooter>
-            </Card>
-          );
-        })
+        <Card className="w-full max-w-md mx-auto" key={data.accountNumber}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Linked Account
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-muted-foreground" />
+              <p>
+                <span className="font-medium">Username:</span>{' '}
+                {data.accountUsername}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <p>
+                <span className="font-medium">Account Number:</span>{' '}
+                {data.accountNumber}
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button
+              variant="destructive"
+              onClick={handleUnlink}
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Unlink className="h-4 w-4 mr-2" />
+              )}
+              Unlink Account
+            </Button>
+          </CardFooter>
+        </Card>
       )}
     </>
   );

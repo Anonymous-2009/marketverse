@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { sellersTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Parse the JSON body
     const body = await req.json();
@@ -16,13 +16,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // // Fetch the seller from the database
-    // const seller = await db
-    //   .select()
-    //   .from(sellersTable)
-    //   .where(and(eq(sellersTable.uniqueId, id), eq(sellersTable.isSeller, true)))
-    //   .limit(1);
     const seller = await db
       .select()
       .from(sellersTable)
@@ -39,10 +32,10 @@ export async function POST(req: NextRequest) {
 
     // Return seller details
     return NextResponse.json(
-      { message: 'Seller found.', seller: seller[0], isSeller: true },
+      { message: 'Seller found.', isSeller: true },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching seller:', error);
     return NextResponse.json(
       { message: 'Internal Server Error.' },

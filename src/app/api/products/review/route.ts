@@ -1,11 +1,14 @@
 import { db } from '@/db';
 import { buyerProfile, reviews } from '@/db/schema';
-import { reviewSchema } from '@/validation';
+import { type ApiResponseCommon } from '@/types';
+import { reviewSchema, type ReviewFormData } from '@/validation';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const data = await req.json().catch(() => null);
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
+  const data: ReviewFormData = await req.json().catch(() => null);
 
   if (!data) {
     return NextResponse.json(
@@ -32,11 +35,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     const { email } = data;
+    if (!email) {
+      return NextResponse.json(
+        { message: 'Email is required' },
+        { status: 400 }
+      );
+    }
+
     const buyerInfo = await db
       .select()
       .from(buyerProfile)
       .where(eq(buyerProfile.email, email))
       .limit(1);
+
     if (!buyerInfo) {
       return NextResponse.json(
         { message: 'Buyer not found, cannot add review' },
@@ -47,7 +58,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.log(data, buyerInfo);
 
     const info: typeof reviews.$inferInsert = {
-      ...data,
+      reviewMessage: data.reviewMessage,
+      reviewStar: data.reviewStar,
+      productId: data.productId!,
       firstName: buyerInfo[0].firstName,
       lastName: buyerInfo[0].lastName,
       profileImageUrl: buyerInfo[0].profileImageUrl,

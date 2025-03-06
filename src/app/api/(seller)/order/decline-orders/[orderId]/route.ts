@@ -1,16 +1,17 @@
 import { db } from '@/db';
 import { orders } from '@/db/schema';
+import { type ApiResponseCommon } from '@/types';
 import transporter from '@/utils/nodemailer';
 import axios from 'axios';
 import { and, eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ orderId: string }> }
-): Promise<NextResponse> {
-  const Id = (await params).orderId;
-  const ID = parseInt(Id);
+): Promise<NextResponse<ApiResponseCommon>> {
+  const Id: string = (await params).orderId;
+  const ID: number = parseInt(Id);
   try {
     if (!ID) {
       return NextResponse.json({ message: 'ID is required.' }, { status: 200 });
@@ -30,7 +31,7 @@ export async function GET(
       `https://marketverse-banking.onrender.com/transaction/transaction/${transactionN0}`
     );
 
-    console.log(orderCall.data);
+    // console.log(orderCall.data);
 
     // create a new cancel transaction
     const data = {
@@ -40,21 +41,21 @@ export async function GET(
     };
 
     console.log(data);
-    const cancelTransaction = await axios.post(
+    await axios.post(
       `https://marketverse-banking.onrender.com/transaction/cancel`,
       data
     );
 
-    console.log(cancelTransaction.data);
+    // console.log(cancelTransaction.data);
 
     // set order state to cancelled
-    const result = await db
+    await db
       .update(orders)
       .set({ status: 'decline' })
       .where(and(eq(orders.status, 'pending'), eq(orders.orderId, ID)))
       .returning();
 
-    console.log(result);
+    // console.log(result);
 
     // Send email notification
     await transporter.sendMail({
@@ -76,7 +77,7 @@ export async function GET(
       { message: 'Order cancelled , money will refunded within a minute' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.log(error);
     return NextResponse.json(
       { message: 'Internal Server Error' },

@@ -1,14 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db'; // Import Drizzle DB instance
 import { buyerProfile, products } from '@/db/schema';
 import { eq, inArray } from 'drizzle-orm';
+import { type ApiResponse, type Product } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponse<Product[]>>> {
   try {
-    const { email } = await req.json();
+    const { email }: { email: string } = await req.json();
 
     if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 200 });
+      return NextResponse.json(
+        { message: 'Email is required' },
+        { status: 200 }
+      );
     }
 
     // Fetch buyer's cart items
@@ -18,8 +24,8 @@ export async function POST(req: NextRequest) {
       .where(eq(buyerProfile.email, email))
       .limit(1);
 
-    if (!buyer.length) {
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 200 });
+    if (buyer.length === 0) {
+      return NextResponse.json({ message: 'Buyer not found' }, { status: 200 });
     }
 
     const cartItems: number[] = Array.isArray(buyer[0].cartItems)
@@ -36,12 +42,13 @@ export async function POST(req: NextRequest) {
       .from(products)
       .where(inArray(products.productId, cartItems));
 
-    console.log(cartProducts);
+    // console.log(cartProducts);
 
-    return NextResponse.json({ products: cartProducts });
-  } catch (error) {
+    return NextResponse.json({ message: 'Cart', data: cartProducts });
+  } catch (error: unknown) {
+    console.log(error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

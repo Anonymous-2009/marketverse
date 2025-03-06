@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import React from 'react';
 import Order from './Order';
 
-const page = () => {
+const Page = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -18,4 +18,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

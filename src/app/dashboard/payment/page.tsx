@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import Loading from '@/components/custom/skeleton/Payment-Skeleton';
 import Main from './main';
 
-export default function Page() {
+const Page: React.FC = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -18,10 +18,12 @@ export default function Page() {
           Account Information
         </h1>
         <Main
-          email={user?.primaryEmailAddress?.emailAddress}
-          sellerId={user?.id}
+          email={user?.primaryEmailAddress?.emailAddress || ''}
+          sellerId={user?.id || ''}
         />
       </main>
     </div>
   );
-}
+};
+
+export default Page;

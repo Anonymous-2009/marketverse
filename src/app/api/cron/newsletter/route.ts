@@ -35,9 +35,9 @@ async function sendWeeklyNewsletter() {
     }
 
     return { success: true, message: 'Newsletters sent successfully' };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error sending newsletters:', error);
-    return { success: false, message: error.message };
+    return { success: false, message: 'error.message ' };
   }
 }
 
@@ -57,9 +57,10 @@ export async function GET() {
   try {
     const result = await sendWeeklyNewsletter();
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.log(error);
     return NextResponse.json(
-      { success: false, message: error.message },
+      { success: false, message: ' error.message' },
       { status: 500 }
     );
   }

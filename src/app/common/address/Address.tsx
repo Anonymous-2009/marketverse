@@ -3,26 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AddAddressDialog } from './Dialog';
 import AddressCard from './Card';
-
-interface AddressProps {
-  email: string;
-}
-
-interface Address {
-  id: number;
-  email: string;
-  addressID: number;
-  isDefault: boolean;
-  country: string;
-  fullName: string;
-  streetName: string;
-  city: string;
-  state: string;
-  pincode: number;
-  phoneNo: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { type Address, type AddressProps, type ApiResponse } from '@/types';
 
 const Address: React.FC<AddressProps> = ({ email }) => {
   // console.log(email)
@@ -32,8 +13,10 @@ const Address: React.FC<AddressProps> = ({ email }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`/api/user/address-user/${email}`);
-        setAddress(response.data.address);
+        const response = await axios.get<ApiResponse<Address[]>>(
+          `/api/user/address-user/${email}`
+        );
+        setAddress(response.data.data ?? []);
         // console.log(response.data.address)
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,7 +29,7 @@ const Address: React.FC<AddressProps> = ({ email }) => {
     };
 
     if (email) getData();
-  }, [email, toast]);
+  }, [email]);
 
   return (
     <div className="container mx-auto py-8">

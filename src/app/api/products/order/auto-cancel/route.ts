@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { and, eq, lt } from 'drizzle-orm';
 import { db } from '@/db';
 import { orders } from '@/db/schema';
 import transporter from '@/utils/nodemailer';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Calculate 24 hours ago
-    const oneDayAgo = new Date();
+    const oneDayAgo: Date = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
     // Find all pending orders older than 24 hours

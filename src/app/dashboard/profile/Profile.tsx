@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-
 import { useState } from 'react';
 import { Upload, User, Mail, Phone } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -24,16 +22,16 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { ProfileSkeleton } from '@/components/custom/skeleton/Profile-Skeleton';
 import { useFetchDataByEmail } from '@/service/seller-detail/fetchDataByEmail';
-import { SellerInfo } from '@/db/schema';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { updateSchema, updateType } from '@/validation';
+import { updateSchema, type updateType } from '@/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { type ApiResponseCommon } from '@/types';
 
-const Profile = ({ email }: any) => {
+const Profile: React.FC<{ email: string }> = ({ email }) => {
   const router = useRouter();
   const {
     register,
@@ -56,22 +54,24 @@ const Profile = ({ email }: any) => {
   });
 
   const { toast } = useToast();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isUploading, setUploading] = useState(false);
-  const { data, isLoading, isError, error } = useFetchDataByEmail(email);
-  // Use the custom mutation hook
-  // const a = data[0] fuck
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isUploading, setUploading] = useState<boolean>(false);
+  const { data, isLoading } = useFetchDataByEmail(email);
 
-  // Update form values when data is loaded
   useEffect(() => {
-    if (data?.data?.[0]) {
-      const userData = data.data[0];
+    if (data?.data) {
+      const userData = data.data;
       reset({
         firstName: userData.firstName || '',
         lastName: userData.lastName || '',
         age: userData.age || 0,
         phoneNo: userData.phoneNo || '',
-        gender: userData.gender || 'prefer-not-to-say',
+        gender: (userData.gender &&
+        ['male', 'female', 'other', 'prefer-not-to-say'].includes(
+          userData.gender
+        )
+          ? userData.gender
+          : 'prefer-not-to-say') as updateType['gender'],
         profileImageUrl: userData.profileImageUrl || '',
         email: email,
       });
@@ -84,16 +84,24 @@ const Profile = ({ email }: any) => {
   }
 
   // console.log(data.message)
-  const handleUpload = async (event: any) => {
+  const handleUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     try {
       setUploading(true);
-      const file = event.target.files[0];
-      const formData = new FormData();
+      const files: FileList | null = event.target.files;
+      if (!files) {
+        throw new Error('No files selected');
+      }
+      const file: File = files[0];
+      const formData: FormData = new FormData();
       formData.append('file', file);
       formData.append('email', email);
 
-      const response = await axios.put('/api/upload', formData);
-      const data = await response.data;
+      const response = await axios.put<ApiResponseCommon>(
+        '/api/upload',
+        formData
+      );
       toast({
         title: 'Message',
         description: response.data.message,
@@ -104,7 +112,7 @@ const Profile = ({ email }: any) => {
         ),
       });
       //   console.log(data)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error uploading image:', error);
       toast({
         variant: 'destructive',
@@ -117,16 +125,14 @@ const Profile = ({ email }: any) => {
     }
   };
 
-  const handleFormSubmit = async (data: updateType) => {
+  const handleFormSubmit = async (data: updateType): Promise<void> => {
     // console.log('Form submitted:', data);
     try {
       // Log the form data
-      const response = await axios.put('/api/update', data);
-      const result = await response.data;
-      // console.log(result)
+      const response = await axios.put<ApiResponseCommon>('/api/update', data);
       toast({
         title: 'Message',
-        description: result.message,
+        description: response.data.message,
         action: (
           <ToastAction altText="OK" onClick={() => router.refresh()}>
             OK
@@ -136,7 +142,7 @@ const Profile = ({ email }: any) => {
       // Close dialog and reset form
       setIsOpen(false);
       // reset();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({
         variant: 'destructive',
@@ -148,7 +154,7 @@ const Profile = ({ email }: any) => {
   };
 
   // for images loading
-  const finalData = data.data[0];
+  const finalData = data?.data;
   // console.log(data)
   return (
     <div className="container mx-auto py-10">
@@ -172,13 +178,13 @@ const Profile = ({ email }: any) => {
                 <div className="flex items-center space-x-4">
                   <Avatar className="w-24 h-24">
                     <AvatarImage
-                      src={finalData?.profileImageUrl}
+                      src={finalData?.profileImageUrl || ''}
                       alt="Profile picture"
                     />
                     <AvatarFallback>
                       {/* {' USER '} */}
                       {finalData?.firstName?.charAt(0) +
-                        finalData?.lastName?.charAt(0) || 'USER'}
+                        (finalData?.lastName?.charAt(0) ?? 'U') || 'USER'}
                     </AvatarFallback>
                   </Avatar>
                 </div>
@@ -292,69 +298,71 @@ const Profile = ({ email }: any) => {
       </div>
 
       {/* Profile View */}
-      {data && data.message === 'success' ? (
-        data.data.map((user: SellerInfo) => (
-          <Card key={user.id} className="mb-6">
-            <CardContent className="pt-6">
-              <div className="flex items-start">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <Avatar className="w-32 h-32">
-                    <AvatarImage
-                      src={user.profileImageUrl}
-                      alt="Profile picture"
-                    />
-                    <AvatarFallback>
-                      {' '}
-                      {user.firstName?.charAt(0) + user.lastName?.charAt(0) ||
-                        'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12">
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">
-                          Full Name
-                        </p>
+      {data ? (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-start">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                <Avatar className="w-32 h-32">
+                  <AvatarImage
+                    src={finalData?.profileImageUrl || ''}
+                    alt="Profile picture"
+                  />
+                  <AvatarFallback>
+                    {' '}
+                    {(finalData?.firstName?.charAt(0) ?? 'U') +
+                      (finalData?.lastName?.charAt(0) ?? 'U') || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12">
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Full Name</p>
+                      <p className="text-lg font-medium">
+                        <span className="mr-1">{finalData?.firstName}</span>
+                        <span>{finalData?.lastName}</span>
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Age</p>
+                      <p className="text-lg font-medium">
+                        {finalData?.age} years
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
                         <p className="text-lg font-medium">
-                          <span className="mr-1">{user.firstName}</span>
-                          <span>{user.lastName}</span>
+                          {finalData?.email}
                         </p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Age</p>
-                        <p className="text-lg font-medium">{user.age} years</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Phone</p>
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        <p className="text-lg font-medium">
+                          {finalData?.phoneNo}
+                        </p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Email</p>
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium">{user.email}</p>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Phone</p>
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium">{user.phoneNo}</p>
-                        </div>
-                      </div>
+                    </div>
 
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">Gender</p>
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-lg font-medium capitalize">
-                            {user.gender}
-                          </p>
-                        </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">Gender</p>
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-muted-foreground" />
+                        <p className="text-lg font-medium capitalize">
+                          {finalData?.gender}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))
+            </div>
+          </CardContent>
+        </Card>
       ) : (
         <p className="text-xl text-gray-600">No Seller data listed yet.</p>
       )}

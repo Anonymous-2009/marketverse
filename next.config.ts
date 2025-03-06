@@ -12,7 +12,7 @@ const nextConfig = {
   reactStrictMode: true,
   eslint: {
     // Warning: This disables ESLint during builds in production!
-    ignoreDuringBuilds: true,
+    // ignoreDuringBuilds: true,
   },
 };
 

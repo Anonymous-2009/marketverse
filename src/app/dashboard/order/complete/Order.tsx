@@ -2,58 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { PackageSearch } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { type ApiResponse, type Order } from '@/types';
 
-interface Address {
-  fullName: string;
-  streetName: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phoneNo: string;
-}
-
-interface Product {
-  name: string;
-  price: number;
-  description: string;
-}
-
-interface PaymentAccount {
-  accountUsername: string;
-  accountNumber: string;
-}
-
-interface Order {
-  orderID: number;
-  orderStatus: 'pending' | 'approved' | 'cancelled' | 'delivered';
-  orderDate: string; // Added order date
-  sellerEmail: string;
-  buyerEmail: string;
-  address: Address;
-  products: Product;
-  paymentAccount: PaymentAccount;
-}
-
-export default function OrdersPage({ email }: { email: string }) {
+const OrdersPage: React.FC<{ email: string }> = ({ email }) => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<ApiResponse<Order[]>>(
           `/api/order/get-delivered-orders/${email}`
         );
-        setOrders(response.data.data);
-      } catch (error) {
+        setOrders(response.data.data ?? []);
+      } catch (error: unknown) {
         console.error('Error fetching data:', error);
         toast({
           variant: 'destructive',
@@ -64,11 +32,9 @@ export default function OrdersPage({ email }: { email: string }) {
     };
 
     getData();
-  }, []);
+  }, [email, toast]);
 
-  const { toast } = useToast();
-
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -83,8 +49,8 @@ export default function OrdersPage({ email }: { email: string }) {
           <PackageSearch className="w-16 h-16 text-muted-foreground mb-4" />
           <h2 className="text-2xl font-semibold mb-2">No Orders Found</h2>
           <p className="text-muted-foreground text-center max-w-md">
-            It looks like you haven't placed any orders yet. Start shopping to
-            see your orders here!
+            It looks like you haven&apos;t placed any orders yet. Start shopping
+            to see your orders here!
           </p>
           <Button className="mt-6" onClick={() => (window.location.href = '/')}>
             Start Shopping
@@ -119,23 +85,34 @@ export default function OrdersPage({ email }: { email: string }) {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <h3 className="font-semibold mb-2">Product Details</h3>
-                  <p className="text-lg font-medium">{order.products.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {order.products.description}
-                  </p>
-                  <p className="text-lg font-bold mt-2">
-                    ₹{order.products.price}
-                  </p>
+                  {order.products ? (
+                    <>
+                      <p className="text-lg font-medium">
+                        {order.products.productName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {order.products.productDescription}
+                      </p>
+                      <p className="text-lg font-bold mt-2">
+                        ₹{order.products.productPrice}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Product details not available
+                    </p>
+                  )}
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Shipping Address</h3>
-                  <p>{order.address.fullName}</p>
-                  <p>{order.address.streetName}</p>
+                  <p>{order.address?.fullName ?? 'N/A'}</p>
+                  <p>{order.address?.streetName ?? 'N/A'}</p>
                   <p>
-                    {order.address.city}, {order.address.state}{' '}
-                    {order.address.pincode}
+                    {order.address?.city ?? 'N/A'},{' '}
+                    {order.address?.state ?? 'N/A'}{' '}
+                    {order.address?.pincode ?? 'N/A'}
                   </p>
-                  <p>Phone: {order.address.phoneNo}</p>
+                  <p>Phone: {order.address?.phoneNo ?? 'N/A'}</p>
                 </div>
               </div>
               <Separator />
@@ -167,4 +144,6 @@ export default function OrdersPage({ email }: { email: string }) {
       </div>
     </div>
   );
-}
+};
+
+export default OrdersPage;

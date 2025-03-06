@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { sellersTable, buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { type ApiResponseCommon } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     const body = await req.json();
 
     const { userId, email, firstName, lastName, username, imageURL } = body;
-    console.log(body);
+    // console.log(body);
     // Validate input
     if (!userId || !email || !email || !firstName || !username) {
       return NextResponse.json(
@@ -22,7 +25,7 @@ export async function POST(req: NextRequest) {
       .where(eq(sellersTable.email, email))
       .limit(1);
 
-    console.log('existingSeller:', existingSeller);
+    // console.log('existingSeller:', existingSeller);
     if (existingSeller.length > 0) {
       return NextResponse.json(
         { message: 'this email is register for seller' },
@@ -56,12 +59,13 @@ export async function POST(req: NextRequest) {
       profileImageUrl: imageURL,
     };
     await db.insert(buyerProfile).values(info);
+    // console.log(typeof buyerProfile);
 
     return NextResponse.json(
       { message: 'buyer added successfully.' },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding buyer:', error);
     return NextResponse.json(
       { message: 'Internal Server Error.' },

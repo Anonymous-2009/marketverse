@@ -22,39 +22,30 @@ import Image from 'next/image';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useClerk } from '@clerk/nextjs';
+import { type Product, type ApiResponseCommon } from '@/types';
 
-interface Product {
-  id: number;
-  productId: number;
-  sellerId: string;
-  sellerEmail: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
-  productImages: string[];
-}
-
-const ProductCard = ({ product }: { product: Product }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const router = useRouter();
   const { user } = useClerk();
 
   // Buy Now action
-  const handleToCart = async (productId: number) => {
+  const handleToCart = async (productId: number): Promise<void> => {
     try {
-      const res = await axios.put('/api/products/cart/add', {
+      const res = await axios.put<ApiResponseCommon>('/api/products/cart/add', {
         email: user?.primaryEmailAddress?.emailAddress,
         productId,
       });
       toast({
-        title: 'Success',
+        title: 'Message',
         description: res.data.message,
       });
-      console.log(res.data);
-    } catch (error) {
-      console.log('Error');
+      // console.log(res.data);
+    } catch (error: unknown) {
+      console.log('Error', error);
     }
   };
+
   return (
     <Card
       className="relative group transition-all duration-300 hover:shadow-xl"

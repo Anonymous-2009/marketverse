@@ -5,9 +5,9 @@ import { useUser } from '@clerk/nextjs';
 import React, { useEffect, useState } from 'react';
 import Order from './order';
 
-const page = ({ params }: { params: Promise<{ id: string }> }) => {
+const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [id, setid] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { user, isLoaded } = useUser();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const page = ({ params }: { params: Promise<{ id: string }> }) => {
     };
 
     fetch();
-  }, []);
+  }, [params]);
 
   if (!isLoaded || loading) {
     return <ProductGridSkeleton />;
@@ -35,4 +35,4 @@ const page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default page;
+export default Page;

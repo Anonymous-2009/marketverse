@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,15 +17,16 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input'; // Import input component
-import { set } from 'zod';
+import { type Address, type Payment, type Product } from '@/types';
+import { type ApiResponse } from '@/types';
 
 const Order = ({ id, email }: { id: number | null; email: string }) => {
-  const [product, setProduct] = useState<any>(null);
-  const [address, setAddress] = useState<any>([]);
-  const [payment, setPayment] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
-  const [password, setPassword] = useState(''); // State for password
+  const [product, setProduct] = useState<Product | null>(null);
+  const [address, setAddress] = useState<Address[]>([]);
+  const [payment, setPayment] = useState<Payment | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>(''); // State for password
 
   const router = useRouter();
   const { toast } = useToast();
@@ -42,15 +43,17 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
         setLoading(true);
         const [resForProducts, resForAddress, resForPayment] =
           await Promise.all([
-            axios.get(`/api/products/${id}`),
-            axios.get(`/api/user/address-user/${email}`),
-            axios.get(`/api/user/payment/${email}`),
+            axios.get<ApiResponse<Product>>(`/api/products/${id}`),
+            axios.get<ApiResponse<Address[]>>(
+              `/api/user/address-user/${email}`
+            ),
+            axios.get<ApiResponse<Payment>>(`/api/user/payment/${email}`),
           ]);
 
-        setProduct(resForProducts.data.data);
-        setAddress(resForAddress.data.address);
-        setPayment(resForPayment.data.result[0]);
-      } catch (error) {
+        setProduct(resForProducts.data.data ?? null);
+        setAddress(resForAddress.data.data ?? []);
+        setPayment(resForPayment.data.data ?? null);
+      } catch (error: unknown) {
         console.error('API Fetch Error:', error);
         toast({
           variant: 'destructive',
@@ -71,7 +74,7 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
     }
   }, [selectedAddressId]);
 
-  const handleOrder = async () => {
+  const handleOrder = async (): Promise<void> => {
     if (!product || !selectedAddressId || !payment || !password) {
       toast({
         variant: 'destructive',
@@ -82,8 +85,8 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
       return;
     }
 
-    const selectedAddress = address.find(
-      (addr: any) => addr.addressID === selectedAddressId
+    const selectedAddress: Address | undefined = address.find(
+      (addr: Address) => addr.addressID === selectedAddressId
     );
 
     if (!selectedAddress) {
@@ -131,7 +134,45 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        Loading...
+        <Card className="w-full max-w-md mx-auto p-6 flex flex-col items-center justify-center text-center space-y-4">
+          <div className="relative w-24 h-24">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-12 h-12 text-primary animate-spin" />
+            </div>
+            <svg
+              className="w-full h-full text-muted-foreground animate-pulse"
+              viewBox="0 0 100 100"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="8"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-semibold">Setting Up Your Order</h2>
+          <p className="text-muted-foreground">
+            We&apos;re preparing everything to process your order. This will
+            only take a moment.
+          </p>
+          <div className="flex space-x-2 mt-4">
+            <div
+              className="w-3 h-3 rounded-full bg-primary animate-bounce"
+              style={{ animationDelay: '0s' }}
+            ></div>
+            <div
+              className="w-3 h-3 rounded-full bg-primary animate-bounce"
+              style={{ animationDelay: '0.2s' }}
+            ></div>
+            <div
+              className="w-3 h-3 rounded-full bg-primary animate-bounce"
+              style={{ animationDelay: '0.4s' }}
+            ></div>
+          </div>
+        </Card>
       </div>
     );
   }
@@ -188,10 +229,12 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
             ) : (
               <RadioGroup
                 value={selectedAddressId?.toString()}
-                onValueChange={(value) => setSelectedAddressId(Number(value))}
+                onValueChange={(value: string) =>
+                  setSelectedAddressId(Number(value))
+                }
               >
                 <div className="grid md:grid-cols-2 gap-4">
-                  {address.map((address: any) => (
+                  {address.map((address: Address) => (
                     <Label
                       key={address.addressID}
                       className="relative cursor-pointer rounded-lg border p-4 hover:bg-accent [&:has(:checked)]:border-primary"
@@ -250,7 +293,9 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
                   type="password"
                   placeholder="Enter payment password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setPassword(e.target.value)
+                  }
                 />
               </div>
             ) : (

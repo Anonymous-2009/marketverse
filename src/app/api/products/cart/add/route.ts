@@ -1,16 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db'; // Import your Drizzle DB instance
 import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { type AddToCartRequest, type ApiResponseCommon } from '@/types';
 
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
-    const { email, productId } = await req.json();
+    const body: AddToCartRequest = await req.json();
+    const { email, productId } = body;
 
     if (!email || !productId) {
       return NextResponse.json(
-        { error: 'Email and productId are required' },
-        { status: 400 }
+        { message: 'Email and productId are required' },
+        { status: 200 }
       );
     }
 
@@ -22,19 +26,20 @@ export async function PUT(req: NextRequest) {
       .limit(1);
 
     if (!buyer.length) {
-      return NextResponse.json({ error: 'Buyer not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Buyer not found' }, { status: 200 });
     }
 
-    let cartItems: number[] = Array.isArray(buyer[0].cartItems)
+    // Ensure cartItems is an array
+    const cartItems: number[] = Array.isArray(buyer[0].cartItems)
       ? buyer[0].cartItems
       : [];
 
     // Check if product already exists in the cart
     if (cartItems.includes(productId)) {
-      return NextResponse.json({
-        message: 'Product already in cart',
-        cartItems,
-      });
+      return NextResponse.json(
+        { message: 'Product already in cart' },
+        { status: 200 }
+      );
     }
 
     // Add productId to cart
@@ -46,10 +51,11 @@ export async function PUT(req: NextRequest) {
       .set({ cartItems })
       .where(eq(buyerProfile.email, email));
 
-    return NextResponse.json({ message: 'Product added to cart', cartItems });
+    return NextResponse.json({ message: 'Product added to cart' });
   } catch (error) {
+    console.error('Error adding product to cart:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

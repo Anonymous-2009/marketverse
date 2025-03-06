@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { updateSchema } from '@/validation';
+import { type ApiResponseCommon } from '@/types';
 
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     // Parse request body
     const data = await req.json().catch(() => null);
@@ -54,32 +57,17 @@ export async function PUT(req: NextRequest) {
       .where(eq(buyerProfile.email, data.email))
       .returning();
 
-    // Update buyer profile
-    // const result = await db
-    // .update(buyerProfile)
-    // .set({
-    //   firstName: data.firstName,
-    //   lastName: data.lastName,
-    //   age: data.age,
-    //   phoneNo: data.phoneNo,
-    //   gender: data.gender,
-    //   updatedAt: new Date().toISOString(),
-    // })
-    // .where(eq(buyerProfile.email, data.email))
-    // .returning();
-
-    if (!result.length) {
+    if (!result.length || result.length === 0) {
       return NextResponse.json({ message: 'Update failed' }, { status: 500 });
     }
 
     return NextResponse.json(
       {
         message: 'Buyer updated successfully',
-        data: result[0],
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error updating buyer:', error);
 
     // Handle specific database errors

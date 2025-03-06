@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { buyerAddress, buyerPayment, orders, products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ email: string }> }
 ): Promise<NextResponse> {
-  const buyerEmail = (await params).email;
+  const buyerEmail: string = (await params).email;
   try {
     if (!buyerEmail) {
       return NextResponse.json(
@@ -33,9 +33,9 @@ export async function GET(
           phoneNo: buyerAddress.phoneNo,
         },
         products: {
-          name: products.productName,
-          price: products.productPrice,
-          description: products.productDescription,
+          productName: products.productName,
+          productPrice: products.productPrice,
+          productDescription: products.productDescription,
         },
         paymentAccount: {
           accountUsername: buyerPayment.accountUsername,
@@ -51,13 +51,14 @@ export async function GET(
         eq(orders.accountNumber, buyerPayment.accountNumber)
       );
 
-    if (!buyerOrders.length) {
+    if (buyerOrders.length === 0) {
       return NextResponse.json(
         { message: 'No orders found for this buyer.', data: [] },
         { status: 200 }
       );
     }
 
+    // console.log(buyerOrders)
     return NextResponse.json(
       { message: 'orders are successfully fetch', data: buyerOrders },
       { status: 200 }
@@ -70,3 +71,5 @@ export async function GET(
     );
   }
 }
+
+// i don't wanna add type safe

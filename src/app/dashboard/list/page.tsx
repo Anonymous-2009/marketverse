@@ -3,7 +3,7 @@ import ProductForm from './Product';
 import { useUser } from '@clerk/nextjs';
 import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
 
-export default function Page() {
+const Page = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -13,9 +13,11 @@ export default function Page() {
   return (
     <div className="container mx-auto py-10">
       <ProductForm
-        email={user?.primaryEmailAddress?.emailAddress}
-        sellerId={user?.id}
+        email={user?.primaryEmailAddress?.emailAddress || ''}
+        sellerId={user?.id || ''}
       />
     </div>
   );
-}
+};
+
+export default Page;

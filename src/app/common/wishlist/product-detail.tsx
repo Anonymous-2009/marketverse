@@ -14,48 +14,42 @@ import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
+import { type Product } from '@/types';
+import { type ApiResponseCommon } from '@/types';
 
-interface ProductDetailProps {
-  id: number;
-  productId: number;
-  sellerId: string;
-  sellerEmail: string;
-  productName: string;
-  productPrice: number;
-  productDescription: string;
-  productImages: string[];
-}
-
-export function ProductDetail({
+export const ProductDetail = ({
   productId,
   productName,
   productPrice,
   productDescription,
   productImages,
-}: ProductDetailProps) {
+}: Product) => {
   const { user, isLoaded } = useUser();
+  const { toast } = useToast();
 
   if (!isLoaded) {
     return <ProductGridSkeleton />;
   }
 
-  const { toast } = useToast();
-
   // Remove product from cart
-  const handleRemoveFromWishlist = async () => {
+  const handleRemoveFromWishlist = async (): Promise<void> => {
     try {
-      const response = await axios.delete('/api/products/wishlist/remove', {
-        data: {
-          email: user?.primaryEmailAddress?.emailAddress,
-          productId,
-        },
-      });
+      const response = await axios.delete<ApiResponseCommon>(
+        '/api/products/wishlist/remove',
+        {
+          data: {
+            email: user?.primaryEmailAddress?.emailAddress,
+            productId,
+          },
+        }
+      );
 
       toast({
-        title: 'Removed from Cart',
+        title: 'Message',
         description: response.data.message,
       });
-    } catch (error) {
+    } catch (error: unknown) {
+      console.log(error);
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -66,19 +60,19 @@ export function ProductDetail({
   };
 
   // Buy Now action
-  const handleToCart = async () => {
+  const handleToCart = async (): Promise<void> => {
     try {
-      const res = await axios.put('/api/products/cart/add', {
+      const res = await axios.put<ApiResponseCommon>('/api/products/cart/add', {
         email: user?.primaryEmailAddress?.emailAddress,
         productId,
       });
       toast({
-        title: 'Success',
+        title: 'Message',
         description: res.data.message,
       });
-      console.log(res.data);
-    } catch (error) {
-      console.log('Error');
+      // console.log(res.data);
+    } catch (error: unknown) {
+      console.log('Error', error);
     }
   };
 
@@ -125,4 +119,4 @@ export function ProductDetail({
       </div>
     </Card>
   );
-}
+};

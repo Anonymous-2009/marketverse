@@ -1,15 +1,16 @@
 import { db } from '@/db';
 import { orders } from '@/db/schema';
+import { type ApiResponseCommon } from '@/types';
 import transporter from '@/utils/nodemailer';
 import { and, eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ orderId: string }> }
-): Promise<NextResponse> {
-  const Id = (await params).orderId;
-  const ID = parseInt(Id);
+): Promise<NextResponse<ApiResponseCommon>> {
+  const Id: string = (await params).orderId;
+  const ID: number = parseInt(Id);
   try {
     if (!ID) {
       return NextResponse.json({ message: 'ID is required.' }, { status: 200 });
@@ -22,16 +23,16 @@ export async function GET(
       .where(eq(orders.orderId, ID))
       .limit(1);
 
-    const buyerEmail = order[0].buyerEmail;
+    const buyerEmail: string = order[0].buyerEmail;
 
     // set order state to cancelled
-    const result = await db
+    await db
       .update(orders)
       .set({ status: 'delivered' })
       .where(and(eq(orders.status, 'approve'), eq(orders.orderId, ID)))
       .returning();
 
-    console.log(result);
+    // console.log(result);
 
     // Send email notification
     await transporter.sendMail({
@@ -50,7 +51,7 @@ export async function GET(
     });
 
     return NextResponse.json({ message: 'Order delivered' }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.log(error);
     return NextResponse.json(
       { message: 'Internal Server Error' },

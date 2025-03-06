@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/db/index';
+import { type NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
 import { buyerAddress, buyerProfile } from '@/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { addressSchema } from '@/validation';
+import { type ApiResponseCommon } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     // Parse request body
     const data = await req.json().catch(() => null);
@@ -86,11 +89,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         message: 'Address added successfully',
-        data: result,
       },
       { status: 201 } // 201 Created for successful resource creation
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding address:', error);
 
     if (error instanceof Error) {
@@ -120,7 +122,9 @@ export async function POST(req: NextRequest) {
 }
 
 // for update user we create a put request
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     // Parse request body
     const data = await req.json().catch(() => null);
@@ -155,7 +159,7 @@ export async function PUT(req: NextRequest) {
       .where(eq(buyerProfile.email, data.email))
       .limit(1);
 
-    if (!existingBuyer.length) {
+    if (existingBuyer.length === 0) {
       return NextResponse.json({ message: 'Buyer not found' }, { status: 404 });
     }
 
@@ -170,13 +174,12 @@ export async function PUT(req: NextRequest) {
         pincode: data.pincode,
         phoneNo: data.phoneNo,
         isDefault: data.isDefault,
-
         updatedAt: new Date().toISOString(),
       })
       .where(eq(buyerAddress.addressID, data.addressID))
       .returning();
 
-    if (!result.length) {
+    if (result.length === 0) {
       return NextResponse.json(
         { message: 'Address Updation failed' },
         { status: 500 }
@@ -186,11 +189,10 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(
       {
         message: 'Address Update successfully',
-        data: result,
       },
       { status: 201 } // 201 Created for successful resource creation
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding address:', error);
 
     if (error instanceof Error) {
@@ -220,7 +222,9 @@ export async function PUT(req: NextRequest) {
 }
 
 // for delete user address we create a delete request
-export async function DELETE(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   const data = await req.json().catch(() => null);
 
   if (!data) {
@@ -230,8 +234,8 @@ export async function DELETE(req: NextRequest) {
     );
   }
 
-  const { id } = data;
-  console.log(id);
+  const { id }: { id: number } = data;
+  // console.log(id);
 
   try {
     const result = await db
@@ -239,7 +243,7 @@ export async function DELETE(req: NextRequest) {
       .where(eq(buyerAddress.addressID, id))
       .returning();
 
-    if (!result.length) {
+    if (result.length === 0) {
       return NextResponse.json(
         { message: 'Address deletion failed' },
         { status: 500 }
@@ -249,11 +253,10 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json(
       {
         message: 'Address deleted successfully',
-        data: result,
       },
       { status: 201 } // 201 Created for successful resource creation
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error deleting address:', error);
     return NextResponse.json(
       {

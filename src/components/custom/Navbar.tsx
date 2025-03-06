@@ -9,7 +9,6 @@ import {
   LogInIcon as Logs,
   MapPin,
   CreditCard,
-  UserRoundCog,
   UserRoundIcon as UserRoundPen,
   MoreVertical,
   Search,
@@ -18,7 +17,6 @@ import {
   Ban,
   FileCheck2,
   Kanban,
-  ChartNoAxesGantt,
 } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
@@ -43,15 +41,15 @@ import { useClerk } from '@clerk/nextjs';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { type ApiResponseCommon } from '@/types';
 
-export default function Navbar() {
+const Navbar = () => {
   const { user } = useUser();
   const router = useRouter();
   const { signOut } = useClerk();
-  const [isSeller, setIsSeller] = useState(false);
+  const [isSeller, setIsSeller] = useState<boolean>(false);
   // console.log('client user is here: ', user?.id);
-  const handleClick = async () => {
-    console.log('Clicked');
+  const handleClick = async (): Promise<void> => {
     try {
       if (!user) {
         console.error('User not authenticated');
@@ -74,8 +72,9 @@ export default function Navbar() {
       console.error('Error hitting API:', error);
     }
   };
+
   useEffect(() => {
-    const checkSellerStatus = async () => {
+    const checkSellerStatus = async (): Promise<void> => {
       try {
         const response = await axios.post('/api/check', user);
         // console.log('API Response:', response.data.isSeller);
@@ -95,17 +94,17 @@ export default function Navbar() {
     }
   }, [user]);
 
-  const userClick = async () => {
-    console.log('Clicked');
+  const userClick = async (): Promise<void> => {
+    // console.log('Clicked');
     router.refresh();
     try {
-      const response = await axios.post('/api/delete', user);
-      console.log('API Response:', response.data);
+      await axios.post<ApiResponseCommon>('/api/delete', user);
       router.refresh();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error hitting API:', error);
     }
   };
+
   return (
     <nav className="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
       <div className="max-w-8xl mx-auto">
@@ -394,4 +393,6 @@ export default function Navbar() {
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

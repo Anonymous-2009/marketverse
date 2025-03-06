@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db/index';
 import { sellersInfoTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { updateSchema } from '@/validation';
+import { type ApiResponseCommon } from '@/types';
 
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     // Parse request body
     const data = await req.json().catch(() => null);
@@ -39,7 +42,7 @@ export async function PUT(req: NextRequest) {
       .where(eq(sellersInfoTable.email, data.email))
       .limit(1);
 
-    if (!existingSeller.length) {
+    if (existingSeller.length === 0) {
       return NextResponse.json({ message: 'Buyer not found' }, { status: 404 });
     }
 
@@ -64,11 +67,10 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(
       {
         message: 'Seller updated successfully',
-        data: result[0],
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error updating buyer:', error);
 
     // Handle specific database errors

@@ -4,11 +4,14 @@ import { db } from '@/db/index';
 import { newsletterTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
+import { type ApiResponseCommon } from '@/types';
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponseCommon>> {
   try {
     const body = await req.json();
-    const { email } = body;
+    const { email }: { email: string } = body;
 
     if (!email) {
       return NextResponse.json(
@@ -30,18 +33,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // const user: typeof newsletterTable.$inferInsert = {
-    //   email: email,
-    // };
-    //  const data = await db.insert(newsletterTable).values(user);
-
-    // const data = await db.insert(newsletterTable).values({ email });
     await db.insert(newsletterTable).values({ email });
     return NextResponse.json(
       { message: 'Subscription successful!' },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error subscribing to newsletter:', error);
     return NextResponse.json(
       { message: 'Internal server error.' },

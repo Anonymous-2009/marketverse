@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -20,21 +20,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { addressSchema, type AddressFormValues } from '@/validation';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-import { is } from 'drizzle-orm';
+import { type ApiResponseCommon, type Address } from '@/types';
 
-const AddressCard = (address: any) => {
-  const [open, setOpen] = useState(false);
+const AddressCard = (address: Address) => {
+  const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
       country: address.country,
       fullName: address.fullName,
-      streetName: address.streetName,
+      streetName: address.streetName ?? '',
       city: address.city,
       state: address.state,
       pincode: address.pincode,
@@ -45,11 +44,16 @@ const AddressCard = (address: any) => {
     },
   });
 
-  async function onSubmit(data: AddressFormValues) {
-    console.log(data);
+  const onSubmit: SubmitHandler<AddressFormValues> = async (
+    data: AddressFormValues
+  ): Promise<void> => {
+    // console.log(data);
     try {
-      const response = await axios.put('/api/user/address-user', data);
-      console.log(response);
+      const response = await axios.put<ApiResponseCommon>(
+        '/api/user/address-user',
+        data
+      );
+      // console.log(response);
       toast({
         title: 'Message',
         description: response.data.message,
@@ -64,13 +68,16 @@ const AddressCard = (address: any) => {
         description: 'There was a problem with your request.',
       });
     }
-  }
+  };
 
-  async function handleRemove(id: number) {
+  async function handleRemove(id: number): Promise<void> {
     try {
-      const response = await axios.delete(`/api/user/address-user`, {
-        data: { id },
-      });
+      const response = await axios.delete<ApiResponseCommon>(
+        `/api/user/address-user`,
+        {
+          data: { id },
+        }
+      );
       toast({
         title: 'Message',
         description: response.data.message,
@@ -85,13 +92,16 @@ const AddressCard = (address: any) => {
     }
   }
 
-  async function handleDefault(id: number) {
+  async function handleDefault(id: number): Promise<void> {
     try {
-      const response = await axios.post(`/api/user/address-user/default`, {
-        addressID: id,
-        email: address.email,
-        isDefault: true,
-      });
+      const response = await axios.post<ApiResponseCommon>(
+        `/api/user/address-user/default`,
+        {
+          addressID: id,
+          email: address.email,
+          isDefault: true,
+        }
+      );
       toast({
         title: 'Message',
         description: response.data.message,

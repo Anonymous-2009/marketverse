@@ -1,5 +1,6 @@
 'use client';
-import { ImageCarousel } from './image-carousel';
+
+import ImageCarousel from './image-carousel';
 import {
   Card,
   CardContent,
@@ -15,25 +16,16 @@ import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 import { useRouter } from 'next/navigation';
+import { Product, type ApiResponseCommon } from '@/types';
 
-interface ProductDetailProps {
-  id: number;
-  productId: number;
-  sellerId: string;
-  sellerEmail: string;
-  productName: string;
-  productPrice: number;
-  productDescription: string;
-  productImages: string[];
-}
-
-export function ProductDetail({
+export const ProductDetail = ({
   productId,
   productName,
   productPrice,
   productDescription,
   productImages,
-}: ProductDetailProps) {
+}: Product) => {
+  const { toast } = useToast();
   const router = useRouter();
   const { user, isLoaded } = useUser();
 
@@ -41,23 +33,25 @@ export function ProductDetail({
     return <ProductGridSkeleton />;
   }
 
-  const { toast } = useToast();
-
   // Remove product from cart
-  const handleRemoveFromCart = async () => {
+  const handleRemoveFromCart = async (): Promise<void> => {
     try {
-      const response = await axios.delete('/api/products/cart/remove', {
-        data: {
-          email: user?.primaryEmailAddress?.emailAddress,
-          productId,
-        },
-      });
+      const response = await axios.delete<ApiResponseCommon>(
+        '/api/products/cart/remove',
+        {
+          data: {
+            email: user?.primaryEmailAddress?.emailAddress,
+            productId,
+          },
+        }
+      );
 
       toast({
-        title: 'Removed from Cart',
+        title: 'Message',
         description: response.data.message,
       });
-    } catch (error) {
+    } catch (error: unknown) {
+      console.log(error);
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -116,4 +110,4 @@ export function ProductDetail({
       </div>
     </Card>
   );
-}
+};

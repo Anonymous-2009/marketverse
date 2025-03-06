@@ -1,5 +1,6 @@
 'use client';
 
+import Review from './Review'; // Remove 'type' from the import
 import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -16,37 +17,42 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Heart } from 'lucide-react';
-import Review from './Review';
 import { useUser } from '@clerk/nextjs';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import {
+  type Product,
+  type ApiResponseCommon,
+  type ApiResponse,
+} from '@/types';
 
-const page = ({ params }: { params: Promise<{ no: string }> }) => {
+const Page = ({ params }: { params: Promise<{ no: string }> }) => {
   const router = useRouter();
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
-    const fetch = async () => {
+    const fetch = async (): Promise<void> => {
       try {
         setLoading(true);
-        const no = (await params).no;
-        const num = parseInt(no);
+        const no: string = (await params).no;
+        const num: number = parseInt(no);
         if (isNaN(num)) {
           console.log('Invalid Page');
         }
-        const res = await axios.get(`/api/products/${num}`);
-        console.log(res.data);
-        setProduct(res.data.data);
+        const res = await axios.get<ApiResponse<Product>>(
+          `/api/products/${num}`
+        );
+        setProduct(res.data.data ?? null);
         setLoading(false);
-      } catch (error) {
-        console.log('Error');
+      } catch (error: unknown) {
+        console.log('Error', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetch();
-  }, []);
+  }, [params]);
 
   const { user, isLoaded } = useUser();
   if (loading || !isLoaded) {
@@ -57,35 +63,38 @@ const page = ({ params }: { params: Promise<{ no: string }> }) => {
     return <NoProductsPage />;
   }
 
-  const handleClick = async (productId: number) => {
+  const handleClick = async (productId: number): Promise<void> => {
     try {
-      const res = await axios.put('/api/products/cart/add', {
+      const res = await axios.put<ApiResponseCommon>('/api/products/cart/add', {
         email: user?.primaryEmailAddress?.emailAddress,
         productId,
       });
       toast({
-        title: 'Success',
+        title: 'Message',
         description: res.data.message,
       });
       console.log(res.data);
-    } catch (error) {
-      console.log('Error');
+    } catch (error: unknown) {
+      console.log('Error', error);
     }
   };
 
-  const handleClickWishList = async (productId: number) => {
+  const handleClickWishList = async (productId: number): Promise<void> => {
     try {
-      const res = await axios.put('/api/products/wishlist/add', {
-        email: user?.primaryEmailAddress?.emailAddress,
-        productId,
-      });
+      const res = await axios.put<ApiResponseCommon>(
+        '/api/products/wishlist/add',
+        {
+          email: user?.primaryEmailAddress?.emailAddress,
+          productId,
+        }
+      );
       toast({
-        title: 'Success',
+        title: 'Message',
         description: res.data.message,
       });
       console.log(res.data);
-    } catch (error) {
-      console.log('Error');
+    } catch (error: unknown) {
+      console.log('Error', error);
     }
   };
 
@@ -190,4 +199,4 @@ const page = ({ params }: { params: Promise<{ no: string }> }) => {
   );
 };
 
-export default page;
+export default Page;

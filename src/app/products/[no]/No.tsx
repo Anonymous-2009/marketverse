@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-const NoProductsPage = () => {
+const NoProductsPage: React.FC = () => {
   const router = useRouter();
 
   return (
@@ -12,7 +12,7 @@ const NoProductsPage = () => {
       <AlertCircle className="h-16 w-16 text-gray-500 dark:text-gray-400" />
       <h1 className="text-2xl font-semibold mt-4">No Products Found</h1>
       <p className="text-gray-600 dark:text-gray-400 mt-2">
-        We couldn't find any products. Try browsing other categories.
+        We couldn&apos;t find any products. Try browsing other categories.
       </p>
 
       <Button
