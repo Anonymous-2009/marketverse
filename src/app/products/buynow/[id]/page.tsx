@@ -28,6 +28,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   if (!isLoaded || loading) {
     return <ProductGridSkeleton />;
   }
+
   return (
     <main className="bg-auto min-h-screen py-8">
       <Order id={id} email={user?.primaryEmailAddress?.emailAddress || ''} />

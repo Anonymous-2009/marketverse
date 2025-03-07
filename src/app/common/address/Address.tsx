@@ -2,8 +2,8 @@ import { toast } from '@/hooks/use-toast';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AddAddressDialog } from './Dialog';
-import AddressCard from './Card';
 import type { Address, AddressProps, ApiResponse } from '@/types';
+import AddressCard from './Card';
 
 const Address: React.FC<AddressProps> = ({ email }) => {
   // console.log(email)

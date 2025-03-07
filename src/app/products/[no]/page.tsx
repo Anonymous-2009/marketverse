@@ -4,7 +4,6 @@ import Review from './Review'; // Remove 'type' from the import
 import SkeletonLoader from '@/components/custom/skeleton/Product-Skeleton';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import NoProductsPage from './No';
 import Image from 'next/image';
 import {
   Carousel,
@@ -21,6 +20,7 @@ import { useUser } from '@clerk/nextjs';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import type { Product, ApiResponseCommon, ApiResponse } from '@/types';
+import NoProductsPage from '@/components/custom/not-found';
 
 const Page = ({ params }: { params: Promise<{ no: string }> }) => {
   const router = useRouter();
@@ -103,19 +103,21 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
             <div className="relative w-full max-w-xl mx-auto">
               <Carousel className="w-full">
                 <CarouselContent>
-                  {product.productImages.map((image: string, index: number) => (
-                    <CarouselItem key={index}>
-                      <div className="relative w-full h-[540px]">
-                        <Image
-                          src={image || '/placeholder.svg'}
-                          alt={`Product image ${index + 1}`}
-                          fill
-                          className="object-cover rounded-lg"
-                          priority={index === 0}
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
+                  {product?.productImages.map(
+                    (image: string, index: number) => (
+                      <CarouselItem key={index}>
+                        <div className="relative w-full h-[540px]">
+                          <Image
+                            src={image || '/placeholder.svg'}
+                            alt={`Product image ${index + 1}`}
+                            fill
+                            className="object-cover rounded-lg"
+                            priority={index === 0}
+                          />
+                        </div>
+                      </CarouselItem>
+                    )
+                  )}
                 </CarouselContent>
                 <CarouselPrevious className="absolute left-4 top-1/2 " />
                 <CarouselNext className="absolute right-4 top-1/2 " />
@@ -125,10 +127,10 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
             {/* Right Column - Product Details */}
             <div className="space-y-6">
               <div>
-                <h1 className="text-4xl font-bold">{product.productName}</h1>
+                <h1 className="text-4xl font-bold">{product?.productName}</h1>
                 <p className="text-3xl font-bold mt-2">
                   <span className="text-muted-foreground"> Price </span>:{' '}
-                  {product.productPrice.toFixed(2)}
+                  {product?.productPrice.toFixed(2)}
                 </p>
               </div>
 
@@ -137,14 +139,14 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Description</h2>
                 <p className="text-muted-foreground">
-                  {product.productDescription}
+                  {product?.productDescription}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <h2 className="text-xl font-semibold">Seller Information</h2>
                 <p className="text-muted-foreground">
-                  Contact: {product.sellerEmail}
+                  Contact: {product?.sellerEmail}
                 </p>
               </div>
 
@@ -154,7 +156,7 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
                     className="w-full"
                     size="lg"
                     onClick={() => {
-                      router.push(`/products/buynow/${product.productId}`);
+                      router.push(`/products/buynow/${product?.productId}`);
                     }}
                   >
                     Buy Now
@@ -186,7 +188,7 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
           </div>
 
           <Review
-            productId={product.productId}
+            productId={product?.productId}
             email={user?.primaryEmailAddress?.emailAddress || ''}
           />
         </div>

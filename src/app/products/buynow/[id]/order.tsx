@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input'; // Import input component
 import type { Address, Payment, Product, ApiResponse } from '@/types';
+import NoProductsPage from '@/components/custom/not-found';
 
 const Order = ({ id, email }: { id: number | null; email: string }) => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -176,6 +177,9 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
     );
   }
 
+  if (!product) {
+    return <NoProductsPage />;
+  }
   return (
     <div className="min-h-screen bg-background px-4 py-8 md:px-6 md:py-12">
       <div className="max-w-6xl mx-auto space-y-8">

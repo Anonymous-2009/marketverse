@@ -1,6 +1,5 @@
 'use client';
 
-import ProductGridSkeleton from '@/components/custom/skeleton/Products-Skeleton';
 import ProductGrid from '@/components/custom/products/ProductGrid';
 import { SignInButton, SignUpButton, useAuth, useUser } from '@clerk/nextjs';
 import axios from 'axios';
@@ -15,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 
 const Home = () => {
   const { isLoaded, isSignedIn } = useAuth();
