@@ -17,8 +17,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input'; // Import input component
-import { type Address, type Payment, type Product } from '@/types';
-import { type ApiResponse } from '@/types';
+import type { Address, Payment, Product, ApiResponse } from '@/types';
 
 const Order = ({ id, email }: { id: number | null; email: string }) => {
   const [product, setProduct] = useState<Product | null>(null);

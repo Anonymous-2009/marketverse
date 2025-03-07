@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { addressSchema, type AddressFormValues } from '@/validation';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-import { type ApiResponseCommon, type Address } from '@/types';
+import type { ApiResponseCommon, Address } from '@/types';
 
 const AddressCard = (address: Address) => {
   const [open, setOpen] = useState<boolean>(false);

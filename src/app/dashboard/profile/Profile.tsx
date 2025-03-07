@@ -29,7 +29,7 @@ import { updateSchema, type updateType } from '@/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { type ApiResponseCommon } from '@/types';
+import type { ApiResponseCommon } from '@/types';
 
 const Profile: React.FC<{ email: string }> = ({ email }) => {
   const router = useRouter();

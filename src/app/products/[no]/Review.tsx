@@ -18,11 +18,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
 import { type ReviewFormData, reviewSchema } from '@/validation';
 import axios from 'axios';
-import {
-  type Review,
-  type ApiResponse,
-  type ApiResponseCommon,
-  type ReviewProps,
+import type {
+  Review,
+  ApiResponse,
+  ApiResponseCommon,
+  ReviewProps,
 } from '@/types';
 
 const Review: React.FC<ReviewProps> = ({ productId, email }) => {

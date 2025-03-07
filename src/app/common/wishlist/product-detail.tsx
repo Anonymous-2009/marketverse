@@ -14,8 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
-import { type Product } from '@/types';
-import { type ApiResponseCommon } from '@/types';
+import type { Product, ApiResponseCommon } from '@/types';
 
 export const ProductDetail = ({
   productId,

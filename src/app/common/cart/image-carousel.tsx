@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
-import { type ImageCarouselProps } from '@/types';
+import type { ImageCarouselProps } from '@/types';
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({
   productImages,

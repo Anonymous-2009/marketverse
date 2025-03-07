@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { MessageSquare, PackageSearch, X } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { type Order, type ApiResponseCommon, ApiResponse } from '@/types';
+import type { Order, ApiResponseCommon, ApiResponse } from '@/types';
 
 const OrderPage = ({ email }: { email: string }) => {
   const [orders, setOrders] = useState<Order[]>([]);

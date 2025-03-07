@@ -4,7 +4,7 @@ import { ProductDetail } from './product-detail';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { type ApiResponse, type Product } from '@/types';
+import type { ApiResponse, Product } from '@/types';
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ import {
 import { BookOpen, HelpCircle, PackageOpen, PlusCircle } from 'lucide-react';
 
 export const ProductList = ({ email }: { email: string }) => {
-  const [products, setProducts] = useState<Product[]>([]); // Explicitly type the state
+  const [products, setProducts] = useState<Product[]>([]); // Explicitly the state
 
   useEffect(() => {
     const fetchProducts = async () => {

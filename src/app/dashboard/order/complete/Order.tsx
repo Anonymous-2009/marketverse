@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
-import { type ApiResponse, type Order } from '@/types';
+import type { ApiResponse, Order } from '@/types';
 
 const OrdersPage: React.FC<{ email: string }> = ({ email }) => {
   const [orders, setOrders] = useState<Order[]>([]);

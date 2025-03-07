@@ -15,7 +15,7 @@ import axios, { AxiosError } from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useUser } from '@clerk/nextjs';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
-import { ApiResponseCommon, ProductListProps } from '@/types';
+import type { ApiResponseCommon, ProductListProps } from '@/types';
 import Link from 'next/link';
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {

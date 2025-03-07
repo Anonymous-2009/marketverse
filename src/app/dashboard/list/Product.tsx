@@ -10,11 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
-import {
-  type ApiResponseCommon,
-  type ProductFormData,
-  type SellerType,
-} from '@/types';
+import type { ApiResponseCommon, ProductFormData, SellerType } from '@/types';
 import Image from 'next/image';
 
 const CreateProduct: React.FC<SellerType> = ({ email, sellerId }) => {

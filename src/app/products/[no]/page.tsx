@@ -20,11 +20,7 @@ import { ShoppingCart, Heart } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import {
-  type Product,
-  type ApiResponseCommon,
-  type ApiResponse,
-} from '@/types';
+import type { Product, ApiResponseCommon, ApiResponse } from '@/types';
 
 const Page = ({ params }: { params: Promise<{ no: string }> }) => {
   const router = useRouter();

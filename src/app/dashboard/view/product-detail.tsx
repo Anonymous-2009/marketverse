@@ -20,7 +20,7 @@ import { Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { Product, type ApiResponseCommon } from '@/types';
+import type { Product, ApiResponseCommon } from '@/types';
 
 export const ProductDetail = ({
   productId,

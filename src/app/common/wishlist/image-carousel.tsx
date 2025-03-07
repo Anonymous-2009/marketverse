@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import type React from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
-import { type ImageCarouselProps } from '@/types';
+import type { ImageCarouselProps } from '@/types';
 
 export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   productImages,

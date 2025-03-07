@@ -40,11 +40,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PaymentSchema, type PaymentType } from '@/validation'; // Adjust this import path as needed
-import {
+import type {
   ApiResponseCommon,
-  type ApiResponse,
-  type MainProps,
-  type Payment,
+  ApiResponse,
+  MainProps,
+  Payment,
 } from '@/types';
 
 const Main: React.FC<MainProps> = ({ email, buyerId }) => {

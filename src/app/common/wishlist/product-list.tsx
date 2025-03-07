@@ -4,13 +4,13 @@ import { ProductDetail } from './product-detail';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { type Product, type ApiResponse } from '@/types';
+import type { Product, ApiResponse } from '@/types';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 export const ProductList = ({ email }: { email: string }) => {
-  const [products, setProducts] = useState<Product[]>([]); // Explicitly type the state
+  const [products, setProducts] = useState<Product[]>([]); // Explicitly  the state
   const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {

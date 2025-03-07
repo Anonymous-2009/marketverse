@@ -26,7 +26,7 @@ import { addressSchema, type AddressFormValues } from '@/validation';
 import { Card, CardContent } from '@/components/ui/card';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-import { type ApiResponseCommon, type AddressProps } from '@/types';
+import type { ApiResponseCommon, AddressProps } from '@/types';
 
 export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
   const [open, setOpen] = useState<boolean>(false);

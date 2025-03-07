@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { type ApiResponseCommon, type ApiResponse, type Order } from '@/types';
+import type { ApiResponseCommon, ApiResponse, Order } from '@/types';
 
 const OrdersPage: React.FC<{ email: string }> = ({ email }) => {
   const [orders, setOrders] = useState<Order[]>([]);

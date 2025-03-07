@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AddAddressDialog } from './Dialog';
 import AddressCard from './Card';
-import { type Address, type AddressProps, type ApiResponse } from '@/types';
+import type { Address, AddressProps, ApiResponse } from '@/types';
 
 const Address: React.FC<AddressProps> = ({ email }) => {
   // console.log(email)

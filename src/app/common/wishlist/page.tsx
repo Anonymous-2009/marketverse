@@ -3,7 +3,7 @@ import { useUser } from '@clerk/nextjs';
 import { ProductList } from './product-list';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 
-export default function Home() {
+const Page: React.FC = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -15,4 +15,6 @@ export default function Home() {
       <ProductList email={user?.primaryEmailAddress?.emailAddress || ''} />
     </main>
   );
-}
+};
+
+export default Page;

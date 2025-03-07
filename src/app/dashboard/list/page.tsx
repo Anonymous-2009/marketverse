@@ -3,7 +3,7 @@ import ProductForm from './Product';
 import { useUser } from '@clerk/nextjs';
 import ProfileSkelCreateProductSkeleton from '@/components/custom/skeleton/List-Skeleton';
 
-const Page = () => {
+const Page: React.FC = () => {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {

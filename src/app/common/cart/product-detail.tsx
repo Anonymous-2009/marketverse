@@ -16,7 +16,7 @@ import { ToastAction } from '@/components/ui/toast';
 import { useUser } from '@clerk/nextjs';
 import ProductGridSkeleton from '@/components/custom/skeleton/Products-List';
 import { useRouter } from 'next/navigation';
-import { Product, type ApiResponseCommon } from '@/types';
+import type { Product, ApiResponseCommon } from '@/types';
 
 export const ProductDetail = ({
   productId,
