@@ -241,6 +241,7 @@ const CreateProduct: React.FC<SellerType> = ({ email, sellerId }) => {
                           className="w-full h-32 object-cover rounded-lg"
                           width={180}
                           height={150}
+                          unoptimized={true}
                         />
                         <button
                           type="button"

@@ -111,6 +111,7 @@ const Page = ({ params }: { params: Promise<{ no: string }> }) => {
                             src={image || '/placeholder.svg'}
                             alt={`Product image ${index + 1}`}
                             fill
+                            unoptimized={true}
                             className="object-cover rounded-lg"
                             priority={index === 0}
                           />

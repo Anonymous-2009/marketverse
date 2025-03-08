@@ -115,6 +115,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                   className="h-full w-full object-cover transition-transform hover:scale-105"
                   width={400}
                   height={400}
+                  unoptimized={true}
                 />
               </div>
               <div className="flex flex-col justify-between p-6">

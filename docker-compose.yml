@@ -1,32 +1,43 @@
 version: '3.9'
 
 services:
-  # marketverse:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     # image: anonymous2009/client:latest
-  #   container_name: marketverse
-  #   restart: always
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - postgres
-  #   env_file:
-  #     - .env.local # Reference the .env file
-  #   networks:
-  #     - marketverse
+  marketverse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    container_name: marketverse
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM=${SMTP_FROM}
+    networks:
+      - marketverse
 
   postgres:
     image: postgres:latest
     container_name: marketverse-database
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: something
+      POSTGRES_PASSWORD: something
       POSTGRES_DB: marketverse
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U root']
+      test: ['CMD-SHELL', 'pg_isready -U something']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -39,7 +50,8 @@ services:
 
 networks:
   marketverse:
-    driver: bridge
+    external: true
+    name: marketverse-network
 
 volumes:
   marketverse-data:

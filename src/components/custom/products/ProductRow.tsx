@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
-import { type Product } from '@/types';
+import type { Product } from '@/types';
 
 const ProductRow: React.FC<{ products: Product[]; title: string }> = ({
   products,

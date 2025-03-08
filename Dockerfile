@@ -1,30 +1,33 @@
 # Base image for building
-FROM node:latest AS builder 
+FROM node:iron-alpine AS builder 
 
 # Initialize a working directory
 WORKDIR /home/marketverse
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml* ./
 
 # install pnpm 
 RUN npm install -g pnpm@latest-10
 
 # Install dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
 
-# Set environment variable for Clerk (Replace with your actual key)
-ARG CLERK_PUBLISHABLE_KEY
-ENV CLERK_PUBLISHABLE_KEY=$CLERK_PUBLISHABLE_KEY
+# Ensure Clerk environment variable is available during build
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 
 # Build the project
 RUN pnpm run build 
 
 # Base image for running
-FROM node:latest AS runner 
+FROM node:iron-alpine AS runner 
+
+# install pnpm 
+RUN npm install -g pnpm@latest-10
 
 # Initialize a working directory
 WORKDIR /app
@@ -34,6 +37,9 @@ COPY --from=builder /home/marketverse/.next ./.next
 COPY --from=builder /home/marketverse/node_modules ./node_modules
 COPY --from=builder /home/marketverse/package.json .
 COPY --from=builder /home/marketverse/pnpm-lock.yaml .
+
+# Ensure Clerk key is available in runtime
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 
 # Expose ports
 EXPOSE 3000

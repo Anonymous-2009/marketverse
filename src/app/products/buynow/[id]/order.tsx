@@ -195,6 +195,7 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
                   src={product.productImages?.[0] || '/placeholder.svg'}
                   alt={product.productName || 'Product Image'}
                   fill
+                  unoptimized={true}
                   className="object-cover rounded-lg"
                 />
               </div>

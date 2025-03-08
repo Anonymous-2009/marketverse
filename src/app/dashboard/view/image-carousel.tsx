@@ -32,6 +32,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     fill
                     className="object-cover rounded-md"
                     quality={80}
+                    unoptimized={true}
                     loading="lazy" // ✅ Lazy loading enabled
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
