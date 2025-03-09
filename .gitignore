@@ -37,7 +37,7 @@ yarn-error.log*
 .env.local
 drizzle
 file
-pnpm-lock.yaml
+# pnpm-lock.yaml
 .env.development
 .env.development.local
 .env.production

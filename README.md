@@ -373,11 +373,11 @@ docker run -d \
 
 #### 5. Initialize Database Schema
 
-Connect to the database container and run the following commands:
+*For Linux :* Connect to the database container and run the following commands:
 
 ```bash
-npx drizzle-kit generate
-npx drizzle-kit push
+pnpm exec drizzle-kit generate
+pnpm exec drizzle-kit push
 ```
 
 #### 6. Run the Container 
