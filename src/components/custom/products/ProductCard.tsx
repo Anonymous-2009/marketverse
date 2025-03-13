@@ -22,7 +22,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useClerk } from '@clerk/nextjs';
-import type  { Product, ApiResponseCommon } from '@/types';
+import type { Product, ApiResponseCommon } from '@/types';
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);

@@ -2,7 +2,7 @@
 
 **MarketVerse** is a dynamic e-commerce platform built with Next.js, where users can seamlessly buy and sell products. Whether you want to shop for quality goods or become a seller to showcase your products, MarketVerse provides a smooth and intuitive experience. With secure transactions, user-friendly navigation, and a robust marketplace, MarketVerse empowers individuals to connect, trade, and grow their businesses effortlessly.
 
-> [!WARNING] 
+> [!WARNING]
 > This project is created for **learning purposes** to explore and implement various web development and DevOps technologies.
 
 # Table of Contents
@@ -49,6 +49,7 @@ Before running MarketVerse, ensure you have the following installed:
 ## Tech Stack
 
 ### Frontend
+
 - **Framework:** [Next.js](https://nextjs.org/) (React)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components:** [Shadcn UI](https://ui.shadcn.com/), [Lucide Icons](https://lucide.dev/)
@@ -57,6 +58,7 @@ Before running MarketVerse, ensure you have the following installed:
 - **Data Fetching & State Management:** [TanStack Query](https://tanstack.com/query/latest)
 
 ### Backend & API
+
 - **Database ORM:** [Drizzle ORM](https://orm.drizzle.team/)
 - **Database:** [PostgreSQL](https://www.postgresql.org/)
 - **Storage:** [Cloudinary](https://cloudinary.com/)
@@ -64,26 +66,32 @@ Before running MarketVerse, ensure you have the following installed:
 - **Email Service:** [Nodemailer](https://nodemailer.com/)
 
 ### Development & Build Tools
+
 - **Code Quality:** [ESLint](https://eslint.org/), [Prettier](https://prettier.io/)
 - **Type Safety:** [TypeScript](https://www.typescriptlang.org/)
 - **Bundling & Transpilation:** TSX, PostCSS
 
 ## DevOps & Deployment
+
 - **Containerization & Orchestration:**
+
   - [Docker](https://www.docker.com/)
   - [Kubernetes (K8s)](https://kubernetes.io/)
   - [Minikube](https://minikube.sigs.k8s.io/docs/)
 
 - **Infrastructure as Code (IaC):**
+
   - [Terraform](https://www.terraform.io/)
   - [Ansible](https://www.ansible.com/)
 
 - **CI/CD Pipeline & Automation:**
+
   - [Jenkins](https://www.jenkins.io/)
   - Shell Scripting
   - Linux (Ubuntu/Debian)
 
 - **Monitoring & Logging:**
+
   - [Grafana](https://grafana.com/)
   - [Prometheus](https://prometheus.io/)
 
@@ -214,10 +222,11 @@ src
 │   └── schema
 ├── utils
 └── validation
-    └── schema 
+    └── schema
 ```
 
 Each folder serves a specific purpose:
+
 - **app/api** → Handles all API endpoints
 - **components/** → Reusable UI components
 - **service/** → Business logic for buyers, products, and sellers
@@ -246,7 +255,7 @@ This structured approach ensures scalability and ease of maintenance.
 - [ ] GraphQL (Planned)
 - [ ] Redis (Planned)
 
-## How To Setup This Project 
+## How To Setup This Project
 
 ### Local Development Setup
 
@@ -267,13 +276,13 @@ cd marketverse
 #### 2. Install Dependencies
 
 ```bash
-npm install # for npm 
+npm install # for npm
 # or
-bun install # for bun 
+bun install # for bun
 # or
-yarn install # for yarn 
+yarn install # for yarn
 # or
-pnpm install # for pnpm 
+pnpm install # for pnpm
 ```
 
 #### 3. Set Up Environment Variables
@@ -322,7 +331,7 @@ bun dev
 
 #### 6. Access the Application
 
-> [!NOTE] 
+> [!NOTE]
 > Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ### Docker Development Setup
@@ -343,7 +352,7 @@ cd marketverse
 
 ```bash
 docker build --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key_here -t marketverse:latest .
-``` 
+```
 
 #### 3. Create Docker Network
 
@@ -373,14 +382,14 @@ docker run -d \
 
 #### 5. Initialize Database Schema
 
-*For Linux :* Connect to the database container and run the following commands:
+_For Linux :_ Connect to the database container and run the following commands:
 
 ```bash
 pnpm exec drizzle-kit generate
 pnpm exec drizzle-kit push
 ```
 
-#### 6. Run the Container 
+#### 6. Run the Container
 
 ```bash
 docker run --name marketverse --network marketverse-network -d \
@@ -419,10 +428,10 @@ SMTP_FROM=
 Then run:
 
 ```bash
-docker-compose up --build -d 
+docker-compose up --build -d
 ```
 
-> [!NOTE] 
+> [!NOTE]
 > Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Author

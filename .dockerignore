@@ -40,6 +40,7 @@ file
 
 # vercel
 .vercel
+kubernetes
 
 # typescript
 *.tsbuildinfo
