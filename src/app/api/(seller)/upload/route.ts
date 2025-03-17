@@ -29,7 +29,7 @@ export async function PUT(
     }
 
     // Type guard for file
-    if (!file || !(file instanceof File)) {
+    if (!file || !(file instanceof Blob)) {
       return NextResponse.json(
         { message: 'No valid file uploaded' },
         { status: 400 }

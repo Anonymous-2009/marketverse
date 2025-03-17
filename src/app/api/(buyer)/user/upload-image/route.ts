@@ -5,6 +5,7 @@ import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import sharp from 'sharp';
 import { type ApiResponseCommon, type CloudinaryUploadResponse } from '@/types';
+import { resourceLimits } from 'worker_threads';
 
 export async function PUT(
   request: NextRequest
@@ -29,7 +30,7 @@ export async function PUT(
     }
 
     // Type guard for file
-    if (!file || !(file instanceof File)) {
+    if (!file || !(file instanceof Blob)) {
       return NextResponse.json(
         { message: 'No valid file uploaded' },
         { status: 400 }

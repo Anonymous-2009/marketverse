@@ -23,6 +23,7 @@ const CreateProduct: React.FC<SellerType> = ({ email, sellerId }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ProductFormData>();
 
@@ -129,6 +130,7 @@ const CreateProduct: React.FC<SellerType> = ({ email, sellerId }) => {
       previewUrls.forEach((url) => URL.revokeObjectURL(url));
       setSelectedImages([]);
       setPreviewUrls([]);
+      reset();
     } catch (error: unknown) {
       console.error('Error creating product:', error);
       // alert('Failed to list a product')

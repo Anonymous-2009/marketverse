@@ -14,6 +14,7 @@ export interface ImageCarouselProps {
 // address page props
 export interface AddressProps {
   email: string;
+  refetch: () => void; // Accept refetch function as a prop
 }
 
 // props for buyer profile

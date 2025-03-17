@@ -24,8 +24,20 @@ import { addressSchema, type AddressFormValues } from '@/validation';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 import type { ApiResponseCommon, Address } from '@/types';
+import { useMutation } from '@apollo/client';
+import {
+  DELETE_ADDRESS_MUTATION,
+  UPDATE_DEFAULT_USER_ADDRESS,
+  UPDATE_USER_ADDRESS,
+} from '@/app/api/graphql/mutations/addressMutations';
 
-const AddressCard = (address: Address) => {
+const AddressCard = ({
+  address,
+  refetch,
+}: {
+  address: Address;
+  refetch: () => void;
+}) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<AddressFormValues>({
@@ -44,23 +56,25 @@ const AddressCard = (address: Address) => {
     },
   });
 
-  const onSubmit: SubmitHandler<AddressFormValues> = async (
-    data: AddressFormValues
-  ): Promise<void> => {
-    // console.log(data);
+  const [updateAddress] = useMutation(UPDATE_USER_ADDRESS);
+  const [deleteAddress] = useMutation(DELETE_ADDRESS_MUTATION);
+  const [updateDefaultAddress] = useMutation(UPDATE_DEFAULT_USER_ADDRESS);
+
+  const onSubmit: SubmitHandler<AddressFormValues> = async (data) => {
     try {
-      const response = await axios.put<ApiResponseCommon>(
-        '/api/user/address-user',
-        data
-      );
-      // console.log(response);
+      const { data: response } = await updateAddress({
+        variables: { input: data }, // GraphQL requires variables in an object
+      });
+
       toast({
         title: 'Message',
-        description: response.data.message,
+        description: response.updateAddress.message,
       });
+
       setOpen(false);
       form.reset();
-    } catch (error) {
+      refetch();
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({
         variant: 'destructive',
@@ -70,18 +84,17 @@ const AddressCard = (address: Address) => {
     }
   };
 
-  async function handleRemove(id: number): Promise<void> {
+  const handleRemove = async (id: number): Promise<void> => {
     try {
-      const response = await axios.delete<ApiResponseCommon>(
-        `/api/user/address-user`,
-        {
-          data: { id },
-        }
-      );
+      const { data: response } = await deleteAddress({
+        variables: { id },
+      });
+
       toast({
         title: 'Message',
-        description: response.data.message,
+        description: response.deleteAddress.message,
       });
+      refetch(); // Refresh the address list
     } catch (error) {
       console.error('Error deleting address:', error);
       toast({
@@ -90,34 +103,41 @@ const AddressCard = (address: Address) => {
         description: 'There was a problem with your request.',
       });
     }
-  }
+  };
 
-  async function handleDefault(id: number): Promise<void> {
+  const handleDefault = async (id: number): Promise<void> => {
     try {
-      const response = await axios.post<ApiResponseCommon>(
-        `/api/user/address-user/default`,
-        {
-          addressID: id,
-          email: address.email,
-          isDefault: true,
-        }
-      );
+      const { data: response } = await updateDefaultAddress({
+        variables: {
+          email: address.email, // Ensure this is provided
+          addressId: id, // Ensure this is provided
+          isDefault: true, // Ensure this is provided
+        },
+      });
+
       toast({
         title: 'Message',
-        description: response.data.message,
+        description: response?.updateDefaultAddress.message,
       });
-    } catch (error) {
-      console.error('Error setting default address:', error);
+
+      setOpen(false);
+      form.reset();
+      refetch();
+    } catch (error: unknown) {
+      console.error('Error updating address:', error);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
         description: 'There was a problem with your request.',
       });
     }
-  }
+  };
 
   return (
-    <Card key={address.id} className="relative bg-white dark:bg-zinc-950">
+    <Card
+      key={address.addressID}
+      className="relative bg-white dark:bg-zinc-950"
+    >
       {address.isDefault && (
         <div className="absolute top-4 right-4 px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-xs font-medium rounded-full">
           Default

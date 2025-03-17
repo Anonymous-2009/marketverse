@@ -17,7 +17,7 @@
 #   make install              → Install dependencies
 #   make format               → Format the codebase
 #   make build                → Build the project
-#   make run                  → Run in development mode
+#   make dev                  → Run in development mode
 #   make start                → Start in production mode
 #   make production           → Build & start in production
 #
@@ -89,10 +89,21 @@ build:
 	pnpm run build
 	@echo "✅ Build completed!"
 
+# For Lint 
+lint:
+	@echo "Linting started"
+	pnpm run lint
+	@echo "✅ Linting done"
+
 # Run the project in development mode
-run:
+dev:
 	@echo "🚀 Running the project in development mode..."
 	pnpm run dev
+
+# for run drizzle stuido 
+studio:
+	@echo "🚀 Running the project in stuidot mode..."
+	pnpm exec drizzle-kit studio
 
 # Start the project in production mode
 start:

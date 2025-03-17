@@ -242,17 +242,19 @@ This structured approach ensures scalability and ease of maintenance.
 > These technologies are planned for future implementation.
 
 - [x] Docker
-- [ ] Kubernetes (Minikube)
-- [ ] Jenkins
-- [ ] Shell Scripting
-- [ ] Linux
-- [ ] Helm
+- [x] Kubernetes (Minikube)
+- [x] Jenkins
+- [x] Makefile
+- [x] Shell Scripting
+- [x] Argocd
+- [x] Linux
+- [x] Helm
 - [ ] AWS EC2
 - [ ] Terraform
 - [ ] Ansible
-- [ ] Grafana
-- [ ] Prometheus
-- [ ] GraphQL (Planned)
+- [x] Grafana
+- [x] Prometheus
+- [x] GraphQL (Planned)
 - [ ] Redis (Planned)
 
 ## How To Setup This Project

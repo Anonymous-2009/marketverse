@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db'; // Import Drizzle DB instance
 import { buyerProfile, products } from '@/db/schema';
 import { eq, inArray } from 'drizzle-orm';
-import { type ApiResponse, type Product } from '@/types';
+import type { ApiResponse, Product } from '@/types';
 
 export async function POST(
   req: NextRequest

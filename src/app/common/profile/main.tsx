@@ -36,7 +36,8 @@ const Main = ({ email }: { email: string }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isUploading, setUploading] = useState<boolean>(false);
 
-  const { data, isLoading, isError } = useFetchDataByEmailForBuyer(email);
+  const { data, isLoading, isError, refetch } =
+    useFetchDataByEmailForBuyer(email);
 
   const {
     register,
@@ -120,6 +121,7 @@ const Main = ({ email }: { email: string }) => {
           </ToastAction>
         ),
       });
+      refetch();
     } catch (error: unknown) {
       console.error('Error uploading image:', error);
       toast({
@@ -149,6 +151,7 @@ const Main = ({ email }: { email: string }) => {
         ),
       });
       setIsOpen(false);
+      refetch();
     } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({

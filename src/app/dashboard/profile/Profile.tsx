@@ -56,7 +56,7 @@ const Profile: React.FC<{ email: string }> = ({ email }) => {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isUploading, setUploading] = useState<boolean>(false);
-  const { data, isLoading } = useFetchDataByEmail(email);
+  const { data, isLoading, refetch } = useFetchDataByEmail(email);
 
   useEffect(() => {
     if (data?.data) {
@@ -112,6 +112,7 @@ const Profile: React.FC<{ email: string }> = ({ email }) => {
         ),
       });
       //   console.log(data)
+      refetch();
     } catch (error: unknown) {
       console.error('Error uploading image:', error);
       toast({
@@ -141,7 +142,8 @@ const Profile: React.FC<{ email: string }> = ({ email }) => {
       });
       // Close dialog and reset form
       setIsOpen(false);
-      // reset();
+      reset();
+      refetch();
     } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({

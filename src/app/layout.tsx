@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/toaster';
 import Providers from './providers';
+import { ApolloProvider } from '@/components/custom/provider/ApolloProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,25 +31,27 @@ export default function RootLayout({
 }>) {
   return (
     <Providers>
-      <ClerkProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
+      <ApolloProvider>
+        <ClerkProvider>
+          <html lang="en" suppressHydrationWarning>
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-              <Navbar />
-              {children}
-              <Toaster />
-              <Footer />
-            </ThemeProvider>
-          </body>
-        </html>
-      </ClerkProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Navbar />
+                {children}
+                <Toaster />
+                <Footer />
+              </ThemeProvider>
+            </body>
+          </html>
+        </ClerkProvider>
+      </ApolloProvider>
     </Providers>
   );
 }

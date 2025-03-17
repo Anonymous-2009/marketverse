@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@apollo/client';
 import {
   Dialog,
   DialogContent,
@@ -24,11 +25,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Plus } from 'lucide-react';
 import { addressSchema, type AddressFormValues } from '@/validation';
 import { Card, CardContent } from '@/components/ui/card';
-import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-import type { ApiResponseCommon, AddressProps } from '@/types';
+import type { AddressProps } from '@/types';
+import { ADD_ADDRESS_MUTATION } from '@/app/api/graphql/mutations/addressMutations';
 
-export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
+export const AddAddressDialog: React.FC<AddressProps> = ({
+  email,
+  refetch,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<AddressFormValues>({
@@ -46,23 +50,21 @@ export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
     },
   });
 
-  const onSubmit: SubmitHandler<AddressFormValues> = async (
-    data: AddressFormValues
-  ): Promise<void> => {
-    // console.log(data);
+  const [addAddress, { loading }] = useMutation(ADD_ADDRESS_MUTATION);
+
+  const onSubmit: SubmitHandler<AddressFormValues> = async (data) => {
     try {
-      const response = await axios.post<ApiResponseCommon>(
-        '/api/user/address-user',
-        data
-      );
+      const { data: response } = await addAddress({
+        variables: { input: data },
+      });
       toast({
         title: 'Message',
-        description: response.data.message,
+        description: response.addAddress.message,
       });
       setOpen(false);
       form.reset();
-      //   console.log(response.data)
-    } catch (error) {
+      refetch(); // Refresh the address list
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       toast({
         variant: 'destructive',
@@ -207,8 +209,9 @@ export const AddAddressDialog: React.FC<AddressProps> = ({ email }) => {
             <Button
               type="submit"
               className="w-full py-2 md:py-3 text-lg rounded-lg"
+              disabled={loading}
             >
-              Add Address
+              {loading ? 'Adding...' : 'Add Address'}
             </Button>
           </form>
         </Form>
