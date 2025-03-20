@@ -26,13 +26,10 @@ import { Plus } from 'lucide-react';
 import { addressSchema, type AddressFormValues } from '@/validation';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import type { AddressProps } from '@/types';
+import type { AddAddressResponse, AddressQl } from '@/types';
 import { ADD_ADDRESS_MUTATION } from '@/app/api/graphql/mutations/addressMutations';
 
-export const AddAddressDialog: React.FC<AddressProps> = ({
-  email,
-  refetch,
-}) => {
+export const AddAddressDialog: React.FC<AddressQl> = ({ email, refetch }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<AddressFormValues>({
@@ -50,7 +47,8 @@ export const AddAddressDialog: React.FC<AddressProps> = ({
     },
   });
 
-  const [addAddress, { loading }] = useMutation(ADD_ADDRESS_MUTATION);
+  const [addAddress, { loading }] =
+    useMutation<AddAddressResponse>(ADD_ADDRESS_MUTATION);
 
   const onSubmit: SubmitHandler<AddressFormValues> = async (data) => {
     try {
@@ -59,7 +57,7 @@ export const AddAddressDialog: React.FC<AddressProps> = ({
       });
       toast({
         title: 'Message',
-        description: response.addAddress.message,
+        description: response?.addAddress.message,
       });
       setOpen(false);
       form.reset();

@@ -21,9 +21,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { addressSchema, type AddressFormValues } from '@/validation';
-import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
-import type { ApiResponseCommon, Address } from '@/types';
+import type {
+  Address,
+  UpdateAddressResponse,
+  DeleteAddressResponse,
+  DefaultUpdateAddressResponse,
+} from '@/types';
 import { useMutation } from '@apollo/client';
 import {
   DELETE_ADDRESS_MUTATION,
@@ -56,9 +60,14 @@ const AddressCard = ({
     },
   });
 
-  const [updateAddress] = useMutation(UPDATE_USER_ADDRESS);
-  const [deleteAddress] = useMutation(DELETE_ADDRESS_MUTATION);
-  const [updateDefaultAddress] = useMutation(UPDATE_DEFAULT_USER_ADDRESS);
+  const [updateAddress] =
+    useMutation<UpdateAddressResponse>(UPDATE_USER_ADDRESS);
+  const [deleteAddress] = useMutation<DeleteAddressResponse>(
+    DELETE_ADDRESS_MUTATION
+  );
+  const [updateDefaultAddress] = useMutation<DefaultUpdateAddressResponse>(
+    UPDATE_DEFAULT_USER_ADDRESS
+  );
 
   const onSubmit: SubmitHandler<AddressFormValues> = async (data) => {
     try {
@@ -68,7 +77,7 @@ const AddressCard = ({
 
       toast({
         title: 'Message',
-        description: response.updateAddress.message,
+        description: response?.updateAddress?.message,
       });
 
       setOpen(false);
@@ -92,7 +101,7 @@ const AddressCard = ({
 
       toast({
         title: 'Message',
-        description: response.deleteAddress.message,
+        description: response?.deleteAddress.message,
       });
       refetch(); // Refresh the address list
     } catch (error) {

@@ -49,9 +49,9 @@ export async function GET(
           phoneNo: buyerAddress.phoneNo,
         },
         products: {
-          name: products.productName,
-          price: products.productPrice,
-          description: products.productDescription,
+          productName: products.productName,
+          productPrice: products.productPrice,
+          productDescription: products.productDescription,
         },
         paymentAccount: {
           accountUsername: buyerPayment.accountUsername,

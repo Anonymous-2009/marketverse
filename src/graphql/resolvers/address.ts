@@ -2,10 +2,13 @@
 import { db } from '@/db';
 import { buyerAddress, buyerProfile } from '../../db/schema'; // Adjust path to your schema file
 import { desc, eq, and } from 'drizzle-orm';
-import type { AddressInput } from '@/types';
+import type { AddressInput, MutationResolvers, QueryResolvers } from '@/types';
 import { addressSchema } from '@/validation';
 
-export const addressResolvers = {
+export const addressResolvers: {
+  Query: QueryResolvers;
+  Mutation: MutationResolvers;
+} = {
   Query: {
     // Get addresses by email (your existing resolver)
     addressesByEmail: async (_: undefined, { email }: { email: string }) => {
@@ -138,6 +141,7 @@ export const addressResolvers = {
     updateAddress: async (_: undefined, { input }: { input: AddressInput }) => {
       try {
         // Validate input data
+
         const validationResult = addressSchema.safeParse(input);
         if (!validationResult.success) {
           return {
@@ -216,15 +220,11 @@ export const addressResolvers = {
         }
 
         if (isDefault) {
-          // Start a transaction to ensure consistency
           await db.transaction(async (trx) => {
-            // Step 1: Set all addresses of the user to `is_default: false`
             await trx
               .update(buyerAddress)
               .set({ isDefault: false })
               .where(eq(buyerAddress.email, email));
-
-            // Step 2: Set the selected address to `is_default: true`
             await trx
               .update(buyerAddress)
               .set({ isDefault: true })

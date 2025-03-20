@@ -34,6 +34,7 @@ const OrdersPage: React.FC<{ email: string }> = ({ email }) => {
     getData();
   }, [email, toast]);
 
+  console.log(orders);
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',

@@ -5,7 +5,6 @@ import { buyerProfile } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import sharp from 'sharp';
 import { type ApiResponseCommon, type CloudinaryUploadResponse } from '@/types';
-import { resourceLimits } from 'worker_threads';
 
 export async function PUT(
   request: NextRequest

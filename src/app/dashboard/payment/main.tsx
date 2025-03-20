@@ -126,8 +126,7 @@ const Main: React.FC<SellerType> = ({ email, sellerId }) => {
         description: response.data.message,
       });
       setIsDialogOpen(false);
-      setData(null);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error linking account:', error);
       toast({
         variant: 'destructive',

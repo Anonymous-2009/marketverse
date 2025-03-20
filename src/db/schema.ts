@@ -33,8 +33,8 @@ export const sellersTable = pgTable('sellers', {
 export const sellersInfoTable = pgTable('sellers_info', {
   id: serial('id').primaryKey(),
   uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
-  firstName: varchar('firstName', { length: 50 }).notNull(),
-  lastName: varchar('lastName', { length: 50 }),
+  firstName: varchar('first_name', { length: 50 }).notNull(),
+  lastName: varchar('last_name', { length: 50 }),
   username: varchar('username', { length: 50 }).notNull(),
   age: integer('age').notNull(),
   email: varchar('email', { length: 100 }).notNull(),
@@ -53,10 +53,10 @@ export const products = pgTable('products', {
   productName: varchar('product_name', { length: 255 }).notNull(), // Name of the product
   productPrice: integer('product_price').notNull(), // Price of the product
   productDescription: text('product_description').notNull(), // Description of the product
-  productImages: varchar('product-images', { length: 255 }).array().notNull(), // Array of product image URLs
+  productImages: varchar('product_images', { length: 255 }).array().notNull(), // Array of product image URLs
 });
 
-export const paymentAccount = pgTable('paymentAccount', {
+export const paymentAccount = pgTable('payment_account', {
   id: serial('id'),
   accountUsername: varchar('account_username'),
   accountNumber: numeric('account_number').primaryKey(),
@@ -67,7 +67,7 @@ export const paymentAccount = pgTable('paymentAccount', {
 
 // here's come's the buyer detail's table's.
 
-export const buyerProfile = pgTable('buyerProfile', {
+export const buyerProfile = pgTable('buyer_profile', {
   id: serial('id'),
   uniqueId: varchar('unique_id', { length: 50 }).notNull().unique(),
   firstName: varchar('first_name', { length: 50 }).notNull(),
@@ -84,7 +84,7 @@ export const buyerProfile = pgTable('buyerProfile', {
   updatedAt: date('updated_at').defaultNow().notNull(),
 });
 
-export const buyerAddress = pgTable('buyerAddress', {
+export const buyerAddress = pgTable('buyer_address', {
   id: serial('id'),
   email: varchar('email', { length: 100 })
     .notNull()
@@ -102,7 +102,7 @@ export const buyerAddress = pgTable('buyerAddress', {
   updatedAt: date('updated_at').defaultNow().notNull(),
 });
 
-export const buyerPayment = pgTable('buyerPayment', {
+export const buyerPayment = pgTable('buyer_payment', {
   id: serial('id'),
   accountUsername: varchar('account_username'),
   accountNumber: numeric('account_number').primaryKey(),
@@ -128,16 +128,16 @@ export const reviews = pgTable('reviews', {
 
 export const orders = pgTable('orders', {
   id: serial('id'), // Auto-incrementing ID
-  orderId: integer('orderId').notNull().unique().primaryKey(), // Unique integer order ID
-  buyerEmail: varchar('buyerEmail', { length: 255 }).notNull(),
-  sellerEmail: varchar('sellerEmail', { length: 255 }).notNull(),
-  orderAt: date('orderAt').defaultNow().notNull(),
+  orderId: integer('order_id').notNull().unique().primaryKey(), // Unique integer order ID
+  buyerEmail: varchar('buyer_email', { length: 255 }).notNull(),
+  sellerEmail: varchar('seller_email', { length: 255 }).notNull(),
+  orderAt: date('order_at').defaultNow().notNull(),
   status: text('status', {
     enum: ['decline', 'pending', 'approve', 'cancelled', 'delivered'],
   }).notNull(),
-  productId: integer('productId').notNull(),
-  addressID: integer('addressID').notNull(),
-  accountNumber: numeric('accountNumber').notNull(),
+  productId: integer('product_id').notNull(),
+  addressID: integer('address_iD').notNull(),
+  accountNumber: numeric('account_number').notNull(),
   accountUsername: varchar('account_username'),
   transactionN0: varchar('transaction_no', { length: 255 }),
 });

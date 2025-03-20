@@ -120,7 +120,8 @@ const Order = ({ id, email }: { id: number | null; email: string }) => {
         description: response.data.message,
       });
       setPaymentLoading(false);
-    } catch (error) {
+      router.push('/common/orders');
+    } catch (error: unknown) {
       setPaymentLoading(false);
       console.error('Order Placement Error:', error);
       toast({
