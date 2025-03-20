@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'CI' }
     // This is ci pipelines for this project 
     
     environment {
