@@ -5,7 +5,8 @@ pipeline {
     environment {
         PROJECT_NAME = "marketverse"
         DOCKER_HUB_REPO = "anonymous2009/marketverse"
-        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = credentials('clerk-publishable-key') // Store in Jenkins credentials
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = credentials('clerk-publishable-key') 
+        // Store in Jenkins credentials
     }
     
     options {
