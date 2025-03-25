@@ -83,6 +83,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    echo "Running Trivy security scan on Docker image..."
+                    try {
+                        sh """
+                            trivy image --exit-code 1 --severity CRITICAL,HIGH ${PROJECT_NAME}:${IMAGE_TAG}
+                        """
+                        echo "No critical vulnerabilities found."
+                    } catch (Exception e) {
+                        echo "Security vulnerabilities detected!"
+                        error "Trivy scan failed. Please check the logs."
+                    }
+                }
+            }
+        }
         
         stage('Test Image') {
             steps {
