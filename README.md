@@ -35,6 +35,7 @@
       - [6. Run the Container](#6-run-the-container)
       - [Using Docker Compose](#using-docker-compose)
   - [Author](#author)
+  - [LICENSE](#license)
 
 ## Prerequisites
 
@@ -250,6 +251,7 @@ This structured approach ensures scalability and ease of maintenance.
 - [x] Linux
 - [x] Helm
 - [ ] AWS EC2
+- [ ] AWS EKS Cluster
 - [ ] Terraform
 - [ ] Ansible
 - [x] Grafana
@@ -441,3 +443,7 @@ docker-compose up --build -d
 **Anonymous**  
 📧 Email: [anonymous292009@gmail.com](mailto:anonymous292009@gmail.com)  
 🔗 GitHub: [https://github.com/Anonymous-2009](https://github.com/Anonymous-2009)
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
