@@ -70,6 +70,31 @@ pipeline {
             }
         }
         
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    echo "Running Trivy security scan on Docker image..."
+                    try {
+                        sh """
+                            trivy image --format table --output trivy-report.txt ${PROJECT_NAME}:${IMAGE_TAG}
+                        """
+                        echo "No critical vulnerabilities found."
+                    } catch (Exception e) {
+                        echo "Security vulnerabilities detected!"
+                        error "Trivy scan failed. Please check the logs."
+                    } finally {
+                        archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
+                        emailext(
+                            to: EMAIL_RECIPIENT,
+                            subject: "Trivy Security Scan Report for ${PROJECT_NAME}:${IMAGE_TAG}",
+                            body: "Trivy scan completed. Please find the attached report.",
+                            attachmentsPattern: 'trivy-report.txt'
+                        )
+                    }
+                }
+            }
+        }
+        
         stage('Tag Image') {
             steps {
                 script {
@@ -85,31 +110,6 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            steps {
-                script {
-                    echo "Running Trivy security scan on Docker image..."
-                    try {
-                        sh """
-                            trivy image --format json --output trivy-report.json --exit-code 1 --severity CRITICAL,HIGH ${PROJECT_NAME}:${IMAGE_TAG}
-                        """
-                        echo "No critical vulnerabilities found."
-                    } catch (Exception e) {
-                        echo "Security vulnerabilities detected!"
-                        error "Trivy scan failed. Please check the logs."
-                    } finally {
-                        archiveArtifacts artifacts: 'trivy-report.json', fingerprint: true
-                        emailext(
-                            to: EMAIL_RECIPIENT,
-                            subject: "Trivy Security Scan Report for ${PROJECT_NAME}:${IMAGE_TAG}",
-                            body: "Trivy scan completed. Please find the attached report.",
-                            attachFiles: 'trivy-report.json'
-                        )
-                    }
-                }
-            }
-        }
-        
         stage('Test Image') {
             steps {
                 script {
@@ -199,7 +199,7 @@ pipeline {
                     </body>
                     </html>
                 """,
-                to: 'krishnabag751@gmail.com',
+                to: EMAIL_RECIPIENT,
                 mimeType: 'text/html'
         }
         
@@ -231,7 +231,7 @@ pipeline {
                     </body>
                     </html>
                 """,
-                to: 'krishnabag751@gmail.com',
+                to: EMAIL_RECIPIENT,
                 mimeType: 'text/html'
         }
         
@@ -249,7 +249,7 @@ pipeline {
                     </body>
                     </html>
                 """,
-                to: 'krishnabag751@gmail.com',
+                to: EMAIL_RECIPIENT,
                 mimeType: 'text/html'
         }
         
