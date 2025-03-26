@@ -3,9 +3,10 @@ pipeline {
     // This is ci pipelines for this project 
     
     environment {
-        PROJECT_NAME = "marketverse"
-        DOCKER_HUB_REPO = "anonymous2009/marketverse"
+        PROJECT_NAME = 'marketverse'
+        DOCKER_HUB_REPO = 'anonymous2009/marketverse'
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = credentials('clerk-publishable-key') 
+        EMAIL_RECIPIENT = 'krishnabag751@gmail.com'
         // Store in Jenkins credentials
     }
     
@@ -90,12 +91,20 @@ pipeline {
                     echo "Running Trivy security scan on Docker image..."
                     try {
                         sh """
-                            trivy image --exit-code 1 --severity CRITICAL,HIGH ${PROJECT_NAME}:${IMAGE_TAG}
+                            trivy image --format json --output trivy-report.json --exit-code 1 --severity CRITICAL,HIGH ${PROJECT_NAME}:${IMAGE_TAG}
                         """
                         echo "No critical vulnerabilities found."
                     } catch (Exception e) {
                         echo "Security vulnerabilities detected!"
                         error "Trivy scan failed. Please check the logs."
+                    } finally {
+                        archiveArtifacts artifacts: 'trivy-report.json', fingerprint: true
+                        emailext(
+                            to: EMAIL_RECIPIENT,
+                            subject: "Trivy Security Scan Report for ${PROJECT_NAME}:${IMAGE_TAG}",
+                            body: "Trivy scan completed. Please find the attached report.",
+                            attachFiles: 'trivy-report.json'
+                        )
                     }
                 }
             }
