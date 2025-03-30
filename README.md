@@ -1,5 +1,34 @@
 # Project - MarketVerse
 
+![Next.js](https://img.shields.io/badge/Frontend-Next.js-black?logo=next.js)
+![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?logo=tailwindcss)
+![Shadcn UI](https://img.shields.io/badge/UI-Shadcn%20UI-blueviolet)
+![Lucide Icons](https://img.shields.io/badge/Icons-Lucide-lightgrey)
+![React Hook Form](https://img.shields.io/badge/Forms-React%20Hook%20Form-red?logo=react)
+![Zod](https://img.shields.io/badge/Validation-Zod-blue)
+![Typed.js](https://img.shields.io/badge/Animations-Typed.js-yellow)
+![TanStack Query](https://img.shields.io/badge/Data%20Fetching-TanStack%20Query-ff4154?logo=react-query)
+![Zustand](https://img.shields.io/badge/State%20Management-Zustand-orange)
+![Drizzle ORM](https://img.shields.io/badge/ORM-Drizzle%20ORM-ff69b4)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-blue?logo=postgresql)
+![Cloudinary](https://img.shields.io/badge/Storage-Cloudinary-yellow?logo=cloudinary)
+![Clerk](https://img.shields.io/badge/Authentication-Clerk-ff9900)
+![Nodemailer](https://img.shields.io/badge/Email-Nodemailer-green)
+![Docker](https://img.shields.io/badge/Container-Docker-blue?logo=docker)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-K8s-blue?logo=kubernetes)
+![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins%20%7C%20ArgoCD-brightgreen?logo=jenkins)
+![Helm](https://img.shields.io/badge/IaC-Helm%20%7C%20Makefile-purple?logo=helm)
+![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-red?logo=prometheus)
+![Grafana](https://img.shields.io/badge/Dashboard-Grafana-orange?logo=grafana)
+![AWS](https://img.shields.io/badge/Cloud-AWS-orange?logo=amazon-aws)
+![Minikube](https://img.shields.io/badge/K8s%20Local-Minikube-blue?logo=kubernetes)
+![Vercel](https://img.shields.io/badge/Hosting-Vercel-black?logo=vercel)
+![ESLint](https://img.shields.io/badge/Code%20Quality-ESLint-purple?logo=eslint)
+![Prettier](https://img.shields.io/badge/Formatter-Prettier-blue?logo=prettier)
+![TypeScript](https://img.shields.io/badge/Type%20Safety-TypeScript-blue?logo=typescript)
+![TSX](https://img.shields.io/badge/Bundler-TSX-lightblue)
+![PostCSS](https://img.shields.io/badge/CSS%20Processing-PostCSS-red?logo=postcss)
+
 **MarketVerse** is a dynamic e-commerce platform built with Next.js, where users can seamlessly buy and sell products. Whether you want to shop for quality goods or become a seller to showcase your products, MarketVerse provides a smooth and intuitive experience. With secure transactions, user-friendly navigation, and a robust marketplace, MarketVerse empowers individuals to connect, trade, and grow their businesses effortlessly.
 
 > [!WARNING]
@@ -35,7 +64,6 @@
       - [6. Run the Container](#6-run-the-container)
       - [Using Docker Compose](#using-docker-compose)
   - [Author](#author)
-  - [LICENSE](#license)
 
 ## Prerequisites
 
@@ -243,20 +271,17 @@ This structured approach ensures scalability and ease of maintenance.
 > These technologies are planned for future implementation.
 
 - [x] Docker
-- [x] Kubernetes (Minikube)
-- [x] Jenkins
-- [x] Makefile
-- [x] Shell Scripting
-- [x] Argocd
-- [x] Linux
-- [x] Helm
+- [ ] Kubernetes (Minikube)
+- [ ] Jenkins
+- [ ] Shell Scripting
+- [ ] Linux
+- [ ] Helm
 - [ ] AWS EC2
-- [ ] AWS EKS Cluster
 - [ ] Terraform
 - [ ] Ansible
-- [x] Grafana
-- [x] Prometheus
-- [x] GraphQL (Planned)
+- [ ] Grafana
+- [ ] Prometheus
+- [ ] GraphQL (Planned)
 - [ ] Redis (Planned)
 
 ## How To Setup This Project
@@ -443,7 +468,3 @@ docker-compose up --build -d
 **Anonymous**  
 📧 Email: [anonymous292009@gmail.com](mailto:anonymous292009@gmail.com)  
 🔗 GitHub: [https://github.com/Anonymous-2009](https://github.com/Anonymous-2009)
-
-## License
-
-This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
