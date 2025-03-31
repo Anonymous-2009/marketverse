@@ -185,7 +185,7 @@ export const addressResolvers: {
           return { success: false, message: 'Address Updation failed' };
         }
 
-        return { success: true, message: 'Address updated' };
+        return { success: true, message: 'Address Updated' };
       } catch (error: unknown) {
         console.error('Error updating address:', error);
 
